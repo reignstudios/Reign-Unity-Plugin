@@ -10,6 +10,10 @@ Library/
 TEMP/
 Help/
 
+# Files
+Reign.AndroidNative.zip
+Reign.AndroidNative.zip.meta
+
 # Tooling
 _ReSharper*/
 *.resharper
