@@ -4,7 +4,7 @@
 // -------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "../AdMob/GADInterstitial.h"
+#import "GADInterstitial.h"
 
 @interface AdMob_InterstitialAdNative : UIViewController<GADInterstitialDelegate>
 {

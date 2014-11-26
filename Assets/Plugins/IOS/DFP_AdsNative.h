@@ -4,8 +4,8 @@
 // -------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "../AdMob/GADBannerView.h"
-#import "../DoubleClick/DFPBannerView.h"
+#import "GADBannerView.h"
+#import "DFPBannerView.h"
 
 @interface DFP_AdsNative : UIViewController<GADBannerViewDelegate>
 {
