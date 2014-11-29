@@ -109,7 +109,8 @@ namespace Reign.EditorTools
 		{
 			if (target == BuildTarget.MetroPlayer || target == BuildTarget.WP8Player)
 			{
-				string projPath = string.Format(@"{0}\{1}\{1}.csproj", pathToBuiltProject, PlayerSettings.productName);
+				var productName = PlayerSettings.productName.Replace(" ", "").Replace("_", "");
+				string projPath = string.Format("{0}/{1}/{1}.csproj", pathToBuiltProject, productName);
 				Debug.Log("Modifing Win8 Proj: " + projPath);
 
 				var csProj = XDocument.Load(projPath);
@@ -188,7 +189,7 @@ namespace Reign.EditorTools
 						// copy cs file
 						string sourcePath = string.Format("{0}/{1}/{2}", Application.dataPath, "Plugins/Reign", source);
 						string sourceFileName = Path.GetFileName(source);
-						File.Copy(sourcePath, string.Format("{0}/{1}/{2}", pathToBuiltProject, PlayerSettings.productName, sourceFileName), true);
+						File.Copy(sourcePath, string.Format("{0}/{1}/{2}", pathToBuiltProject, productName, sourceFileName), true);
 
 						// make sure we need to reference the file
 						bool needToRefFile = true;
