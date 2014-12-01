@@ -185,7 +185,7 @@ public class Amazon_InAppPurchaseNative implements PurchasingListener, ReignActi
 	// ===============================
 	// PurchasingListener
 	// ===============================
-	private String currentUser;
+	//private String currentUser;
 	
 	@Override
 	public void onProductDataResponse(ProductDataResponse arg)
@@ -217,7 +217,7 @@ public class Amazon_InAppPurchaseNative implements PurchasingListener, ReignActi
 	public void onUserDataResponse(UserDataResponse arg)
 	{
 		UserData data = arg.getUserData();
-		currentUser = data.getUserId();
+		//currentUser = data.getUserId();
 		Log.v(logTag, "onGetUserIdResponse recieved: Response -" + data.getUserId());
         Log.v(logTag, "RequestId:" + arg.getRequestId());
         Log.v(logTag, "IdRequestStatus:" + arg.getRequestStatus());
@@ -228,7 +228,7 @@ public class Amazon_InAppPurchaseNative implements PurchasingListener, ReignActi
     // ===============================
  	// PurchasingListener Helpers
  	// ===============================
-    private void printReceipt(final Receipt receipt)
+    /*private void printReceipt(final Receipt receipt)
     {
         Log.v
         (
@@ -236,7 +236,7 @@ public class Amazon_InAppPurchaseNative implements PurchasingListener, ReignActi
             String.format("Receipt: ItemType: %s Sku: %s PurchaseDate: %s", receipt.getProductType(),
             receipt.getSku(), receipt.getPurchaseDate())
         );
-    }
+    }*/
 
     /*
      * Started when the Observer receives a GetUserIdResponse. The Shared Preferences file for the returned user id is
