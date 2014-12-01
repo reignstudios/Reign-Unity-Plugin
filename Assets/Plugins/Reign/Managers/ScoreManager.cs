@@ -16,7 +16,7 @@ namespace Reign
 	{
 		/// <summary>
 		/// Use to check if the API is doing GUI operations.
-		/// NOTE: If Scoreoid, you should disable your UI to let the Reign UI take over.
+		/// NOTE: If ReignScores, you should disable your UI to let the Reign UI take over.
 		/// </summary>
 		public static bool PerformingGUIOperation
 		{
@@ -42,12 +42,12 @@ namespace Reign
 		/// <summary>
 		/// Use to get the authenticated user ID.
 		/// </summary>
-		public static string UserID
+		public static string Username
 		{
 			get
 			{
 				if (plugin == null) return "???";
-				return plugin.UserID;
+				return plugin.Username;
 			}
 		}
 
@@ -158,7 +158,7 @@ namespace Reign
 
 		/// <summary>
 		/// Use to manualy login a user.
-		/// NOTE: Only supports Scoreoid.
+		/// NOTE: Only supports ReignScores.
 		/// </summary>
 		/// <param name="userID">Username or UserID.</param>
 		/// <param name="password">User Password.</param>
@@ -178,7 +178,7 @@ namespace Reign
 
 		/// <summary>
 		/// Use to manualy create a user.
-		/// NOTE: Only supports Scoreoid.
+		/// NOTE: Only supports ReignScores.
 		/// </summary>
 		/// <param name="userID">Username or UserID.</param>
 		/// <param name="password">User Password.</param>
@@ -217,7 +217,7 @@ namespace Reign
 		
 		/// <summary>
 		/// Use to request scores.
-		/// NOTE: Only supports Scoreoid.
+		/// NOTE: Only supports ReignScores.
 		/// </summary>
 		/// <param name="leaderboardID">Leaderboard ID.</param>
 		/// <param name="offset">Item offset.</param>
@@ -256,7 +256,7 @@ namespace Reign
 		
 		/// <summary>
 		/// Use to request achievements.
-		/// NOTE: Only supports Scoreoid.
+		/// NOTE: Only supports ReignScores.
 		/// </summary>
 		/// <param name="callback">The callback that fires when done.</param>
 		public static void RequestAchievements(RequestAchievementsCallbackMethod callback)
@@ -318,7 +318,7 @@ namespace Reign.Plugin
 	{
 		public bool PerformingGUIOperation {get; private set;}
 		public bool IsAuthenticated {get; private set;}
-		public string UserID {get; private set;}
+		public string Username {get; private set;}
 
 		/// <summary>
 		/// Dumy constructor.
@@ -328,7 +328,7 @@ namespace Reign.Plugin
 		{
 			PerformingGUIOperation = false;
 			IsAuthenticated = false;
-			UserID = "???";
+			Username = "???";
 			if (callback != null) callback(false, "Dumy Score object");
 		}
 
@@ -472,30 +472,30 @@ namespace Reign.Plugin
 			return new Dumy_ScorePluginPlugin(desc, callback);
 			#elif UNITY_EDITOR
 			if (desc.Editor_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
-			else if (desc.Editor_ScoreAPI == ScoreAPIs.Scoreoid) return new Scoreoid_ScorePlugin(desc, callback);
+			else if (desc.Editor_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported Editor_ScoreAPI: " + desc.Editor_ScoreAPI);
 			#elif UNITY_WP8
 			if (desc.WP8_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
-			else if (desc.WP8_ScoreAPI == ScoreAPIs.Scoreoid) return new Scoreoid_ScorePlugin(desc, callback);
+			else if (desc.WP8_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported WP8_ScoreAPI: " + desc.WP8_ScoreAPI);
 			#elif UNITY_METRO
 			if (desc.Win8_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
-			else if (desc.Win8_ScoreAPI == ScoreAPIs.Scoreoid) return new Scoreoid_ScorePlugin(desc, callback);
+			else if (desc.Win8_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported Win8_ScoreAPI: " + desc.Win8_ScoreAPI);
 			#elif UNITY_ANDROID
 			if (desc.Android_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
-			else if (desc.Android_ScoreAPI == ScoreAPIs.Scoreoid) return new Scoreoid_ScorePlugin(desc, callback);
+			else if (desc.Android_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
 			else if (desc.Android_ScoreAPI == ScoreAPIs.GooglePlay) return new GooglePlay_ScorePlugin(desc, callback);
 			else if (desc.Android_ScoreAPI == ScoreAPIs.GameCircle) return new Amazon_GameCircle_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported Android_ScoreAPI: " + desc.Android_ScoreAPI);
 			#elif UNITY_IOS
 			if (desc.iOS_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
-			else if (desc.iOS_ScoreAPI == ScoreAPIs.Scoreoid) return new Scoreoid_ScorePlugin(desc, callback);
+			else if (desc.iOS_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
 			else if (desc.iOS_ScoreAPI == ScoreAPIs.GameCenter) return new GameCenter_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported iOS_ScoreAPI: " + desc.iOS_ScoreAPI);
 			#elif UNITY_BB10
 			if (desc.BB10_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
-			else if (desc.BB10_ScoreAPI == ScoreAPIs.Scoreoid) return new Scoreoid_ScorePlugin(desc, callback);
+			else if (desc.BB10_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
 			else if (desc.BB10_ScoreAPI == ScoreAPIs.Scoreloop) return new Scoreloop_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported BB10_ScoreAPI: " + desc.BB10_ScoreAPI);
 			#else

@@ -14,9 +14,9 @@ namespace Reign
 		None,
 
 		/// <summary>
-		/// Scoreoid
+		/// ReignScores
 		/// </summary>
-		Scoreoid,
+		ReignScores,
 
 		/// <summary>
 		/// Scoreloop
@@ -48,6 +48,11 @@ namespace Reign
 		/// ID value (Can be any unique string)
 		/// </summary>
 		public string ID;
+
+		/// <summary>
+		/// Name (Only applies to platforms that dont have a native UI)
+		/// </summary>
+		public string Name;
 		
 		/// <summary>
 		/// Desc (Only applies to platforms that dont have a native UI)
@@ -55,14 +60,14 @@ namespace Reign
 		public string Desc;
 
 		/// <summary>
-		/// Scoreoid ID (Unique index value)
+		/// ReignScores ID (Unique value)
 		/// </summary>
-		public int Editor_Scoreoid_ID, Win32_Scoreoid_ID, OSX_Scoreoid_ID, Linux_Scoreoid_ID, Web_Scoreoid_ID;
+		public Guid Editor_ReignScores_ID, Win32_ReignScores_ID, OSX_ReignScores_ID, Linux_ReignScores_ID, Web_ReignScores_ID;
 
 		/// <summary>
-		/// Scoreoid ID (Unique index value)
+		/// ReignScores ID (Unique value)
 		/// </summary>
-		public int Win8_Scoreoid_ID, WP8_Scoreoid_ID, BB10_Scoreoid_ID, iOS_Scoreoid_ID, Android_Scoreoid_ID;
+		public Guid Win8_ReignScores_ID, WP8_ReignScores_ID, BB10_ReignScores_ID, iOS_ReignScores_ID, Android_ReignScores_ID;
 
 		/// <summary>
 		/// Scoreloop Mode ID (Mode Index value)
@@ -105,16 +110,16 @@ namespace Reign
 		/// </summary>
 		public string Desc;
 
-		// Scoreoid
+		// ReignScores
 		/// <summary>
-		/// ID value (Normaly you keep this the same as ID)
+		/// ID value (Unique value)
 		/// </summary>
-		public string Editor_Scoreoid_ID, Win32_Scoreoid_ID, OSX_Scoreoid_ID, Linux_Scoreoid_ID, Web_Scoreoid_ID;
+		public Guid Editor_ReignScores_ID, Win32_ReignScores_ID, OSX_ReignScores_ID, Linux_ReignScores_ID, Web_ReignScores_ID;
 
 		/// <summary>
-		/// ID value (Normaly you keep this the same as ID)
+		/// ID value (Unique value)
 		/// </summary>
-		public string Win8_Scoreoid_ID, WP8_Scoreoid_ID, BB10_Scoreoid_ID, iOS_Scoreoid_ID, Android_Scoreoid_ID;
+		public Guid Win8_ReignScores_ID, WP8_ReignScores_ID, BB10_ReignScores_ID, iOS_ReignScores_ID, Android_ReignScores_ID;
 
 		/// <summary>
 		/// GooglePlay ID (NOTE: Not name)
@@ -162,121 +167,121 @@ namespace Reign
 			Web_ScoreAPI = ScoreAPIs.None, Win8_ScoreAPI = ScoreAPIs.None, WP8_ScoreAPI = ScoreAPIs.None, BB10_ScoreAPI = ScoreAPIs.None, iOS_ScoreAPI = ScoreAPIs.None,
 			Android_ScoreAPI = ScoreAPIs.None;
 	
-		// Scoreoid
+		// Reign Scores
 		/// <summary>
 		/// Set to true if you want the Reign UI to auto trigger on if the user is not authenticated. (NOTE: defaults to true)
 		/// </summary>
-		public bool Scoreoid_AutoTriggerAuthenticateGUI = true;
+		public bool ReignScores_AutoTriggerAuthenticateGUI = true;
 
 		/// <summary>
 		/// Login UI Title
 		/// </summary>
-		public string Scoreoid_LoginTitle = "Login";
+		public string ReignScores_LoginTitle = "Login";
 		
 		/// <summary>
 		/// Create User UI Title
 		/// </summary>
-		public string Scoreoid_CreateUserTitle = "Create Account";
+		public string ReignScores_CreateUserTitle = "Create Account";
 
 		/// <summary>
 		/// Background UI texture. (Or you can set to NULL and use your own backgrounds)
 		/// </summary>
-		public Texture Scoreoid_BackgroudTexture;
+		public Texture ReignScores_BackgroudTexture;
 		
 		/// <summary>
 		/// Leaderboard background texture.
 		/// </summary>
-		public Texture Scoreoid_TopScoreBoardTexture;
+		public Texture ReignScores_TopScoreBoardTexture;
 		
 		/// <summary>
 		/// Achievement background texture.
 		/// </summary>
-		public Texture Scoreoid_AchievementBoardTexture;
+		public Texture ReignScores_AchievementBoardTexture;
 
 		/// <summary>
 		/// CloseBox texture
 		/// </summary>
-		public Texture Scoreoid_TopScoreBoardButton_CloseNormal, Scoreoid_TopScoreBoardButton_CloseHover;
+		public Texture ReignScores_TopScoreBoardButton_CloseNormal, ReignScores_TopScoreBoardButton_CloseHover;
 
 		/// <summary>
 		/// CloseBox button texture
 		/// </summary>
-		public Texture Scoreoid_AchievementBoardButton_CloseNormal, Scoreoid_AchievementBoardButton_CloseHover;
+		public Texture ReignScores_AchievementBoardButton_CloseNormal, ReignScores_AchievementBoardButton_CloseHover;
 
 		/// <summary>
 		/// Navigation button texture
 		/// </summary>
-		public Texture Scoreoid_TopScoreBoardButton_PrevNormal, Scoreoid_TopScoreBoardButton_PrevHover, Scoreoid_TopScoreBoardButton_NextNormal, Scoreoid_TopScoreBoardButton_NextHover;
+		public Texture ReignScores_TopScoreBoardButton_PrevNormal, ReignScores_TopScoreBoardButton_PrevHover, ReignScores_TopScoreBoardButton_NextNormal, ReignScores_TopScoreBoardButton_NextHover;
 		
 		/// <summary>
 		/// Navigation button texture
 		/// </summary>
-		public Texture Scoreoid_AchievementBoardButton_PrevNormal, Scoreoid_AchievementBoardButton_PrevHover, Scoreoid_AchievementBoardButton_NextNormal, Scoreoid_AchievementBoardButton_NextHover;
+		public Texture ReignScores_AchievementBoardButton_PrevNormal, ReignScores_AchievementBoardButton_PrevHover, ReignScores_AchievementBoardButton_NextNormal, ReignScores_AchievementBoardButton_NextHover;
 		
 		/// <summary>
-		/// All usernames will fit in this rect. (Auto scales to fit in Scoreoid_TopScoreBoardTexture)
+		/// All usernames will fit in this rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
 		/// </summary>
-		public Rect Scoreoid_TopScoreBoardFrame_Usernames;
+		public Rect ReignScores_TopScoreBoardFrame_Usernames;
 		
 		/// <summary>
-		/// All score values will fit in this rect. (Auto scales to fit in Scoreoid_TopScoreBoardTexture)
+		/// All score values will fit in this rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
 		/// </summary>
-		public Rect Scoreoid_TopScoreBoardFrame_Scores;
+		public Rect ReignScores_TopScoreBoardFrame_Scores;
 		
 		/// <summary>
-		/// Button rect. (Auto scales to fit in Scoreoid_TopScoreBoardTexture)
+		/// Button rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
 		/// </summary>
-		public Rect Scoreoid_TopScoreBoardFrame_PrevButton, Scoreoid_TopScoreBoardFrame_NextButton, Scoreoid_TopScoreBoardFrame_CloseBox;
+		public Rect ReignScores_TopScoreBoardFrame_PrevButton, ReignScores_TopScoreBoardFrame_NextButton, ReignScores_TopScoreBoardFrame_CloseBox;
 
 		/// <summary>
-		/// All achievement names will fit in this rect. (Auto scales to fit in Scoreoid_AchievementBoardTexture)
+		/// All achievement names will fit in this rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
 		/// </summary>
-		public Rect Scoreoid_AchievementBoardFrame_Names;
+		public Rect ReignScores_AchievementBoardFrame_Names;
 		
 		/// <summary>
-		/// All achievement descs will fit in this rect. (Auto scales to fit in Scoreoid_AchievementBoardTexture)
+		/// All achievement descs will fit in this rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
 		/// </summary>
-		public Rect Scoreoid_AchievementBoardFrame_Descs;
+		public Rect ReignScores_AchievementBoardFrame_Descs;
 		
 		/// <summary>
-		/// Button rect. (Auto scales to fit in Scoreoid_AchievementBoardTexture)
+		/// Button rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
 		/// </summary>
-		public Rect Scoreoid_AchievementBoardFrame_PrevButton, Scoreoid_AchievementBoardFrame_NextButton, Scoreoid_AchievementBoardFrame_CloseBox;
+		public Rect ReignScores_AchievementBoardFrame_PrevButton, ReignScores_AchievementBoardFrame_NextButton, ReignScores_AchievementBoardFrame_CloseBox;
 
 		/// <summary>
 		/// Board font size (Defaults to 12)
 		/// </summary>
-		public int Scoreoid_TopScoreBoardFont_Size = 12, Scoreoid_AchievementBoardFont_Size = 12;
+		public int ReignScores_TopScoreBoardFont_Size = 12, ReignScores_AchievementBoardFont_Size = 12;
 
 		/// <summary>
 		/// Board font color (Defaults to white)
 		/// </summary>
-		public Color Scoreoid_TopScoreBoardFont_Color = Color.white, Scoreoid_AchievementBoardFont_Color = Color.white;
+		public Color ReignScores_TopScoreBoardFont_Color = Color.white, ReignScores_AchievementBoardFont_Color = Color.white;
 
 		/// <summary>
 		/// Amount to show on board (Defaults to 10)
 		/// </summary>
-		public int Scoreoid_TopScoresToListPerPage = 10, Scoreoid_AchievementsToListPerPage = 10;
+		public int ReignScores_TopScoresToListPerPage = 10, ReignScores_AchievementsToListPerPage = 10;
 
 		/// <summary>
 		/// Set to true to visual see where your board rects are placed.
 		/// </summary>
-		public bool Scoreoid_EnableTestRects;
+		public bool ReignScores_EnableTestRects;
 
 		/// <summary>
 		/// Set to your UI audio source
 		/// </summary>
-		public AudioSource Scoreoid_AudioSource;
+		public AudioSource ReignScores_AudioSource;
 
 		/// <summary>
 		/// Button click sound
 		/// </summary>
-		public AudioClip Scoreoid_ButtonClick;
+		public AudioClip ReignScores_ButtonClick;
 
 		/// <summary>
 		/// This callback fires when a score needs to be formated (Such as converting an int to TimeSpan)
 		/// </summary>
-		public ScoreFormatCallbackMethod Scoreoid_ScoreFormatCallback;
+		public ScoreFormatCallbackMethod ReignScores_ScoreFormatCallback;
 
 		/// <summary>
 		/// Leaderboard descs
@@ -287,107 +292,58 @@ namespace Reign
 		/// Achievement descs
 		/// </summary>
 		public AchievementDesc[] AchievementDescs;
-
-		/// <summary>
-		/// Scoreoid API key
-		/// </summary>
-		public string Editor_Scoreoid_APIKey;
 		
 		/// <summary>
-		/// Scoreoid Game ID
+		/// ReignScores Game ID
 		/// </summary>
-		public string Editor_Scoreoid_GameID;
-
-		/// <summary>
-		/// Scoreoid API key
-		/// </summary>
-		public string Win32_Scoreoid_APIKey;
+		public string Editor_ReignScores_GameID;
 		
 		/// <summary>
-		/// Scoreoid Game ID
+		/// ReignScores Game ID
 		/// </summary>
-		public string Win32_Scoreoid_GameID;
-
-		/// <summary>
-		/// Scoreoid API key
-		/// </summary>
-		public string Linux_Scoreoid_APIKey;
+		public string Win32_ReignScores_GameID;
 		
 		/// <summary>
-		/// Scoreoid Game ID
+		/// ReignScores Game ID
 		/// </summary>
-		public string Linux_Scoreoid_GameID;
-
-		/// <summary>
-		/// Scoreoid API key
-		/// </summary>
-		public string OSX_Scoreoid_APIKey;
+		public string Linux_ReignScores_GameID;
 		
 		/// <summary>
-		/// Scoreoid Game ID
+		/// ReignScores Game ID
 		/// </summary>
-		public string OSX_Scoreoid_GameID;
-
-		/// <summary>
-		/// Scoreoid API key
-		/// </summary>
-		public string Web_Scoreoid_APIKey;
+		public string OSX_ReignScores_GameID;
 		
 		/// <summary>
-		/// Scoreoid Game ID
+		/// ReignScores Game ID
 		/// </summary>
-		public string Web_Scoreoid_GameID;
-
-		/// <summary>
-		/// Scoreoid API key
-		/// </summary>
-		public string Win8_Scoreoid_APIKey;
+		public string Web_ReignScores_GameID;
 		
 		/// <summary>
-		/// Scoreoid Game ID
+		/// ReignScores Game ID
 		/// </summary>
-		public string Win8_Scoreoid_GameID;
-
-		/// <summary>
-		/// Scoreoid API key
-		/// </summary>
-		public string WP8_Scoreoid_APIKey;
+		public string Win8_ReignScores_GameID;
 		
 		/// <summary>
-		/// Scoreoid Game ID
+		/// ReignScores Game ID
 		/// </summary>
-		public string WP8_Scoreoid_GameID;
-
-		/// <summary>
-		/// Scoreoid API key
-		/// </summary>
-		public string BB10_Scoreoid_APIKey;
+		public string WP8_ReignScores_GameID;
 		
 		/// <summary>
-		/// Scoreoid Game ID
+		/// ReignScores Game ID
 		/// </summary>
-		public string BB10_Scoreoid_GameID;
-
-		/// <summary>
-		/// Scoreoid API key
-		/// </summary>
-		public string iOS_Scoreoid_APIKey;
+		public string BB10_ReignScores_GameID;
 		
 		/// <summary>
-		/// Scoreoid Game ID
+		/// ReignScores Game ID
 		/// </summary>
-		public string iOS_Scoreoid_GameID;
-
-		/// <summary>
-		/// Scoreoid API key
-		/// </summary>
-		public string Android_Scoreoid_APIKey;
+		public string iOS_ReignScores_GameID;
 		
 		/// <summary>
-		/// Scoreoid Game ID
+		/// ReignScores Game ID
 		/// </summary>
-		public string Android_Scoreoid_GameID;
+		public string Android_ReignScores_GameID;
 
+		// Scoreloop
 		/// <summary>
 		/// Scoreloop ID key
 		/// </summary>
@@ -560,7 +516,7 @@ namespace Reign.Plugin
 		/// <summary>
 		/// Use to get the username or ID
 		/// </summary>
-		string UserID {get;}
+		string Username {get;}
 	
 		/// <summary>
 		/// Use to authenticate user

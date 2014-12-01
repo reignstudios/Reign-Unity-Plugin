@@ -4,57 +4,42 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Reign.Plugin
 {
-	namespace ScoreoidXML
+	namespace XML
 	{
-		public class playerScore
+		public enum ResponseTypes
 		{
-			[XmlAttribute("score")] public int score;
-			[XmlAttribute("platform")] public string platform;
-			[XmlAttribute("created")] public string created;
+			Error,
+			Succeeded
 		}
 
-		public class player
+		public class WebResponse_Score
 		{
-			[XmlAttribute("username")] public string username;
-			[XmlAttribute("achievements")] public string achievements;
-			[XmlElement("score")] public playerScore score;
+			[XmlElement("UserID")] public string UserID;
+			[XmlElement("Username")] public string Username;
+			[XmlElement("Score")] public int Score;
 		}
 
-		[XmlRoot("players")]
-		public class players
+		[XmlRoot("ClientResponse")]
+		public class WebResponse
 		{
-			[XmlElement("player")] public player[] player;
-		}
+			[XmlAttribute("Type")] public ResponseTypes Type;
+			[XmlElement("ErrorMessage")] public string ErrorMessage;
+			[XmlElement("UserID")] public string UserID;
+			[XmlElement("Score")] public List<WebResponse_Score> Scores;
 
-		[XmlRoot("score")]
-		public class score
-		{
-			[XmlText] public string Content;
-		}
-
-		[XmlRoot("scores")]
-		public class scores
-		{
-			[XmlElement("player")] public player[] player;
-		}
-
-		[XmlRoot("error")]
-		public class error
-		{
-			[XmlText] public string Content;
-		}
-
-		[XmlRoot("success")]
-		public class success
-		{
-			[XmlText] public string Content;
+			public WebResponse() {}
+			public WebResponse(ResponseTypes type)
+			{
+				this.Type = type;
+			}
 		}
 	}
 
-	enum Scoreoid_GuiModes
+	enum ReignScores_GuiModes
 	{
 		None,
 		Login,
@@ -67,55 +52,48 @@ namespace Reign.Plugin
 		LoadingAchievements
 	}
 
-	public class Scoreoid_ScorePlugin : IScorePlugin
+	public class ReignScores_ScorePlugin : IScorePlugin
 	{
-		private const string scoreoidURL = "https://api.scoreoid.com/v1/";
+		private const string reignScoresURL = "https://reignscores.azurewebsites.net/Services/";
+		private const string userAPIKey = "CE8E55E1-F383-4F05-9388-5C89F27B7FF2";
+		private const string gameAPIKey = "04E0676D-AAF8-4836-A584-DE0C1D618D84";
 
 		public bool PerformingGUIOperation {get; private set;}
-		private Scoreoid_GuiModes guiMode = Scoreoid_GuiModes.None;
+		private ReignScores_GuiModes guiMode = ReignScores_GuiModes.None;
 		private AuthenticateCallbackMethod guiAuthenticateCallback;
 		private MonoBehaviour guiServices;
 
 		public bool IsAuthenticated {get; private set;}
+		public string Username {get; private set;}
 		public string UserID {get; private set;}
 
 		private ScoreDesc desc;
-		private string apiKey, gameID, achievementString;
+		private string gameID;
 		private Achievement[] achievements;
 	
-		public Scoreoid_ScorePlugin(ScoreDesc desc, CreatedScoreAPICallbackMethod callback)
+		public ReignScores_ScorePlugin(ScoreDesc desc, CreatedScoreAPICallbackMethod callback)
 		{
 			this.desc = desc;
 			#if UNITY_EDITOR
-			apiKey = desc.Editor_Scoreoid_APIKey;
-			gameID = desc.Editor_Scoreoid_GameID;
+			gameID = desc.Editor_ReignScores_GameID;
 			#elif UNITY_STANDALONE_WIN
-			apiKey = desc.Win32_Scoreoid_APIKey;
-			gameID = desc.Win32_Scoreoid_GameID;
+			gameID = desc.Win32_ReignScores_GameID;
 			#elif UNITY_STANDALONE_OSX
-			apiKey = desc.OSX_Scoreoid_APIKey;
-			gameID = desc.OSX_Scoreoid_GameID;
+			gameID = desc.OSX_ReignScores_GameID;
 			#elif UNITY_STANDALONE_LINUX
-			apiKey = desc.Linux_Scoreoid_APIKey;
-			gameID = desc.Linux_Scoreoid_GameID;
+			gameID = desc.Linux_ReignScores_GameID;
 			#elif UNITY_WEBPLAYER
-			apiKey = desc.Web_Scoreoid_APIKey;
-			gameID = desc.Web_Scoreoid_GameID;
+			gameID = desc.Web_ReignScores_GameID;
 			#elif UNITY_METRO
-			apiKey = desc.Win8_Scoreoid_APIKey;
-			gameID = desc.Win8_Scoreoid_GameID;
+			gameID = desc.Win8_ReignScores_GameID;
 			#elif UNITY_WP8
-			apiKey = desc.WP8_Scoreoid_APIKey;
-			gameID = desc.WP8_Scoreoid_GameID;
+			gameID = desc.WP8_ReignScores_GameID;
 			#elif UNITY_BLACKBERRY
-			apiKey = desc.BB10_Scoreoid_APIKey;
-			gameID = desc.BB10_Scoreoid_GameID;
+			gameID = desc.BB10_ReignScores_GameID;
 			#elif UNITY_IPHONE
-			apiKey = desc.iOS_Scoreoid_APIKey;
-			gameID = desc.iOS_Scoreoid_GameID;
+			gameID = desc.iOS_ReignScores_GameID;
 			#elif UNITY_ANDROID
-			apiKey = desc.Android_Scoreoid_APIKey;
-			gameID = desc.Android_Scoreoid_GameID;
+			gameID = desc.Android_ReignScores_GameID;
 			#endif
 
 			if (callback != null) callback(true, null);
@@ -128,118 +106,100 @@ namespace Reign.Plugin
 			return bytes;
 		}
 
-		private bool checkError(WWW www, out string errorMessage)
+		private bool checkError(WWW www, out XML.WebResponse response, out string errorMessage)
 		{
-			errorMessage = null;
 			try
 			{
-				var xml = new XmlSerializer(typeof(ScoreoidXML.error));
+				var xml = new XmlSerializer(typeof(XML.WebResponse));
 				using (var data = new MemoryStream(www.bytes))
 				{
-					var error = (ScoreoidXML.error)xml.Deserialize(data);
-					errorMessage = error.Content;
-					Debug.LogError("Scoreoid error: " + error.Content);
+					response = (XML.WebResponse)xml.Deserialize(data);
+					if (response.Type == XML.ResponseTypes.Error)
+					{
+						errorMessage = response.ErrorMessage;
+						Debug.LogError("Reign Scores Error: " + response.ErrorMessage);
+						return true;
+					}
+					else
+					{
+						errorMessage = null;
+						return false;
+					}
 				}
 			}
 			catch (Exception e)
 			{
+				response = null;
 				errorMessage = e.Message;
-				return false;
+				return true;
 			}
-
-			return true;
 		}
 
-		private IEnumerator login(string userID, string password, AuthenticateCallbackMethod callback)
+		private IEnumerator login(string username, string password, AuthenticateCallbackMethod callback)
 		{
 			var form = new WWWForm();
-			form.AddField("api_key", apiKey);
+			form.AddField("api_key", userAPIKey);
 			form.AddField("game_id", gameID);
-			form.AddField("response", "xml");
-			form.AddField("username", userID);
+			form.AddField("username", username);
 			form.AddField("password", password);
-			var www = new WWW(scoreoidURL+"getPlayer", form);
+			var www = new WWW(reignScoresURL+"Users/Login.cshtml", form);
 			yield return www;
 			string error;
 			if (!string.IsNullOrEmpty(www.error))
 			{
-				error = "Scoreoid getPlayer failed: " + www.error;
+				error = "ReignScores Login failed: " + www.error;
 				Debug.LogError(error);
 				IsAuthenticated = false;
 				if (callback != null) callback(false, error);
 				yield break;
 			}
 
-			if (!checkError(www, out error))
+			XML.WebResponse response;
+			if (!checkError(www, out response, out error))
 			{
-				try
-				{
-					var xml = new XmlSerializer(typeof(ScoreoidXML.players));
-					using (var data = new MemoryStream(www.bytes))
-					{
-						var players = (ScoreoidXML.players)xml.Deserialize(data);
-						UserID = players.player[0].username;
-						achievementString = players.player[0].achievements != null ? players.player[0].achievements : "";
-						IsAuthenticated = true;
-						PlayerPrefs.SetString("ReignScoreoid_UserID", userID);
-						PlayerPrefs.SetString("ReignScoreoid_Pass", password);
-						Debug.Log("Authenticated as: " + UserID);
-						if (callback != null) callback(true, null);
-						yield break;
-					}
-				}
-				catch (Exception e)
-				{
-					Debug.Log("Server Text: " + www.text);
-					error = e.Message;
-				}
+				Username = username;
+				UserID = response.UserID;
+				IsAuthenticated = true;
+				PlayerPrefs.SetString("ReignScores_UserID", username);
+				PlayerPrefs.SetString("ReignScores_Pass", password);
+				Debug.Log("Authenticated as: " + username);
+				if (callback != null) callback(true, null);
+				yield break;
 			}
 
 			if (callback != null) callback(false, error);
 		}
 
-		private IEnumerator createUser(string userID, string password, AuthenticateCallbackMethod callback)
+		private IEnumerator createUser(string username, string password, AuthenticateCallbackMethod callback)
 		{
 			var form = new WWWForm();
-			form.AddField("api_key", apiKey);
+			form.AddField("api_key", gameAPIKey);
 			form.AddField("game_id", gameID);
-			form.AddField("response", "xml");
-			form.AddField("username", userID);
+			form.AddField("username", username);
 			form.AddField("password", password);
-			var www = new WWW(scoreoidURL+"createPlayer", form);
+			var www = new WWW(reignScoresURL+"Games/CreateUser.cshtml", form);
 			yield return www;
 			string error;
 			if (!string.IsNullOrEmpty(www.error))
 			{
-				error = "Scoreoid createPlayer failed: " + www.error;
+				error = "ReignScores CreateUser failed: " + www.error;
 				Debug.LogError(error);
 				IsAuthenticated = false;
 				if (callback != null) callback(false, error);
 				yield break;
 			}
 
-			if (!checkError(www, out error))
+			XML.WebResponse response;
+			if (!checkError(www, out response, out error))
 			{
-				try
-				{
-					var xml = new XmlSerializer(typeof(ScoreoidXML.success));
-					using (var data = new MemoryStream(www.bytes))
-					{
-						var success = (ScoreoidXML.success)xml.Deserialize(data);
-						UserID = userID;
-						IsAuthenticated = true;
-						PlayerPrefs.SetString("ReignScoreoid_UserID", userID);
-						PlayerPrefs.SetString("ReignScoreoid_Pass", password);
-						Debug.Log("Scoreoid createPlayer success: " + success.Content);
-						if (callback != null) callback(true, null);
-						yield break;
-					}
-				}
-				catch (Exception e)
-				{
-					Debug.Log("Server Text: " + www.text);
-					error = e.Message;
-				}
+				Username = username;
+				UserID = response.UserID;
+				IsAuthenticated = true;
+				PlayerPrefs.SetString("ReignScores_UserID", username);
+				PlayerPrefs.SetString("ReignScores_Pass", password);
+				Debug.Log("ReignScores CreateUser success: " + username);
+				if (callback != null) callback(true, null);
+				yield break;
 			}
 
 			if (callback != null) callback(false, error);
@@ -251,10 +211,10 @@ namespace Reign.Plugin
 			{
 				if (guiAuthenticateCallback != null) guiAuthenticateCallback(true, errorMessage);
 			}
-			else if (desc.Scoreoid_AutoTriggerAuthenticateGUI)
+			else if (desc.ReignScores_AutoTriggerAuthenticateGUI)
 			{
 				PerformingGUIOperation = true;
-				guiMode = Scoreoid_GuiModes.Login;
+				guiMode = ReignScores_GuiModes.Login;
 			}
 		}
 		
@@ -263,21 +223,21 @@ namespace Reign.Plugin
 			try
 			{
 				// check if player exists
-				if (PlayerPrefs.HasKey("ReignScoreoid_UserID"))
+				if (PlayerPrefs.HasKey("ReignScores_UserID"))
 				{
 					PerformingGUIOperation = false;
 					guiAuthenticateCallback = callback;
 					guiServices = services;
-					services.StartCoroutine(login(PlayerPrefs.GetString("ReignScoreoid_UserID"), PlayerPrefs.GetString("ReignScoreoid_Pass"), authenticateCallbackMethod));
+					services.StartCoroutine(login(PlayerPrefs.GetString("ReignScores_UserID"), PlayerPrefs.GetString("ReignScores_Pass"), authenticateCallbackMethod));
 				}
 				else
 				{
-					if (desc.Scoreoid_AutoTriggerAuthenticateGUI)
+					if (desc.ReignScores_AutoTriggerAuthenticateGUI)
 					{
 						PerformingGUIOperation = true;
 						guiAuthenticateCallback = callback;
 						guiServices = services;
-						guiMode = Scoreoid_GuiModes.Login;
+						guiMode = ReignScores_GuiModes.Login;
 					}
 					else if (callback != null)
 					{
@@ -290,7 +250,7 @@ namespace Reign.Plugin
 			}
 			catch (Exception e)
 			{
-				string error = "Scoreoid Authenticate error: " + e.Message;
+				string error = "ReignScores Authenticate error: " + e.Message;
 				Debug.LogError(error);
 				IsAuthenticated = false;
 				PerformingGUIOperation = false;
@@ -301,7 +261,9 @@ namespace Reign.Plugin
 		public void Logout()
 		{
 			IsAuthenticated = false;
-			UserID = "???";
+			Username = "???";
+			if (PlayerPrefs.HasKey("ReignScores_UserID")) PlayerPrefs.DeleteKey("ReignScores_UserID");
+			if (PlayerPrefs.HasKey("ReignScores_Pass")) PlayerPrefs.DeleteKey("ReignScores_Pass");
 		}
 
 		public void ManualLogin(string userID, string password, AuthenticateCallbackMethod callback, MonoBehaviour services)
@@ -356,67 +318,53 @@ namespace Reign.Plugin
 			return achievementDesc;
 		}
 
-		private IEnumerator async_ReportScore(string leaderboardID, int score, LeaderboardDesc leaderboardDesc, ReportScoreCallbackMethod callback)
+		private IEnumerator async_ReportScore(int score, LeaderboardDesc leaderboardDesc, ReportScoreCallbackMethod callback)
 		{
 			#if UNITY_EDITOR
-			var scoreoidID = leaderboardDesc.Editor_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Editor_ReignScores_ID;
 			#elif UNITY_STANDALONE_WIN
-			var scoreoidID = leaderboardDesc.Win32_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Win32_ReignScores_ID;
 			#elif UNITY_STANDALONE_OSX
-			var scoreoidID = leaderboardDesc.OSX_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.OSX_ReignScores_ID;
 			#elif UNITY_STANDALONE_LINUX
-			var scoreoidID = leaderboardDesc.Linux_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Linux_ReignScores_ID;
 			#elif UNITY_WEBPLAYER
-			var scoreoidID = leaderboardDesc.Web_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Web_ReignScores_ID;
 			#elif UNITY_METRO
-			var scoreoidID = leaderboardDesc.Win8_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Win8_ReignScores_ID;
 			#elif UNITY_WP8
-			var scoreoidID = leaderboardDesc.WP8_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.WP8_ReignScores_ID;
 			#elif UNITY_BLACKBERRY
-			var scoreoidID = leaderboardDesc.BB10_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.BB10_ReignScores_ID;
 			#elif UNITY_IPHONE
-			var scoreoidID = leaderboardDesc.iOS_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.iOS_ReignScores_ID;
 			#elif UNITY_ANDROID
-			var scoreoidID = leaderboardDesc.Android_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Android_ReignScores_ID;
 			#endif
 
 			// report score
 			var form = new WWWForm();
-			form.AddField("api_key", apiKey);
-			form.AddField("game_id", gameID);
-			form.AddField("response", "xml");
-			form.AddField("platform", scoreoidID.ToString());
-			form.AddField("username", UserID);
+			form.AddField("api_key", userAPIKey);
+			form.AddField("user_id", UserID);
+			form.AddField("leaderboard_id", leaderboardID.ToString());
 			form.AddField("score", score.ToString());
-			var www = new WWW(scoreoidURL+"createScore", form);
+			var www = new WWW(reignScoresURL+"Users/ReportScore.cshtml", form);
 			yield return www;
 			string error;
 			if (!string.IsNullOrEmpty(www.error))
 			{
-				error = "Scoreoid createScore failed: " + www.error;
+				error = "ReignScores ReportScore failed: " + www.error;
 				Debug.LogError(error);
 				if (callback != null) callback(false, error);
 				yield break;
 			}
 
-			if (!checkError(www, out error))
+			XML.WebResponse response;
+			if (!checkError(www, out response, out error))
 			{
-				try
-				{
-					var xml = new XmlSerializer(typeof(ScoreoidXML.success));
-					using (var data = new MemoryStream(www.bytes))
-					{
-						var scoreXML = (ScoreoidXML.success)xml.Deserialize(data);
-						Debug.Log("Scoreoid createScore success: " + scoreXML.Content);
-						if (callback != null) callback(true, null);
-						yield break;
-					}
-				}
-				catch (Exception e)
-				{
-					Debug.Log("Server Text: " + www.text);
-					error = e.Message;
-				}
+				Debug.Log("ReignScores createScore success");
+				if (callback != null) callback(true, null);
+				yield break;
 			}
 
 			if (callback != null) callback(false, error);
@@ -432,77 +380,62 @@ namespace Reign.Plugin
 				return;
 			}
 
-			services.StartCoroutine(async_ReportScore(leaderboardID, score, leaderboardDesc, callback));
+			services.StartCoroutine(async_ReportScore(score, leaderboardDesc, callback));
 		}
 
-		private IEnumerator async_RequestScores(string leaderboardID, int offset, int range, LeaderboardDesc leaderboardDesc, RequestScoresCallbackMethod callback)
+		private IEnumerator async_RequestScores(int offset, int range, LeaderboardDesc leaderboardDesc, RequestScoresCallbackMethod callback)
 		{
 			#if UNITY_EDITOR
-			var scoreoidID = leaderboardDesc.Editor_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Editor_ReignScores_ID;
 			#elif UNITY_STANDALONE_WIN
-			var scoreoidID = leaderboardDesc.Win32_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Win32_ReignScores_ID;
 			#elif UNITY_STANDALONE_OSX
-			var scoreoidID = leaderboardDesc.OSX_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.OSX_ReignScores_ID;
 			#elif UNITY_STANDALONE_LINUX
-			var scoreoidID = leaderboardDesc.Linux_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Linux_ReignScores_ID;
 			#elif UNITY_WEBPLAYER
-			var scoreoidID = leaderboardDesc.Web_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Web_ReignScores_ID;
 			#elif UNITY_METRO
-			var scoreoidID = leaderboardDesc.Win8_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Win8_ReignScores_ID;
 			#elif UNITY_WP8
-			var scoreoidID = leaderboardDesc.WP8_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.WP8_ReignScores_ID;
 			#elif UNITY_BLACKBERRY
-			var scoreoidID = leaderboardDesc.BB10_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.BB10_ReignScores_ID;
 			#elif UNITY_IPHONE
-			var scoreoidID = leaderboardDesc.iOS_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.iOS_ReignScores_ID;
 			#elif UNITY_ANDROID
-			var scoreoidID = leaderboardDesc.Android_Scoreoid_ID;
+			var leaderboardID = leaderboardDesc.Android_ReignScores_ID;
 			#endif
 
 			// report score
 			var form = new WWWForm();
-			form.AddField("api_key", apiKey);
-			form.AddField("game_id", gameID);
-			form.AddField("response", "xml");
-			form.AddField("platform", scoreoidID.ToString());
-			form.AddField("order_by", "score");
-			form.AddField("limit", string.Format("{0},{1}", offset+1, range));
-			var www = new WWW(scoreoidURL+"getScores", form);
+			form.AddField("api_key", gameAPIKey);
+			form.AddField("leaderboard_id", leaderboardID.ToString());
+			form.AddField("limit", string.Format("{0},{1}", offset, range));
+			var www = new WWW(reignScoresURL+"Games/RequestScores.cshtml", form);
 			yield return www;
 			string error;
 			if (!string.IsNullOrEmpty(www.error))
 			{
-				error = "Scoreoid getScores failed: " + www.error;
+				error = "ReignScores RequestScores failed: " + www.error;
 				Debug.LogError(error);
 				if (callback != null) callback(null, false, error);
 				yield break;
 			}
 
-			if (!checkError(www, out error))
+			XML.WebResponse response;
+			if (!checkError(www, out response, out error))
 			{
-				try
+				int count = (response.Scores != null ? response.Scores.Count : 0);
+				var newScores = new LeaderboardScore[count];
+				for (int i = 0; i != count; ++i)
 				{
-					var xml = new XmlSerializer(typeof(ScoreoidXML.scores));
-					using (var data = new MemoryStream(www.bytes))
-					{
-						var scoreXML = (ScoreoidXML.scores)xml.Deserialize(data);
-						int count = (scoreXML.player != null ? scoreXML.player.Length : 0);
-						var newScores = new LeaderboardScore[count];
-						for (int i = 0; i != count; ++i)
-						{
-							newScores[i] = new LeaderboardScore(scoreXML.player[i].username, scoreXML.player[i].score.score);
-						}
+					newScores[i] = new LeaderboardScore(response.Scores[i].Username, response.Scores[i].Score);
+				}
 
-						Debug.Log("Scoreoid getScores success: " + count);
-						if (callback != null) callback(newScores, true, null);
-						yield break;
-					}
-				}
-				catch (Exception e)
-				{
-					Debug.Log("Server Text: " + www.text);
-					error = e.Message;
-				}
+				Debug.Log("ReignScores RequestScores success: " + count);
+				if (callback != null) callback(newScores, true, null);
+				yield break;
 			}
 
 			if (callback != null) callback(null, false, error);
@@ -518,88 +451,56 @@ namespace Reign.Plugin
 				return;
 			}
 
-			services.StartCoroutine(async_RequestScores(leaderboardID, offset, range, leaderboardDesc, callback));
+			services.StartCoroutine(async_RequestScores(offset, range, leaderboardDesc, callback));
 		}
 
-		private IEnumerator async_ReportAchievement(string achievementID, AchievementDesc achievementDesc, ReportAchievementCallbackMethod callback)
+		private IEnumerator async_ReportAchievement(AchievementDesc achievementDesc, float percentComplete, ReportAchievementCallbackMethod callback)
 		{
 			#if UNITY_EDITOR
-			var scoreoidID = achievementDesc.Editor_Scoreoid_ID;
+			var achievementID = achievementDesc.Editor_ReignScores_ID;
 			#elif UNITY_STANDALONE_WIN
-			var scoreoidID = achievementDesc.Win32_Scoreoid_ID;
+			var achievementID = achievementDesc.Win32_ReignScores_ID;
 			#elif UNITY_STANDALONE_OSX
-			var scoreoidID = achievementDesc.OSX_Scoreoid_ID;
+			var achievementID = achievementDesc.OSX_ReignScores_ID;
 			#elif UNITY_STANDALONE_LINUX
-			var scoreoidID = achievementDesc.Linux_Scoreoid_ID;
+			var achievementID = achievementDesc.Linux_ReignScores_ID;
 			#elif UNITY_WEBPLAYER
-			var scoreoidID = achievementDesc.Web_Scoreoid_ID;
+			var achievementID = achievementDesc.Web_ReignScores_ID;
 			#elif UNITY_METRO
-			var scoreoidID = achievementDesc.Win8_Scoreoid_ID;
+			var achievementID = achievementDesc.Win8_ReignScores_ID;
 			#elif UNITY_WP8
-			var scoreoidID = achievementDesc.WP8_Scoreoid_ID;
+			var achievementID = achievementDesc.WP8_ReignScores_ID;
 			#elif UNITY_BLACKBERRY
-			var scoreoidID = achievementDesc.BB10_Scoreoid_ID;
+			var achievementID = achievementDesc.BB10_ReignScores_ID;
 			#elif UNITY_IPHONE
-			var scoreoidID = achievementDesc.iOS_Scoreoid_ID;
+			var achievementID = achievementDesc.iOS_ReignScores_ID;
 			#elif UNITY_ANDROID
-			var scoreoidID = achievementDesc.Android_Scoreoid_ID;
+			var achievementID = achievementDesc.Android_ReignScores_ID;
 			#endif
 
-			// append achievement string
-			var achievementIDs = achievementString.Split(',');
-			string newAchievementString = "";
-			foreach (var achievement in achievementIDs)
-			{
-				if (achievement == scoreoidID)
-				{
-					// already achieved
-					if (callback != null) callback(true, null);
-					yield break;
-				}
-
-				newAchievementString += string.IsNullOrEmpty(newAchievementString) ? achievement : (','+achievement);
-			}
-
-			newAchievementString += string.IsNullOrEmpty(newAchievementString) ? scoreoidID : (','+scoreoidID);
-			
 			// report achievement
 			var form = new WWWForm();
-			form.AddField("api_key", apiKey);
-			form.AddField("game_id", gameID);
-			form.AddField("response", "xml");
-			form.AddField("username", UserID);
-			form.AddField("field", "achievements");
-			form.AddField("value", newAchievementString);
-			var www = new WWW(scoreoidURL+"updatePlayerField", form);
+			form.AddField("api_key", userAPIKey);
+			form.AddField("user_id", UserID);
+			form.AddField("achievement_id", achievementID.ToString());
+			form.AddField("percent_complete", percentComplete.ToString());
+			var www = new WWW(reignScoresURL+"Users/RequestAchievments.cshtml", form);
 			yield return www;
 			string error;
 			if (!string.IsNullOrEmpty(www.error))
 			{
-				error = "Scoreoid updatePlayerField failed: " + www.error;
+				error = "ReignScores RequestAchievments failed: " + www.error;
 				Debug.LogError(error);
 				if (callback != null) callback(false, error);
 				yield break;
 			}
 
-			if (!checkError(www, out error))
+			XML.WebResponse response;
+			if (!checkError(www, out response, out error))
 			{
-				try
-				{
-					var xml = new XmlSerializer(typeof(ScoreoidXML.success));
-					using (var data = new MemoryStream(www.bytes))
-					{
-						var success = (ScoreoidXML.success)xml.Deserialize(data);
-						achievementString = newAchievementString;
-						Debug.Log("Scoreoid updatePlayerField success: " + success.Content);
-						if (callback != null) callback(true, null);
-						yield break;
-					}
-				}
-				catch (Exception e)
-				{
-					Debug.Log("Server Text: " + www.text);
-					error = e.Message;
-				}
+				Debug.Log("ReignScores RequestAchievments success");
+				if (callback != null) callback(true, null);
+				yield break;
 			}
 
 			if (callback != null) callback(false, error);
@@ -615,12 +516,12 @@ namespace Reign.Plugin
 				return;
 			}
 
-			services.StartCoroutine(async_ReportAchievement(achievementID, achievementDesc, callback));
+			services.StartCoroutine(async_ReportAchievement(achievementDesc, 100, callback));
 		}
 		
 		public void RequestAchievements(RequestAchievementsCallbackMethod callback)
 		{
-			// get pre-loaded achievements
+			/*// get pre-loaded achievements
 			var achievementIDs = achievementString.Split(',');
 			var newAchievements = new Achievement[desc.AchievementDescs.Length];
 			for (int i = 0; i != desc.AchievementDescs.Length; ++i)
@@ -632,27 +533,27 @@ namespace Reign.Plugin
 				foreach (var achievementID in achievementIDs)
 				{
 					#if UNITY_EDITOR
-					string id = achDesc.Editor_Scoreoid_ID;
+					string id = achDesc.Editor_ReignScores_ID;
 					#elif UNITY_STANDALONE_WIN
-					var id = achDesc.Win32_Scoreoid_ID;
+					var id = achDesc.Win32_ReignScores_ID;
 					#elif UNITY_STANDALONE_OSX
-					var id = achDesc.OSX_Scoreoid_ID;
+					var id = achDesc.OSX_ReignScores_ID;
 					#elif UNITY_STANDALONE_LINUX
-					var id = achDesc.Linux_Scoreoid_ID;
+					var id = achDesc.Linux_ReignScores_ID;
 					#elif UNITY_WEBPLAYER
-					var id = achDesc.Web_Scoreoid_ID;
+					var id = achDesc.Web_ReignScores_ID;
 					#elif UNITY_METRO
-					var id = achDesc.Win8_Scoreoid_ID;
+					var id = achDesc.Win8_ReignScores_ID;
 					#elif UNITY_WP8
-					var id = achDesc.WP8_Scoreoid_ID;
+					var id = achDesc.WP8_ReignScores_ID;
 					#elif UNITY_BLACKBERRY
-					var id = achDesc.BB10_Scoreoid_ID;
+					var id = achDesc.BB10_ReignScores_ID;
 					#elif UNITY_BLACKBERRY
-					var id = achDesc.iOS_Scoreoid_ID;
+					var id = achDesc.iOS_ReignScores_ID;
 					#elif UNITY_IPHONE
-					var id = achDesc.iOS_Scoreoid_ID;
+					var id = achDesc.iOS_ReignScores_ID;
 					#elif UNITY_ANDROID
-					var id = achDesc.Android_Scoreoid_ID;
+					var id = achDesc.Android_ReignScores_ID;
 					#endif
 					if (achievementID == id)
 					{
@@ -678,7 +579,7 @@ namespace Reign.Plugin
 
 				if (achievedTexture == null)
 				{
-					string fileName = "Reign/Scoreoid/" + achDesc.ID + "_achieved";
+					string fileName = "Reign/ReignScores/" + achDesc.ID + "_achieved";
 					achievedTexture = (Texture)Resources.Load(fileName);
 					if (achievedTexture == null)
 					{
@@ -691,7 +592,7 @@ namespace Reign.Plugin
 
 				if (unachievedTexture == null)
 				{
-					string fileName = "Reign/Scoreoid/" + achDesc.ID + "_unachieved";
+					string fileName = "Reign/ReignScores/" + achDesc.ID + "_unachieved";
 					unachievedTexture = (Texture)Resources.Load(fileName);
 					if (unachievedTexture == null)
 					{
@@ -707,7 +608,7 @@ namespace Reign.Plugin
 			}
 
 			achievements = newAchievements;
-			if (callback != null) callback(achievements, true, null);
+			if (callback != null) callback(achievements, true, null);*/
 		}
 
 		private ShowNativeViewDoneCallbackMethod guiShowNativeViewDoneCallback;
@@ -717,12 +618,12 @@ namespace Reign.Plugin
 			if (succeeded)
 			{
 				guiScores = scores;
-				guiMode = Scoreoid_GuiModes.ShowingScores;
+				guiMode = ReignScores_GuiModes.ShowingScores;
 			}
 			else
 			{
 				PerformingGUIOperation = false;
-				guiMode = Scoreoid_GuiModes.None;
+				guiMode = ReignScores_GuiModes.None;
 				if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(false, errorMessage);
 			}
 		}
@@ -731,12 +632,12 @@ namespace Reign.Plugin
 		private string guiLeaderboardID;
 		public void ShowNativeScoresPage(string leaderboardID, ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
 		{
-			guiMode = Scoreoid_GuiModes.LoadingScores;
+			guiMode = ReignScores_GuiModes.LoadingScores;
 			PerformingGUIOperation = true;
 			guiShowNativeViewDoneCallback = callback;
 			guiLeaderboardID = leaderboardID;
 			guiScoreOffset = 0;
-			RequestScores(leaderboardID, guiScoreOffset, desc.Scoreoid_TopScoresToListPerPage, guiRequestScoresCallback, services);
+			RequestScores(leaderboardID, guiScoreOffset, desc.ReignScores_TopScoresToListPerPage, guiRequestScoresCallback, services);
 		}
 
 		private Achievement[] guiAchievements;
@@ -745,12 +646,12 @@ namespace Reign.Plugin
 			if (succeeded)
 			{
 				guiAchievements = achievements;
-				guiMode = Scoreoid_GuiModes.ShowingAchievements;
+				guiMode = ReignScores_GuiModes.ShowingAchievements;
 			}
 			else
 			{
 				PerformingGUIOperation = false;
-				guiMode = Scoreoid_GuiModes.None;
+				guiMode = ReignScores_GuiModes.None;
 				if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(false, errorMessage);
 			}
 		}
@@ -758,7 +659,7 @@ namespace Reign.Plugin
 		private int guiAchievementOffset;
 		public void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback)
 		{
-			guiMode = Scoreoid_GuiModes.LoadingAchievements;
+			guiMode = ReignScores_GuiModes.LoadingAchievements;
 			PerformingGUIOperation = true;
 			guiAchievementOffset = 0;
 			guiShowNativeViewDoneCallback = callback;
@@ -824,19 +725,19 @@ namespace Reign.Plugin
 		private string userAccount_Name = "", userAccount_Pass = "", userAccount_ConfPass = "", errorText;
 		public void OnGUI()
 		{
-			if (guiMode == Scoreoid_GuiModes.None) return;
+			if (guiMode == ReignScores_GuiModes.None) return;
 
 			GUI.color = Color.white;
 			GUI.matrix = Matrix4x4.identity;
 			float scale = new Vector2(Screen.width, Screen.height).magnitude / new Vector2(1280, 720).magnitude;
 
 			// draw background
-			if (desc.Scoreoid_BackgroudTexture != null)
+			if (desc.ReignScores_BackgroudTexture != null)
 			{
-				var size = fillView(desc.Scoreoid_BackgroudTexture.width, desc.Scoreoid_BackgroudTexture.height, Screen.width, Screen.height);
+				var size = fillView(desc.ReignScores_BackgroudTexture.width, desc.ReignScores_BackgroudTexture.height, Screen.width, Screen.height);
 				float offsetX = -Mathf.Max((size.x-Screen.width)*.5f, 0f);
 				float offsetY = -Mathf.Max((size.y-Screen.height)*.5f, 0f);
-				GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), desc.Scoreoid_BackgroudTexture);
+				GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), desc.ReignScores_BackgroudTexture);
 			}
 
 			float buttonWidth = 128 * scale;
@@ -844,16 +745,16 @@ namespace Reign.Plugin
 			float textWidth = 256 * scale;
 			float textHeight = 32 * scale;
 			float y = Screen.height / 2;
-			if (guiMode == Scoreoid_GuiModes.Login)
+			if (guiMode == ReignScores_GuiModes.Login)
 			{
 				// title
-				if (!string.IsNullOrEmpty(desc.Scoreoid_LoginTitle))
+				if (!string.IsNullOrEmpty(desc.ReignScores_LoginTitle))
 				{
 					var style = new GUIStyle();
 					style.fontSize = (int)(128 * scale);
 					style.alignment = TextAnchor.MiddleCenter;
 					style.normal.textColor = Color.white;
-					GUI.Label(new Rect(0, 0, Screen.width, Screen.height/4), desc.Scoreoid_LoginTitle, style);
+					GUI.Label(new Rect(0, 0, Screen.width, Screen.height/4), desc.ReignScores_LoginTitle, style);
 				}
 
 				// labels
@@ -870,7 +771,7 @@ namespace Reign.Plugin
 				if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, buttonWidth, buttonHeight), "Cancel"))
 				{
 					errorText = null;
-					guiMode = Scoreoid_GuiModes.None;
+					guiMode = ReignScores_GuiModes.None;
 					PerformingGUIOperation = false;
 					if (guiAuthenticateCallback != null) guiAuthenticateCallback(false, "Canceled");
 				}
@@ -895,7 +796,7 @@ namespace Reign.Plugin
 					if (validInfo)
 					{
 						PerformingGUIOperation = true;
-						guiMode = Scoreoid_GuiModes.LoggingIn;
+						guiMode = ReignScores_GuiModes.LoggingIn;
 						guiServices.StartCoroutine(login(userAccount_Name, userAccount_Pass, guiAuthenticateCallbackTEMP));
 					}
 				}
@@ -903,20 +804,20 @@ namespace Reign.Plugin
 				y += buttonHeight * 2;
 				if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, (buttonWidth*2)+(10*scale), buttonHeight), "Create New User"))
 				{
-					guiMode = Scoreoid_GuiModes.CreateUser;
+					guiMode = ReignScores_GuiModes.CreateUser;
 					errorText = null;
 				}
 			}
-			else if (guiMode == Scoreoid_GuiModes.CreateUser)
+			else if (guiMode == ReignScores_GuiModes.CreateUser)
 			{
 				// title
-				if (!string.IsNullOrEmpty(desc.Scoreoid_CreateUserTitle))
+				if (!string.IsNullOrEmpty(desc.ReignScores_CreateUserTitle))
 				{
 					var style = new GUIStyle();
 					style.fontSize = (int)(128 * scale);
 					style.alignment = TextAnchor.MiddleCenter;
 					style.normal.textColor = Color.white;
-					GUI.Label(new Rect(0, 0, Screen.width, Screen.height/4), desc.Scoreoid_CreateUserTitle, style);
+					GUI.Label(new Rect(0, 0, Screen.width, Screen.height/4), desc.ReignScores_CreateUserTitle, style);
 				}
 
 				// labels
@@ -936,7 +837,7 @@ namespace Reign.Plugin
 				if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, buttonWidth, buttonHeight), "Cancel"))
 				{
 					errorText = null;
-					guiMode = Scoreoid_GuiModes.None;
+					guiMode = ReignScores_GuiModes.None;
 					PerformingGUIOperation = false;
 					if (guiAuthenticateCallback != null) guiAuthenticateCallback(false, "Canceled");
 				}
@@ -973,7 +874,7 @@ namespace Reign.Plugin
 					if (validInfo)
 					{
 						PerformingGUIOperation = true;
-						guiMode = Scoreoid_GuiModes.CreatingUser;
+						guiMode = ReignScores_GuiModes.CreatingUser;
 						guiServices.StartCoroutine(createUser(userAccount_Name, userAccount_Pass, guiAuthenticateCallbackTEMP));
 					}
 				}
@@ -981,11 +882,11 @@ namespace Reign.Plugin
 				y += buttonHeight * 2;
 				if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, (buttonWidth*2)+(10*scale), buttonHeight), "Login Existing User"))
 				{
-					guiMode = Scoreoid_GuiModes.Login;
+					guiMode = ReignScores_GuiModes.Login;
 					errorText = null;
 				}
 			}
-			else if (guiMode == Scoreoid_GuiModes.LoggingIn)
+			else if (guiMode == ReignScores_GuiModes.LoggingIn)
 			{
 				var style = new GUIStyle();
 				style.fontSize = (int)(128 * scale);
@@ -993,70 +894,70 @@ namespace Reign.Plugin
 				style.normal.textColor = Color.white;
 				GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "Logging In...", style);
 			}
-			else if (guiMode == Scoreoid_GuiModes.ShowingScores)
+			else if (guiMode == ReignScores_GuiModes.ShowingScores)
 			{
-				if (desc.Scoreoid_TopScoreBoardTexture != null)
+				if (desc.ReignScores_TopScoreBoardTexture != null)
 				{
 					// draw board
-					var size = fitInView(desc.Scoreoid_TopScoreBoardTexture.width, desc.Scoreoid_TopScoreBoardTexture.height, Screen.width, Screen.height);
+					var size = fitInView(desc.ReignScores_TopScoreBoardTexture.width, desc.ReignScores_TopScoreBoardTexture.height, Screen.width, Screen.height);
 					float offsetX = (Screen.width*.5f)-(size.x*.5f);
 					float offsetY = (Screen.height*.5f)-(size.y*.5f);
-					GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), desc.Scoreoid_TopScoreBoardTexture);
+					GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), desc.ReignScores_TopScoreBoardTexture);
 
 					// get main scale value
-					var mainScale = scaleToFitInView(desc.Scoreoid_TopScoreBoardTexture.width, desc.Scoreoid_TopScoreBoardTexture.height, Screen.width, Screen.height);
+					var mainScale = scaleToFitInView(desc.ReignScores_TopScoreBoardTexture.width, desc.ReignScores_TopScoreBoardTexture.height, Screen.width, Screen.height);
 
 					// handle buttons
-					if (Input.GetKeyUp(KeyCode.Escape) || processButton(desc.Scoreoid_TopScoreBoardFrame_CloseBox, desc.Scoreoid_TopScoreBoardButton_CloseNormal, desc.Scoreoid_TopScoreBoardButton_CloseHover, mainScale, offsetX, offsetY))
+					if (Input.GetKeyUp(KeyCode.Escape) || processButton(desc.ReignScores_TopScoreBoardFrame_CloseBox, desc.ReignScores_TopScoreBoardButton_CloseNormal, desc.ReignScores_TopScoreBoardButton_CloseHover, mainScale, offsetX, offsetY))
 					{
 						PerformingGUIOperation = false;
-						guiMode = Scoreoid_GuiModes.None;
+						guiMode = ReignScores_GuiModes.None;
 						if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(true, null);
 					}
 
-					if (processButton(desc.Scoreoid_TopScoreBoardFrame_PrevButton, desc.Scoreoid_TopScoreBoardButton_PrevNormal, desc.Scoreoid_TopScoreBoardButton_PrevHover, mainScale, offsetX, offsetY))
+					if (processButton(desc.ReignScores_TopScoreBoardFrame_PrevButton, desc.ReignScores_TopScoreBoardButton_PrevNormal, desc.ReignScores_TopScoreBoardButton_PrevHover, mainScale, offsetX, offsetY))
 					{
 						if (guiScoreOffset != 0)
 						{
-							guiScoreOffset -= desc.Scoreoid_TopScoresToListPerPage;
+							guiScoreOffset -= desc.ReignScores_TopScoresToListPerPage;
 							if (guiScoreOffset < 0) guiScoreOffset = 0;
-							RequestScores(guiLeaderboardID, guiScoreOffset, desc.Scoreoid_TopScoresToListPerPage, guiRequestScoresCallback, guiServices);
+							RequestScores(guiLeaderboardID, guiScoreOffset, desc.ReignScores_TopScoresToListPerPage, guiRequestScoresCallback, guiServices);
 						}
 					}
 
-					if (processButton(desc.Scoreoid_TopScoreBoardFrame_NextButton, desc.Scoreoid_TopScoreBoardButton_NextNormal, desc.Scoreoid_TopScoreBoardButton_NextHover, mainScale, offsetX, offsetY))
+					if (processButton(desc.ReignScores_TopScoreBoardFrame_NextButton, desc.ReignScores_TopScoreBoardButton_NextNormal, desc.ReignScores_TopScoreBoardButton_NextHover, mainScale, offsetX, offsetY))
 					{
-						if (guiScores.Length == desc.Scoreoid_TopScoresToListPerPage)
+						if (guiScores.Length == desc.ReignScores_TopScoresToListPerPage)
 						{
-							guiScoreOffset += desc.Scoreoid_TopScoresToListPerPage;
-							RequestScores(guiLeaderboardID, guiScoreOffset, desc.Scoreoid_TopScoresToListPerPage, guiRequestScoresCallback, guiServices);
+							guiScoreOffset += desc.ReignScores_TopScoresToListPerPage;
+							RequestScores(guiLeaderboardID, guiScoreOffset, desc.ReignScores_TopScoresToListPerPage, guiRequestScoresCallback, guiServices);
 						}
 					}
 
 					// draw names and scores
-					var usernameRect = calculateFrame(desc.Scoreoid_TopScoreBoardFrame_Usernames, mainScale, offsetX, offsetY);
-					var scoreRect = calculateFrame(desc.Scoreoid_TopScoreBoardFrame_Scores, mainScale, offsetX, offsetY);
-					if (desc.Scoreoid_EnableTestRects)
+					var usernameRect = calculateFrame(desc.ReignScores_TopScoreBoardFrame_Usernames, mainScale, offsetX, offsetY);
+					var scoreRect = calculateFrame(desc.ReignScores_TopScoreBoardFrame_Scores, mainScale, offsetX, offsetY);
+					if (desc.ReignScores_EnableTestRects)
 					{
 						GUI.Button(usernameRect, "TEST RECT");
 						GUI.Button(scoreRect, "TEST RECT");
 					}
 					var style = new GUIStyle();
-					style.fontSize = (int)(desc.Scoreoid_TopScoreBoardFont_Size * scale);
+					style.fontSize = (int)(desc.ReignScores_TopScoreBoardFont_Size * scale);
 					style.alignment = TextAnchor.LowerLeft;
-					style.normal.textColor = desc.Scoreoid_TopScoreBoardFont_Color;
+					style.normal.textColor = desc.ReignScores_TopScoreBoardFont_Color;
 					int userI = 0, scoreI = 0;
 					foreach (var score in guiScores)
 					{
 						// username
-						float height = usernameRect.height / desc.Scoreoid_TopScoresToListPerPage;
+						float height = usernameRect.height / desc.ReignScores_TopScoresToListPerPage;
 						GUI.Label(new Rect(usernameRect.x, usernameRect.y + userI, usernameRect.width, height), score.UserName, style);
 						userI += (int)height;
 
 						// score
-						height = scoreRect.height / desc.Scoreoid_TopScoresToListPerPage;
+						height = scoreRect.height / desc.ReignScores_TopScoresToListPerPage;
 						string scoreValue;
-						if (desc.Scoreoid_ScoreFormatCallback != null) desc.Scoreoid_ScoreFormatCallback(score.Score, out scoreValue);
+						if (desc.ReignScores_ScoreFormatCallback != null) desc.ReignScores_ScoreFormatCallback(score.Score, out scoreValue);
 						else scoreValue = score.Score.ToString();
 						GUI.Label(new Rect(scoreRect.x, scoreRect.y + scoreI, scoreRect.width, height), scoreValue, style);
 						scoreI += (int)height;
@@ -1064,68 +965,68 @@ namespace Reign.Plugin
 				}
 				else
 				{
-					errorText = "Scoreoid_TopScoreBoardTexture MUST be set!";
+					errorText = "ReignScores_TopScoreBoardTexture MUST be set!";
 					Debug.LogError(errorText);
 				}
 			}
-			else if (guiMode == Scoreoid_GuiModes.ShowingAchievements)
+			else if (guiMode == ReignScores_GuiModes.ShowingAchievements)
 			{
-				if (desc.Scoreoid_AchievementBoardTexture != null)
+				if (desc.ReignScores_AchievementBoardTexture != null)
 				{
 					// draw board
-					var size = fitInView(desc.Scoreoid_AchievementBoardTexture.width, desc.Scoreoid_AchievementBoardTexture.height, Screen.width, Screen.height);
+					var size = fitInView(desc.ReignScores_AchievementBoardTexture.width, desc.ReignScores_AchievementBoardTexture.height, Screen.width, Screen.height);
 					float offsetX = (Screen.width*.5f)-(size.x*.5f);
 					float offsetY = (Screen.height*.5f)-(size.y*.5f);
-					GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), desc.Scoreoid_AchievementBoardTexture);
+					GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), desc.ReignScores_AchievementBoardTexture);
 
 					// get main scale value
-					var mainScale = scaleToFitInView(desc.Scoreoid_AchievementBoardTexture.width, desc.Scoreoid_AchievementBoardTexture.height, Screen.width, Screen.height);
+					var mainScale = scaleToFitInView(desc.ReignScores_AchievementBoardTexture.width, desc.ReignScores_AchievementBoardTexture.height, Screen.width, Screen.height);
 
 					// handle buttons
-					if (Input.GetKeyUp(KeyCode.Escape) || processButton(desc.Scoreoid_AchievementBoardFrame_CloseBox, desc.Scoreoid_AchievementBoardButton_CloseNormal, desc.Scoreoid_AchievementBoardButton_CloseHover, mainScale, offsetX, offsetY))
+					if (Input.GetKeyUp(KeyCode.Escape) || processButton(desc.ReignScores_AchievementBoardFrame_CloseBox, desc.ReignScores_AchievementBoardButton_CloseNormal, desc.ReignScores_AchievementBoardButton_CloseHover, mainScale, offsetX, offsetY))
 					{
 						PerformingGUIOperation = false;
-						guiMode = Scoreoid_GuiModes.None;
+						guiMode = ReignScores_GuiModes.None;
 						if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(true, null);
 					}
 
-					if (processButton(desc.Scoreoid_AchievementBoardFrame_PrevButton, desc.Scoreoid_AchievementBoardButton_PrevNormal, desc.Scoreoid_AchievementBoardButton_PrevHover, mainScale, offsetX, offsetY))
+					if (processButton(desc.ReignScores_AchievementBoardFrame_PrevButton, desc.ReignScores_AchievementBoardButton_PrevNormal, desc.ReignScores_AchievementBoardButton_PrevHover, mainScale, offsetX, offsetY))
 					{
 						if (guiAchievementOffset != 0)
 						{
-							guiAchievementOffset -= desc.Scoreoid_AchievementsToListPerPage;
+							guiAchievementOffset -= desc.ReignScores_AchievementsToListPerPage;
 							if (guiAchievementOffset < 0) guiAchievementOffset = 0;
 						}
 					}
 
-					if (processButton(desc.Scoreoid_AchievementBoardFrame_NextButton, desc.Scoreoid_AchievementBoardButton_NextNormal, desc.Scoreoid_AchievementBoardButton_NextHover, mainScale, offsetX, offsetY))
+					if (processButton(desc.ReignScores_AchievementBoardFrame_NextButton, desc.ReignScores_AchievementBoardButton_NextNormal, desc.ReignScores_AchievementBoardButton_NextHover, mainScale, offsetX, offsetY))
 					{
-						if (guiAchievementOffset + desc.Scoreoid_AchievementsToListPerPage < guiAchievements.Length)
+						if (guiAchievementOffset + desc.ReignScores_AchievementsToListPerPage < guiAchievements.Length)
 						{
-							guiAchievementOffset += desc.Scoreoid_AchievementsToListPerPage;
+							guiAchievementOffset += desc.ReignScores_AchievementsToListPerPage;
 						}
 					}
 
 					// draw names and scores
-					var nameRect = calculateFrame(desc.Scoreoid_AchievementBoardFrame_Names, mainScale, offsetX, offsetY);
-					var descRect = calculateFrame(desc.Scoreoid_AchievementBoardFrame_Descs, mainScale, offsetX, offsetY);
-					if (desc.Scoreoid_EnableTestRects)
+					var nameRect = calculateFrame(desc.ReignScores_AchievementBoardFrame_Names, mainScale, offsetX, offsetY);
+					var descRect = calculateFrame(desc.ReignScores_AchievementBoardFrame_Descs, mainScale, offsetX, offsetY);
+					if (desc.ReignScores_EnableTestRects)
 					{
 						GUI.Button(nameRect, "TEST RECT");
 						GUI.Button(descRect, "TEST RECT");
 					}
 					var style = new GUIStyle();
-					style.fontSize = (int)(desc.Scoreoid_AchievementBoardFont_Size * scale);
+					style.fontSize = (int)(desc.ReignScores_AchievementBoardFont_Size * scale);
 					style.alignment = TextAnchor.LowerLeft;
-					style.normal.textColor = desc.Scoreoid_AchievementBoardFont_Color;
+					style.normal.textColor = desc.ReignScores_AchievementBoardFont_Color;
 					int nameI = 0, descI = 0;
-					for (int i = guiAchievementOffset; i < guiAchievementOffset+desc.Scoreoid_AchievementsToListPerPage; ++i)
+					for (int i = guiAchievementOffset; i < guiAchievementOffset+desc.ReignScores_AchievementsToListPerPage; ++i)
 					{
 						if (i == guiAchievements.Length) break;
 						var ach = guiAchievements[i];
 
 						// icon
-						float height = nameRect.height / desc.Scoreoid_AchievementsToListPerPage;
+						float height = nameRect.height / desc.ReignScores_AchievementsToListPerPage;
 						float iconSize = height * .8f;
 						GUI.DrawTexture(new Rect(nameRect.x, nameRect.y + nameI + height - iconSize, iconSize, iconSize), ach.IsAchieved ? ach.AchievedImage : ach.UnachievedImage);
 
@@ -1134,18 +1035,18 @@ namespace Reign.Plugin
 						nameI += (int)height;
 
 						// desc
-						height = descRect.height / desc.Scoreoid_AchievementsToListPerPage;
+						height = descRect.height / desc.ReignScores_AchievementsToListPerPage;
 						GUI.Label(new Rect(descRect.x, descRect.y + descI, descRect.width, height), ach.Desc, style);
 						descI += (int)height;
 					}
 				}
 				else
 				{
-					errorText = "Scoreoid_AchievementBoardTexture MUST be set!";
+					errorText = "ReignScores_AchievementBoardTexture MUST be set!";
 					Debug.LogError(errorText);
 				}
 			}
-			else if (guiMode == Scoreoid_GuiModes.CreatingUser)
+			else if (guiMode == ReignScores_GuiModes.CreatingUser)
 			{
 				var style = new GUIStyle();
 				style.fontSize = (int)(128 * scale);
@@ -1153,7 +1054,7 @@ namespace Reign.Plugin
 				style.normal.textColor = Color.white;
 				GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "Creating User...", style);
 			}
-			else if (guiMode == Scoreoid_GuiModes.LoadingScores || guiMode == Scoreoid_GuiModes.LoadingAchievements)
+			else if (guiMode == ReignScores_GuiModes.LoadingScores || guiMode == ReignScores_GuiModes.LoadingAchievements)
 			{
 				var style = new GUIStyle();
 				style.fontSize = (int)(128 * scale);
@@ -1202,7 +1103,7 @@ namespace Reign.Plugin
 
 			if (pass)
 			{
-				if (desc.Scoreoid_AudioSource != null && desc.Scoreoid_ButtonClick != null) desc.Scoreoid_AudioSource.PlayOneShot(desc.Scoreoid_ButtonClick);
+				if (desc.ReignScores_AudioSource != null && desc.ReignScores_ButtonClick != null) desc.ReignScores_AudioSource.PlayOneShot(desc.ReignScores_ButtonClick);
 				return true;
 			}
 
@@ -1214,15 +1115,15 @@ namespace Reign.Plugin
 			if (success)
 			{
 				PerformingGUIOperation = false;
-				guiMode = Scoreoid_GuiModes.None;
+				guiMode = ReignScores_GuiModes.None;
 				if (guiAuthenticateCallback != null) guiAuthenticateCallback(true, null);
 			}
 			else
 			{
 				Debug.LogError(errorMessage);
 				errorText = errorMessage;
-				if (guiMode == Scoreoid_GuiModes.LoggingIn) guiMode = Scoreoid_GuiModes.Login;
-				else if (guiMode == Scoreoid_GuiModes.CreatingUser) guiMode = Scoreoid_GuiModes.CreateUser;
+				if (guiMode == ReignScores_GuiModes.LoggingIn) guiMode = ReignScores_GuiModes.Login;
+				else if (guiMode == ReignScores_GuiModes.CreatingUser) guiMode = ReignScores_GuiModes.CreateUser;
 			}
 		}
 
