@@ -23,6 +23,12 @@ namespace Reign.Plugin
 			[XmlElement("Score")] public int Score;
 		}
 
+		public class WebResponse_Achievement
+		{
+			[XmlElement("ID")] public string ID;
+			[XmlElement("PercentComplete")] public float PercentComplete;
+		}
+
 		[XmlRoot("ClientResponse")]
 		public class WebResponse
 		{
@@ -30,6 +36,7 @@ namespace Reign.Plugin
 			[XmlElement("ErrorMessage")] public string ErrorMessage;
 			[XmlElement("UserID")] public string UserID;
 			[XmlElement("Score")] public List<WebResponse_Score> Scores;
+			[XmlElement("Achievement")] public List<WebResponse_Achievement> Achievements;
 
 			public WebResponse() {}
 			public WebResponse(ResponseTypes type)
@@ -484,7 +491,7 @@ namespace Reign.Plugin
 			form.AddField("user_id", UserID);
 			form.AddField("achievement_id", achievementID.ToString());
 			form.AddField("percent_complete", percentComplete.ToString());
-			var www = new WWW(reignScoresURL+"Users/RequestAchievments.cshtml", form);
+			var www = new WWW(reignScoresURL+"Users/ReportAchievement.cshtml", form);
 			yield return www;
 			string error;
 			if (!string.IsNullOrEmpty(www.error))
@@ -518,97 +525,106 @@ namespace Reign.Plugin
 
 			services.StartCoroutine(async_ReportAchievement(achievementDesc, 100, callback));
 		}
-		
-		public void RequestAchievements(RequestAchievementsCallbackMethod callback)
+
+		private IEnumerator async_RequestAchievements(RequestAchievementsCallbackMethod callback)
 		{
-			/*// get pre-loaded achievements
-			var achievementIDs = achievementString.Split(',');
-			var newAchievements = new Achievement[desc.AchievementDescs.Length];
-			for (int i = 0; i != desc.AchievementDescs.Length; ++i)
+			var form = new WWWForm();
+			form.AddField("api_key", userAPIKey);
+			form.AddField("user_id", UserID);
+			var www = new WWW(reignScoresURL+"Users/RequestAchievements.cshtml", form);
+			yield return www;
+			string error;
+			if (!string.IsNullOrEmpty(www.error))
 			{
-				var achDesc = desc.AchievementDescs[i];
+				error = "ReignScores RequestAchievments failed: " + www.error;
+				Debug.LogError(error);
+				if (callback != null) callback(null, false, error);
+				yield break;
+			}
 
-				// check if is achieved
-				bool isAchieved = false;
-				foreach (var achievementID in achievementIDs)
+			XML.WebResponse response;
+			if (!checkError(www, out response, out error))
+			{
+				if (achievements == null) achievements = new Achievement[desc.AchievementDescs.Length];
+				for (int i = 0; i != achievements.Length; ++i)
 				{
+					var a = desc.AchievementDescs[i];
 					#if UNITY_EDITOR
-					string id = achDesc.Editor_ReignScores_ID;
+					var id = a.Editor_ReignScores_ID;
 					#elif UNITY_STANDALONE_WIN
-					var id = achDesc.Win32_ReignScores_ID;
+					var id = a.Win32_ReignScores_ID;
 					#elif UNITY_STANDALONE_OSX
-					var id = achDesc.OSX_ReignScores_ID;
+					var id = a.OXS_ReignScores_ID;
 					#elif UNITY_STANDALONE_LINUX
-					var id = achDesc.Linux_ReignScores_ID;
+					var id = a.Linux_ReignScores_ID;
 					#elif UNITY_WEBPLAYER
-					var id = achDesc.Web_ReignScores_ID;
+					var id = a.Web_ReignScores_ID;
 					#elif UNITY_METRO
-					var id = achDesc.Win8_ReignScores_ID;
+					var id = a.Win8_ReignScores_ID;
 					#elif UNITY_WP8
-					var id = achDesc.WP8_ReignScores_ID;
+					var id = a.WP8_ReignScores_ID;
 					#elif UNITY_BLACKBERRY
-					var id = achDesc.BB10_ReignScores_ID;
-					#elif UNITY_BLACKBERRY
-					var id = achDesc.iOS_ReignScores_ID;
+					var id = a.BB10_ReignScores_ID;
 					#elif UNITY_IPHONE
-					var id = achDesc.iOS_ReignScores_ID;
+					var id = a.iOS_ReignScores_ID;
 					#elif UNITY_ANDROID
-					var id = achDesc.Android_ReignScores_ID;
+					var id = a.Android_ReignScores_ID;
 					#endif
-					if (achievementID == id)
-					{
-						isAchieved = true;
-						break;
-					}
-				}
 
-				// check if textures already loaded
-				Texture achievedTexture = null, unachievedTexture = null;
-				if (achievements != null)
-				{
-					foreach (var achievement in achievements)
+					// find achievement desc
+					XML.WebResponse_Achievement found = null;
+					foreach (var ach in response.Achievements)
 					{
-						if (achievement.ID == achDesc.ID)
+						if (id == new Guid(ach.ID))
 						{
-							achievedTexture = achievement.AchievedImage;
-							unachievedTexture = achievement.UnachievedImage;
+							found = ach;
 							break;
 						}
 					}
-				}
 
-				if (achievedTexture == null)
-				{
-					string fileName = "Reign/ReignScores/" + achDesc.ID + "_achieved";
-					achievedTexture = (Texture)Resources.Load(fileName);
-					if (achievedTexture == null)
+					// check achievement object exists
+					if (achievements[i] == null)
 					{
-						string error = "RequestAchievements Failed to load texture: " + fileName;
-						Debug.LogError(error);
-						if (callback != null) callback(null, false, error);
-						return;
+						string fileName = "Reign/Achievements/" + a.ID + "_achieved";
+						var achievedTexture = (Texture)Resources.Load(fileName);
+						if (achievedTexture == null)
+						{
+							error = "RequestAchievements Failed to load texture: " + fileName;
+							Debug.LogError(error);
+							if (callback != null) callback(null, false, error);
+							yield break;
+						}
+
+						fileName = "Reign/Achievements/" + a.ID + "_unachieved";
+						var unachievedTexture = (Texture)Resources.Load(fileName);
+						if (unachievedTexture == null)
+						{
+							error = "RequestAchievements Failed to load texture: " + fileName;
+							Debug.LogError(error);
+							if (callback != null) callback(null, false, error);
+							yield break;
+						}
+
+						// add achievement
+						achievements[i] = new Achievement(found.PercentComplete >= 100f, found.PercentComplete, a.ID, a.Name, a.Desc, achievedTexture, unachievedTexture);
+					}
+					else
+					{
+						achievements[i].IsAchieved = found.PercentComplete >= 100f;
+						achievements[i].PercentComplete = found.PercentComplete;
 					}
 				}
-
-				if (unachievedTexture == null)
-				{
-					string fileName = "Reign/ReignScores/" + achDesc.ID + "_unachieved";
-					unachievedTexture = (Texture)Resources.Load(fileName);
-					if (unachievedTexture == null)
-					{
-						string error = "RequestAchievements Failed to load texture: " + fileName;
-						Debug.LogError(error);
-						if (callback != null) callback(null, false, error);
-						return;
-					}
-				}
-
-				// create new entry
-				newAchievements[i] = new Achievement(isAchieved, achDesc.ID, achDesc.Name, achDesc.Desc, achievedTexture, unachievedTexture);
+				Debug.Log("ReignScores RequestAchievments success");
+				if (callback != null) callback(null, true, null);
+				yield break;
 			}
 
-			achievements = newAchievements;
-			if (callback != null) callback(achievements, true, null);*/
+			if (callback != null) callback(null, false, error);
+		}
+		
+		public void RequestAchievements(RequestAchievementsCallbackMethod callback, MonoBehaviour services)
+		{
+			services.StartCoroutine(async_RequestAchievements(callback));
 		}
 
 		private ShowNativeViewDoneCallbackMethod guiShowNativeViewDoneCallback;
@@ -657,13 +673,13 @@ namespace Reign.Plugin
 		}
 
 		private int guiAchievementOffset;
-		public void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback)
+		public void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
 		{
 			guiMode = ReignScores_GuiModes.LoadingAchievements;
 			PerformingGUIOperation = true;
 			guiAchievementOffset = 0;
 			guiShowNativeViewDoneCallback = callback;
-			RequestAchievements(guiRequestAchievementsCallback);
+			RequestAchievements(guiRequestAchievementsCallback, services);
 		}
 
 		private static Vector2 fillView(float objectWidth, float objectHeight, float viewWidth, float viewHeight)

@@ -390,7 +390,12 @@ namespace Reign
 		/// <summary>
 		/// Use to check if item is achieved
 		/// </summary>
-		public bool IsAchieved {get; private set;}
+		public bool IsAchieved {get; internal set;}
+
+		/// <summary>
+		/// Use to check percent complete of achievement
+		/// </summary>
+		public float PercentComplete {get; internal set;}
 
 		/// <summary>
 		/// Use to get achievement ID
@@ -426,9 +431,10 @@ namespace Reign
 		/// <param name="desc">Desc</param>
 		/// <param name="achievedImage">Achieved Image</param>
 		/// <param name="unachievedImage">Unachieved Image</param>
-		public Achievement(bool isAchieved, string id, string name, string desc, Texture achievedImage, Texture unachievedImage)
+		public Achievement(bool isAchieved, float percentComplete, string id, string name, string desc, Texture achievedImage, Texture unachievedImage)
 		{
 			IsAchieved = isAchieved;
+			PercentComplete = percentComplete;
 			ID = id;
 			Name = name;
 			Desc = desc;
@@ -579,7 +585,8 @@ namespace Reign.Plugin
 		/// Use to request achievements
 		/// </summary>
 		/// <param name="callback">Callback fired when done</param>
-		void RequestAchievements(RequestAchievementsCallbackMethod callback);
+		/// <param name="services">Takes in ReignServices object</param>
+		void RequestAchievements(RequestAchievementsCallbackMethod callback, MonoBehaviour services);
 
 		/// <summary>
 		/// Use to show native score page
@@ -593,7 +600,7 @@ namespace Reign.Plugin
 		/// Use to show native achievement page
 		/// </summary>
 		/// <param name="callback">Callback fired when done</param>
-		void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback);
+		void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services);
 
 		/// <summary>
 		/// Used for UI events

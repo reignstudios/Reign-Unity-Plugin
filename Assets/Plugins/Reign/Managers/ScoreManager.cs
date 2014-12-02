@@ -269,7 +269,7 @@ namespace Reign
 
 			waitingForOperation = true;
 			requestAchievementsCallback = callback;
-			plugin.RequestAchievements(async_requestAchievementsCallback);
+			plugin.RequestAchievements(async_requestAchievementsCallback, ReignServices.Singleton);
 		}
 
 		/// <summary>
@@ -304,7 +304,7 @@ namespace Reign
 
 			waitingForOperation = true;
 			showNativeViewCallback = callback;
-			plugin.ShowNativeAchievementsPage(async_showNativeViewCallback);
+			plugin.ShowNativeAchievementsPage(async_showNativeViewCallback, ReignServices.Singleton);
 		}
 	}
 }
@@ -401,7 +401,7 @@ namespace Reign.Plugin
 		/// Dumy method.
 		/// </summary>
 		/// <param name="callback"></param>
-		public void RequestAchievements(RequestAchievementsCallbackMethod callback)
+		public void RequestAchievements(RequestAchievementsCallbackMethod callback, MonoBehaviour services)
 		{
 			if (callback != null) callback(null, false, "Dumy Score Obj");
 		}
@@ -423,7 +423,7 @@ namespace Reign.Plugin
 		/// Dumy method.
 		/// </summary>
 		/// <param name="callback"></param>
-		public void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback)
+		public void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
 		{
 			if (callback != null) callback(false, "Dumy Score Obj");
 		}
