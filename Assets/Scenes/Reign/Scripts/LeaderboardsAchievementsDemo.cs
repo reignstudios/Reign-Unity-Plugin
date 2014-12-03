@@ -231,7 +231,7 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 		if (ScoreManager.IsAuthenticated)
 		{
-			GUI.Label(new Rect(0, offset, Screen.width, Screen.height/8), "Authenticated UserID: " + ScoreManager.Username);
+			GUI.Label(new Rect(0, offset, Screen.width, Screen.height/8), "Authenticated Username: " + ScoreManager.Username);
 
 			// Show Leaderboards
 			if (GUI.Button(new Rect(0, Screen.height-64, 256, 64), "Show Leaderboard Scores") || Input.GetKeyUp(KeyCode.L))

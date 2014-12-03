@@ -42,7 +42,7 @@ namespace Reign.Plugin
 		public bool IsAuthenticated {get{return isAuthenticated;}}
 
 		private static string userID;
-		public string UserID {get{return userID;}}
+		public string Username {get{return userID;}}
 
 		private static AuthenticateCallbackMethod authenticatedCallback;
 		private static ReportScoreCallbackMethod reportScoreCallback;
@@ -335,8 +335,8 @@ namespace Reign.Plugin
 			var user = SC_Session_GetUser(session);
 			var login = SC_User_GetLogin(user);
 			var name = SC_String_GetData(login);
-			userID = Marshal.PtrToStringAnsi(name);
-			Debug.Log("UserID: " + userID);
+			username = Marshal.PtrToStringAnsi(name);
+			Debug.Log("Username: " + username);
 
 			SC_UserController_Release(userController);
 
@@ -576,13 +576,13 @@ namespace Reign.Plugin
 		        IntPtr user = SC_Score_GetUser(score);
 		        IntPtr login = user != IntPtr.Zero ? SC_User_GetLogin(user) : IntPtr.Zero;
 		        
-		        string authenticateUserID = "???";
+		        string authenticateUsername = "???";
 		        if (login != IntPtr.Zero)
 		        {
 			        var name = SC_String_GetData(login);
-	    			authenticateUserID = Marshal.PtrToStringAnsi(name);
+					authenticateUsername = Marshal.PtrToStringAnsi(name);
     			}
-		        scores[i] = new LeaderboardScore(authenticateUserID, (int)SC_Score_GetResult(score));//, (int)SC_Score_GetRank(score));
+				scores[i] = new LeaderboardScore(authenticateUsername, (int)SC_Score_GetResult(score));//, (int)SC_Score_GetRank(score));
 		    }
 		
 		    SC_ScoresController_Release(scoresController);
@@ -662,7 +662,7 @@ namespace Reign.Plugin
 			if (reportAchievementCallback != null) reportAchievementCallback(true, null);
 		}
 		
-		public void RequestAchievements(RequestAchievementsCallbackMethod callback)
+		public void RequestAchievements(RequestAchievementsCallbackMethod callback, MonoBehaviour services)
 		{
 			requestAchievementsCallback = callback;
 		
@@ -772,7 +772,7 @@ namespace Reign.Plugin
 			if (requestAchievementsCallback != null) requestAchievementsCallback(Achievements, true, null);
 		}
 		
-		public void ShowNativeAchievementsPage (ShowNativeViewDoneCallbackMethod callback)
+		public void ShowNativeAchievementsPage (ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
 		{
 			if (!nativeGUISupported)
 			{

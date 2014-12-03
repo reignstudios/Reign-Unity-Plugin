@@ -539,20 +539,20 @@ namespace Reign.Plugin
 		/// <summary>
 		/// Use to manualy login a user
 		/// </summary>
-		/// <param name="userID">Username or UserID to login</param>
+		/// <param name="userID">Username to login</param>
 		/// <param name="password">User password</param>
 		/// <param name="callback">Callback fired when done</param>
 		/// <param name="services">Takes in ReignServices object</param>
-		void ManualLogin(string userID, string password, AuthenticateCallbackMethod callback, MonoBehaviour services);
+		void ManualLogin(string username, string password, AuthenticateCallbackMethod callback, MonoBehaviour services);
 
 		/// <summary>
 		/// Use to manualy create a user
 		/// </summary>
-		/// <param name="userID">Username of UserID to create</param>
+		/// <param name="userID">Username to create</param>
 		/// <param name="password">User password</param>
 		/// <param name="callback">Callback fired when done</param>
 		/// <param name="services">Takes in ReignServices object</param>
-		void ManualCreateUser(string userID, string password, AuthenticateCallbackMethod callback, MonoBehaviour services);
+		void ManualCreateUser(string username, string password, AuthenticateCallbackMethod callback, MonoBehaviour services);
 
 		/// <summary>
 		/// Use to report a score

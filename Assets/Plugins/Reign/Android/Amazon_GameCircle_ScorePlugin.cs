@@ -8,7 +8,7 @@ namespace Reign.Plugin
 	{
 		public bool IsAuthenticated {get; private set;}
 		public bool PerformingGUIOperation {get; private set;}
-		public string UserID {get; private set;}
+		public string Username {get; private set;}
 
 		private AndroidJavaClass native;
 		private AuthenticateCallbackMethod authenticateCallback;
@@ -45,7 +45,7 @@ namespace Reign.Plugin
 		public void Logout()
 		{
 			IsAuthenticated = false;
-			UserID = "???";
+			Username = "???";
 			native.CallStatic("Logout");
 		}
 
@@ -71,7 +71,7 @@ namespace Reign.Plugin
 			native.CallStatic("ReportScore", findLeaderboardID(leaderboardID), score);
 		}
 
-		public void RequestAchievements (RequestAchievementsCallbackMethod callback)
+		public void RequestAchievements (RequestAchievementsCallbackMethod callback, MonoBehaviour services)
 		{
 			if (callback != null) callback(null, false, "RequestAchievements: Not supported with this API (Use ShowNativeAchievementsPage instead)");
 		}
@@ -81,7 +81,7 @@ namespace Reign.Plugin
 			if (callback != null) callback(null, false, "RequestScores: Not supported with this API (Use ShowNativeScoresPage instead)");
 		}
 
-		public void ShowNativeAchievementsPage (ShowNativeViewDoneCallbackMethod callback)
+		public void ShowNativeAchievementsPage (ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
 		{
 			showNativeViewDoneCallback = callback;
 			native.CallStatic("ShowNativeAchievementsPage");
@@ -131,13 +131,13 @@ namespace Reign.Plugin
 				{
 				case "Connected":
 					IsAuthenticated = true;
-					UserID = eventValues[1];
+					Username = eventValues[1];
 					if (authenticateCallback != null) authenticateCallback(true, null);
 					break;
 
 				case "Error":
 					IsAuthenticated = native.CallStatic<bool>("CheckIsAuthenticated");
-					UserID = IsAuthenticated ? UserID : "???";
+					Username = IsAuthenticated ? Username : "???";
 					if (authenticateCallback != null) authenticateCallback(false, eventValues[1]);
 					break;
 

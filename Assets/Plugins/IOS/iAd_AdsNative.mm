@@ -73,9 +73,12 @@
     if (orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight)
     {
         isLandscape = true;
-        float width = viewSize.width;
-        viewSize.width = viewSize.height;
-        viewSize.height = width;
+        if (viewSize.width < viewSize.height)
+        {
+            float width = viewSize.width;
+            viewSize.width = viewSize.height;
+            viewSize.height = width;
+        }
     }
     
     // set ad position

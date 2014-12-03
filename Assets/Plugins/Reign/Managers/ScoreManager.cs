@@ -160,10 +160,10 @@ namespace Reign
 		/// Use to manualy login a user.
 		/// NOTE: Only supports ReignScores.
 		/// </summary>
-		/// <param name="userID">Username or UserID.</param>
+		/// <param name="userID">Username</param>
 		/// <param name="password">User Password.</param>
 		/// <param name="callback">The callback that fires when done.</param>
-		public static void ManualLogin(string userID, string password, AuthenticateCallbackMethod callback)
+		public static void ManualLogin(string username, string password, AuthenticateCallbackMethod callback)
 		{
 			if (waitingForOperation)
 			{
@@ -173,17 +173,17 @@ namespace Reign
 
 			waitingForOperation = true;
 			authenticateCallback = callback;
-			plugin.ManualLogin(userID, password, async_authenticateCallback, ReignServices.Singleton);
+			plugin.ManualLogin(username, password, async_authenticateCallback, ReignServices.Singleton);
 		}
 
 		/// <summary>
 		/// Use to manualy create a user.
 		/// NOTE: Only supports ReignScores.
 		/// </summary>
-		/// <param name="userID">Username or UserID.</param>
+		/// <param name="userID">Username</param>
 		/// <param name="password">User Password.</param>
 		/// <param name="callback">The callback that fires when done.</param>
-		public static void ManualCreateUser(string userID, string password, AuthenticateCallbackMethod callback)
+		public static void ManualCreateUser(string username, string password, AuthenticateCallbackMethod callback)
 		{
 			if (waitingForOperation)
 			{
@@ -193,7 +193,7 @@ namespace Reign
 
 			waitingForOperation = true;
 			authenticateCallback = callback;
-			plugin.ManualCreateUser(userID, password, async_authenticateCallback, ReignServices.Singleton);
+			plugin.ManualCreateUser(username, password, async_authenticateCallback, ReignServices.Singleton);
 		}
 	
 		/// <summary>

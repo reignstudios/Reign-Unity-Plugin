@@ -10,7 +10,7 @@ namespace Reign.Plugin
 		private bool waitingToAuthenticate;
 		public bool IsAuthenticated {get; private set;}
 		public bool PerformingGUIOperation {get {return false;}}
-		public string UserID {get; private set;}
+		public string Username {get; private set;}
 
 		private ScoreDesc desc;
 		private AuthenticateCallbackMethod authenticateCallback;
@@ -134,7 +134,7 @@ namespace Reign.Plugin
 			GameCenterReportScore(score, findNativeLoaderboardID(leaderboardID));
 		}
 
-		public void RequestAchievements (RequestAchievementsCallbackMethod callback)
+		public void RequestAchievements (RequestAchievementsCallbackMethod callback, MonoBehaviour services)
 		{
 			if (callback != null) callback(null, false, "Not supported on iOS");
 		}
@@ -144,7 +144,7 @@ namespace Reign.Plugin
 			if (callback != null) callback(null, false, "Not supported on iOS");
 		}
 
-		public void ShowNativeAchievementsPage (ShowNativeViewDoneCallbackMethod callback)
+		public void ShowNativeAchievementsPage (ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
 		{
 			if (IsAuthenticated)
 			{
@@ -186,7 +186,7 @@ namespace Reign.Plugin
 				{
 					// get userid
 					IntPtr userPtr = GameCenterGetUserID();
-					UserID = userPtr != IntPtr.Zero ? Marshal.PtrToStringAnsi(userPtr) : null;
+					Username = userPtr != IntPtr.Zero ? Marshal.PtrToStringAnsi(userPtr) : null;
 
 					// callback
 					IntPtr errorPtr = GameCenterGetAuthenticatedError();
