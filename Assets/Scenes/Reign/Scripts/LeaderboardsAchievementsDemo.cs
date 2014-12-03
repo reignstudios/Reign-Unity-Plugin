@@ -46,24 +46,24 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		leaderboard.Desc = "Level1 Desc...";// Any desc you want (NOTE: this only applies to APIs that don't have a native UI)
 
 		// Editor
-		leaderboard.Editor_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
+		leaderboard.Editor_ReignScores_ID = System.Guid.Empty;// Any unique value
 
 		// Win8
-		leaderboard.Win8_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
+		leaderboard.Win8_ReignScores_ID = System.Guid.Empty;// Any unique value
 
 		// WP8
-		leaderboard.WP8_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
+		leaderboard.WP8_ReignScores_ID = System.Guid.Empty;// Any unique value
 
 		// BB10
-		leaderboard.BB10_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
+		leaderboard.BB10_ReignScores_ID = System.Guid.Empty;// Any unique value
 		leaderboard.BB10_Scoreloop_Mode = 0;// Each "mode" value can also be thought of as an ID
 
 		// iOS
-		leaderboard.iOS_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
-		leaderboard.iOS_GameCenter_ID = "";// Set to your GameCenter leaderboard ID
+		leaderboard.iOS_ReignScores_ID = System.Guid.Empty;// Any unique value
+		leaderboard.iOS_GameCenter_ID = "Level1";// Set to your GameCenter leaderboard ID
 
 		// Android
-		leaderboard.Android_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
+		leaderboard.Android_ReignScores_ID = System.Guid.Empty;// Any unique value
 		leaderboard.Android_GooglePlay_ID = "";// Set to your GooglePlay leaderboard ID (Not Name)
 		leaderboard.Android_GameCircle_ID = "";// Set to your GameCircle leaderboard ID (Not Name)
 
@@ -82,30 +82,30 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 			achievement.Desc = value + " Desc...";// Any desc you want (NOTE: this only applies to APIs that don't have a native UI)
 
 			// Editor
-			achievement.Editor_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
+			achievement.Editor_ReignScores_ID = System.Guid.Empty;// Any unique value
 
 			// Win8
-			achievement.Win8_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
+			achievement.Win8_ReignScores_ID = System.Guid.Empty;// Any unique value
 
 			// WP8
-			achievement.WP8_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
+			achievement.WP8_ReignScores_ID = System.Guid.Empty;// Any unique value
 
 			// BB10
-			achievement.BB10_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
+			achievement.BB10_ReignScores_ID = System.Guid.Empty;// Any unique value
 			achievement.BB10_Scoreloop_ID = value.ToLower();// Must be lower case
 
 			// iOS
-			achievement.iOS_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
-			achievement.iOS_GameCenter_ID = "";// Set to your GameCenter achievement ID
+			achievement.iOS_ReignScores_ID = System.Guid.Empty;// Any unique index value
+			achievement.iOS_GameCenter_ID = "Achievement1";// Set to your GameCenter achievement ID
 
 			// Android
-			achievement.Android_ReignScores_ID = new System.Guid("Enter Value Here!");// Any unique index value
+			achievement.Android_ReignScores_ID = System.Guid.Empty;// Any unique value
 			achievement.Android_GooglePlay_ID = "";// Set to your GooglePlay achievement ID (Not Name)
 			achievement.Android_GameCircle_ID = "";// Set to your GameCircle achievement ID (Not Name)
 		}
 
 		// Desc ---------------------------
-		string scoreoid_gameID = "f57c9a0a97";
+		string reignScores_gameID = "";
 		var desc = new ScoreDesc();
 		desc.LeaderboardDescs = leaderboards;
 		desc.AchievementDescs = achievements;
@@ -155,15 +155,15 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 		// Editor
 		desc.Editor_ScoreAPI = ScoreAPIs.ReignScores;
-		desc.Editor_ReignScores_GameID = scoreoid_gameID;
+		desc.Editor_ReignScores_GameID = reignScores_gameID;
 
 		// Win8
 		desc.Win8_ScoreAPI = ScoreAPIs.ReignScores;
-		desc.Win8_ReignScores_GameID = scoreoid_gameID;
+		desc.Win8_ReignScores_GameID = reignScores_gameID;
 
 		// WP8
 		desc.WP8_ScoreAPI = ScoreAPIs.ReignScores;
-		desc.WP8_ReignScores_GameID = scoreoid_gameID;
+		desc.WP8_ReignScores_GameID = reignScores_gameID;
 
 		// BB10
 		desc.BB10_ScoreAPI = ScoreAPIs.Scoreloop;
@@ -171,11 +171,11 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		desc.BB10_Scoreloop_Secret = "";
 		desc.BB10_Scoreloop_Currency = "";
 
-		desc.BB10_ReignScores_GameID = scoreoid_gameID;
+		desc.BB10_ReignScores_GameID = reignScores_gameID;
 
 		// iOS
 		desc.iOS_ScoreAPI = ScoreAPIs.GameCenter;
-		desc.iOS_ReignScores_GameID = scoreoid_gameID;
+		desc.iOS_ReignScores_GameID = reignScores_gameID;
 
 		// Android
 		#if GOOGLEPLAY
@@ -185,7 +185,7 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		#else
 		desc.Android_ScoreAPI = ScoreAPIs.ReignScores;
 		#endif
-		desc.Android_ReignScores_GameID = scoreoid_gameID;
+		desc.Android_ReignScores_GameID = reignScores_gameID;
 
 		// init
 		ScoreManager.Init(desc, createdCallback);
@@ -290,6 +290,6 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 	void Update()
 	{
-		Application.Quit();
+		if (Input.GetKeyUp(KeyCode.Escape)) Application.Quit();
 	}
 }
