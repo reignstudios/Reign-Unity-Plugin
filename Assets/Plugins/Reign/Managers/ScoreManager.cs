@@ -502,7 +502,6 @@ namespace Reign.Plugin
 			#elif UNITY_BB10
 			if (desc.BB10_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
 			else if (desc.BB10_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
-			else if (desc.BB10_ScoreAPI == ScoreAPIs.Scoreloop) return new Scoreloop_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported BB10_ScoreAPI: " + desc.BB10_ScoreAPI);
 			#else
 			return new Dumy_ScorePluginPlugin(desc, callback);

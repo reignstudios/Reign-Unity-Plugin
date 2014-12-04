@@ -56,7 +56,6 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 		// BB10
 		leaderboard.BB10_ReignScores_ID = System.Guid.Empty;// Any unique value
-		leaderboard.BB10_Scoreloop_Mode = 0;// Each "mode" value can also be thought of as an ID
 
 		// iOS
 		leaderboard.iOS_ReignScores_ID = System.Guid.Empty;// Any unique value
@@ -92,7 +91,6 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 			// BB10
 			achievement.BB10_ReignScores_ID = System.Guid.Empty;// Any unique value
-			achievement.BB10_Scoreloop_ID = value.ToLower();// Must be lower case
 
 			// iOS
 			achievement.iOS_ReignScores_ID = System.Guid.Empty;// Any unique index value
@@ -166,11 +164,7 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		desc.WP8_ReignScores_GameID = reignScores_gameID;
 
 		// BB10
-		desc.BB10_ScoreAPI = ScoreAPIs.Scoreloop;
-		desc.BB10_Scoreloop_ID = "";
-		desc.BB10_Scoreloop_Secret = "";
-		desc.BB10_Scoreloop_Currency = "";
-
+		desc.BB10_ScoreAPI = ScoreAPIs.ReignScores;
 		desc.BB10_ReignScores_GameID = reignScores_gameID;
 
 		// iOS

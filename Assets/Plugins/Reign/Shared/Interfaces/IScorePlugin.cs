@@ -19,11 +19,6 @@ namespace Reign
 		ReignScores,
 
 		/// <summary>
-		/// Scoreloop
-		/// </summary>
-		Scoreloop,
-
-		/// <summary>
 		/// GooglePlay
 		/// </summary>
 		GooglePlay,
@@ -68,11 +63,6 @@ namespace Reign
 		/// ReignScores ID (Unique value)
 		/// </summary>
 		public Guid Win8_ReignScores_ID, WP8_ReignScores_ID, BB10_ReignScores_ID, iOS_ReignScores_ID, Android_ReignScores_ID;
-
-		/// <summary>
-		/// Scoreloop Mode ID (Mode Index value)
-		/// </summary>
-		public int BB10_Scoreloop_Mode;
 
 		/// <summary>
 		/// GooglePlay ID (NOTE: Not name)
@@ -135,23 +125,6 @@ namespace Reign
 		/// GameCenter ID (NOTE: Not name)
 		/// </summary>
 		public string iOS_GameCenter_ID;
-
-		// Scoreloop
-		/// <summary>
-		/// ID value (Normaly you keep this the same as ID)
-		/// NOTE: Must be lower case
-		/// </summary>
-		public string BB10_Scoreloop_ID;
-
-		/// <summary>
-		/// Achievement name override (Normaly you leave this null unless you are using your own UI)
-		/// </summary>
-		public string BB10_Scoreloop_NameOverride;
-		
-		/// <summary>
-		/// Achievement desc override (Normaly you leave this null unless you are using your own UI)
-		/// </summary>
-		public string BB10_Scoreloop_DescOverride;
 	}
 
 	/// <summary>
@@ -342,32 +315,6 @@ namespace Reign
 		/// ReignScores Game ID
 		/// </summary>
 		public string Android_ReignScores_GameID;
-
-		// Scoreloop
-		/// <summary>
-		/// Scoreloop ID key
-		/// </summary>
-		public string BB10_Scoreloop_ID;
-		
-		/// <summary>
-		/// Scoreloop Secret key
-		/// </summary>
-		public string BB10_Scoreloop_Secret;
-		
-		/// <summary>
-		/// Scoreloop Currency type
-		/// </summary>
-		public string BB10_Scoreloop_Currency;
-		
-		/// <summary>
-		/// Scoreloop version (Normaly leave to default)
-		/// </summary>
-		public string BB10_Scoreloop_Version = "1.0";
-		
-		/// <summary>
-		/// Scoreloop Language (Normaly leave to default)
-		/// </summary>
-		public string BB10_Scoreloop_Language = "en";
 	}
 	
 	public class LeaderboardScore
