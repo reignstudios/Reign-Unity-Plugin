@@ -1,5 +1,6 @@
 ﻿#if UNITY_ANDROID
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Reign.Plugin
@@ -16,6 +17,7 @@ namespace Reign.Plugin
 		private ReportScoreCallbackMethod reportScoreCallback;
 		private ShowNativeViewDoneCallbackMethod showNativeViewDoneCallback;
 		private CreatedScoreAPICallbackMethod createdCallback;
+		private RequestAchievementsCallbackMethod requestAchievementsCallback;
 
 		private ScoreDesc desc;
 
@@ -72,7 +74,8 @@ namespace Reign.Plugin
 
 		public void RequestAchievements (RequestAchievementsCallbackMethod callback, MonoBehaviour services)
 		{
-			if (callback != null) callback(null, false, "RequestAchievements: Not supported with this API (Use ShowNativeAchievementsPage instead)");
+			requestAchievementsCallback = callback;
+			native.CallStatic("RequestAchievements");
 		}
 
 		public void RequestScores (string leaderboardID, int offset, int range, RequestScoresCallbackMethod callback, MonoBehaviour services)
@@ -152,6 +155,30 @@ namespace Reign.Plugin
 					case "ReportAchievement":
 						success = eventValues[1] == "Success";
 						if (reportAchievementCallback != null) reportAchievementCallback(success, eventValues[1]);
+						break;
+
+					case "RequestAchievements":
+						success = eventValues[1] == "Success";
+						if (requestAchievementsCallback != null)
+						{
+							var achievementValues = native.CallStatic<string>("GetRequestAchievementsResult").Split(':');
+							var achievements = new List<Achievement>();
+							for (int i = 0; i < achievementValues.Length-1; i += 2)
+							{
+								// find achievement desc
+								AchievementDesc found = null;
+								foreach (var descObj in desc.AchievementDescs)
+								{
+									if (descObj.Android_GooglePlay_ID == achievementValues[i]) found = descObj;
+								}
+
+								// add achievement
+								float percentComplete = float.Parse(achievementValues[i+1]);
+								achievements.Add(new Achievement(percentComplete >= 100f, percentComplete, found.ID, found.Name, found.Desc, null, null));
+							}
+
+							requestAchievementsCallback(achievements.ToArray(), success, eventValues[1]);
+						}
 						break;
 
 					case "ShowNativePage":

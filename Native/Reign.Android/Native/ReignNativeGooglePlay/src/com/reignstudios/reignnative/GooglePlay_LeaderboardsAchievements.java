@@ -17,6 +17,9 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.achievement.Achievement;
+import com.google.android.gms.games.achievement.AchievementBuffer;
+import com.google.android.gms.games.achievement.Achievements.LoadAchievementsResult;
 import com.google.android.gms.games.achievement.Achievements.UpdateAchievementResult;
 import com.google.android.gms.games.leaderboard.Leaderboards.SubmitScoreResult;
 import com.google.android.gms.plus.Plus;
@@ -29,6 +32,7 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 	private static List<String> events;
 	private static int initStatus;
 	private static boolean isAuthenticated;
+	private static String requestAchievementsResult;
 	
 	private static int REQUEST_LEADERBOARD_ID = 100001, REQUEST_ACHIEVEMENTS_ID = 100002, RC_RESOLVE_ID = 100003;
 	
@@ -64,7 +68,7 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 		});
 	}
 	
-	public boolean CheckIsAuthenticated()
+	public static boolean CheckIsAuthenticated()
 	{
 		return isAuthenticated;
 	}
@@ -142,6 +146,54 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
     		    result.setResultCallback(resultCallback);
 			}
 		});
+	}
+	
+	public static void RequestAchievements()
+	{
+		requestAchievementsResult = "";
+		ReignUnityActivity.ReignContext.runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				PendingResult<LoadAchievementsResult> result = Games.Achievements.load(client, true);
+				ResultCallback<LoadAchievementsResult> resultCallback = new ResultCallback<LoadAchievementsResult>()
+				{
+					@Override
+					public void onResult(LoadAchievementsResult result)
+					{
+						if (result.getStatus().getStatusCode() == GamesStatusCodes.STATUS_OK)
+						{
+							Log.i(logTag, "RequestAchievements Succeeded!");
+							AchievementBuffer achievements = result.getAchievements();
+							boolean starting = true;
+							if (achievements != null)
+							for (int i = 0; i != achievements.getCount(); ++i)
+							{
+								Achievement a = achievements.get(i);
+								if (!starting) requestAchievementsResult += ":";
+								starting = false;
+								requestAchievementsResult += a.getAchievementId();
+								requestAchievementsResult += ":" + a.getCurrentSteps();
+							}
+							
+							events.add("RequestAchievements:Success");
+						}
+						else
+						{
+							Log.i(logTag, "RequestAchievements Failed: " + result.getStatus());
+				        	events.add("RequestAchievements:Failed");
+						}
+					}
+				};
+				
+				result.setResultCallback(resultCallback);
+			}
+		});
+	}
+	
+	public static String GetRequestAchievementsResult()
+	{
+		return requestAchievementsResult;
 	}
 	
 	public static void ShowNativeAchievementsPage()

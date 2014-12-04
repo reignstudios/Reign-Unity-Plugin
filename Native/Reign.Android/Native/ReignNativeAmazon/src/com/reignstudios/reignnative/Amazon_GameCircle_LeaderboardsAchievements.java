@@ -2,7 +2,6 @@ package com.reignstudios.reignnative;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.List;
 
 import android.content.Intent;
@@ -162,10 +161,13 @@ public class Amazon_GameCircle_LeaderboardsAchievements implements AmazonGamesCa
 				        {
 				        	Log.i(logTag, "RequestAchievements Succeeded!");
 							List<Achievement> achievements = result.getAchievementsList();
+							boolean starting = true;
 							if (achievements != null)
 							for (int i = 0; i != achievements.size(); ++i)
 							{
 								Achievement a = achievements.get(i);
+								if (!starting) requestAchievementsResult += ":";
+								starting = false;
 								requestAchievementsResult += a.getId();
 								requestAchievementsResult += ":" + a.getProgress();
 							}
