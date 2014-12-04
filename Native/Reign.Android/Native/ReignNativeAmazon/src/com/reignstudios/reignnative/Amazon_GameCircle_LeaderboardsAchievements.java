@@ -2,6 +2,7 @@ package com.reignstudios.reignnative;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.Intent;
@@ -13,7 +14,9 @@ import com.amazon.ags.api.AmazonGamesCallback;
 import com.amazon.ags.api.AmazonGamesClient;
 import com.amazon.ags.api.AmazonGamesFeature;
 import com.amazon.ags.api.AmazonGamesStatus;
+import com.amazon.ags.api.achievements.Achievement;
 import com.amazon.ags.api.achievements.AchievementsClient;
+import com.amazon.ags.api.achievements.GetAchievementsResponse;
 import com.amazon.ags.api.achievements.UpdateProgressResponse;
 import com.amazon.ags.api.leaderboards.LeaderboardsClient;
 import com.amazon.ags.api.leaderboards.SubmitScoreResponse;
@@ -27,6 +30,7 @@ public class Amazon_GameCircle_LeaderboardsAchievements implements AmazonGamesCa
 	private static List<String> events;
 	private static EnumSet<AmazonGamesFeature> gameFeatures;
 	private static boolean isAthenticated, loggedOut;
+	private static String requestAchievementsResult;
 	
 	public static void Init()
 	{
@@ -133,6 +137,50 @@ public class Amazon_GameCircle_LeaderboardsAchievements implements AmazonGamesCa
 				});
 			}
 		});
+	}
+	
+	public static void RequestAchievements()
+	{
+		requestAchievementsResult = "";
+		ReignUnityActivity.ReignContext.runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				AchievementsClient acClient = client.getAchievementsClient();
+				AGResponseHandle<GetAchievementsResponse> handle = acClient.getAchievements();
+				handle.setCallback(new AGResponseCallback<GetAchievementsResponse>()
+				{
+					@Override
+					public void onComplete(GetAchievementsResponse result)
+					{
+						if (result.isError())
+				        {
+				        	Log.i(logTag, "RequestAchievements Failed: " + result.getError());
+				        	events.add("RequestAchievements:Failed");
+				        }
+				        else
+				        {
+				        	Log.i(logTag, "RequestAchievements Succeeded!");
+							List<Achievement> achievements = result.getAchievementsList();
+							if (achievements != null)
+							for (int i = 0; i != achievements.size(); ++i)
+							{
+								Achievement a = achievements.get(i);
+								requestAchievementsResult += a.getId();
+								requestAchievementsResult += ":" + a.getProgress();
+							}
+							
+							events.add("RequestAchievements:Success");
+				        }
+					}
+				});
+			}
+		});
+	}
+	
+	public static String GetRequestAchievementsResult()
+	{
+		return requestAchievementsResult;
 	}
 	
 	public static void ShowNativeAchievementsPage()

@@ -206,6 +206,23 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 	{
 		Debug.Log("Authenticated: " + succeeded);
 		if (!succeeded && errorMessage != null) Debug.LogError(errorMessage);
+		if (succeeded) ScoreManager.RequestAchievements(requestAchievementsCallback);
+	}
+
+	private void requestAchievementsCallback(Achievement[] achievements, bool succeeded, string errorMessage)
+	{
+		if (succeeded)
+		{
+			Debug.Log("Got Achievement count: " + achievements.Length);
+			foreach (var achievement in achievements)
+			{
+				Debug.Log(string.Format("Achievement {0} PercentCompleted {1}", achievement.ID, achievement.PercentComplete));
+			}
+		}
+		else
+		{
+			Debug.LogError("Request Achievements Error: " + errorMessage);
+		}
 	}
 
 	void OnGUI()

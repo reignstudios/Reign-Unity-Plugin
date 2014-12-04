@@ -45,12 +45,12 @@ namespace Reign
 		public string ID;
 
 		/// <summary>
-		/// Name (Only applies to platforms that dont have a native UI)
+		/// Name
 		/// </summary>
 		public string Name;
 		
 		/// <summary>
-		/// Desc (Only applies to platforms that dont have a native UI)
+		/// Desc
 		/// </summary>
 		public string Desc;
 
@@ -91,12 +91,12 @@ namespace Reign
 		public string ID;
 
 		/// <summary>
-		/// Name (Only applies to platforms that dont have a native UI)
+		/// Name
 		/// </summary>
 		public string Name;
 
 		/// <summary>
-		/// Desc (Only applies to platforms that dont have a native UI)
+		/// Desc
 		/// </summary>
 		public string Desc;
 
