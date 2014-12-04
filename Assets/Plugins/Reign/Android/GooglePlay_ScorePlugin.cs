@@ -58,10 +58,10 @@ namespace Reign.Plugin
 			if (callback != null) callback(false, "ManualLogin: Not supported with this API");
 		}
 
-		public void ReportAchievement (string achievementID, ReportAchievementCallbackMethod callback, MonoBehaviour services)
+		public void ReportAchievement (string achievementID, float percentComplete, ReportAchievementCallbackMethod callback, MonoBehaviour services)
 		{
 			reportAchievementCallback = callback;
-			native.CallStatic("ReportAchievement", findAchievementID(achievementID));
+			native.CallStatic("ReportAchievement", percentComplete, findAchievementID(achievementID));
 		}
 
 		public void ReportScore (string leaderboardID, int score, ReportScoreCallbackMethod callback, MonoBehaviour services)

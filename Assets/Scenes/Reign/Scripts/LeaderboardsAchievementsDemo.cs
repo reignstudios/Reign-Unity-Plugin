@@ -254,8 +254,8 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 			// Report Achievements
 			if (GUI.Button(new Rect(Screen.width-256, 64+offset, 256, 64), "Report Random Achievement") || Input.GetKeyUp(KeyCode.R))
 			{
-				string value = "Achievement" + 1;//Random.Range(1, 5);
-				ScoreManager.ReportAchievement(value, reportAchievementCallback);
+				string value = "Achievement" + 1;
+				ScoreManager.ReportAchievement(value, 100, reportAchievementCallback);
 			}
 
 			// Logout (NOTE: Some platforms do not support this!)

@@ -577,9 +577,10 @@ namespace Reign.Plugin
 		/// Use to report a achievement
 		/// </summary>
 		/// <param name="achievementID">Achievement ID</param>
+		/// <param name="percentComplete">Percent Complete</param>
 		/// <param name="callback">Callback fired when done</param>
 		/// <param name="services">Takes in ReignServices object</param>
-		void ReportAchievement(string achievementID, ReportAchievementCallbackMethod callback, MonoBehaviour services);
+		void ReportAchievement(string achievementID, float percentComplete, ReportAchievementCallbackMethod callback, MonoBehaviour services);
 
 		/// <summary>
 		/// Use to request achievements

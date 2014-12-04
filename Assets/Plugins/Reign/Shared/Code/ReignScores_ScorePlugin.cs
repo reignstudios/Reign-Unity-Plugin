@@ -513,7 +513,7 @@ namespace Reign.Plugin
 			if (callback != null) callback(false, error);
 		}
 		
-		public void ReportAchievement(string achievementID, ReportAchievementCallbackMethod callback, MonoBehaviour services)
+		public void ReportAchievement(string achievementID, float percentComplete, ReportAchievementCallbackMethod callback, MonoBehaviour services)
 		{
 			// find leaderboard
 			var achievementDesc = findAchievement(achievementID);
@@ -523,7 +523,7 @@ namespace Reign.Plugin
 				return;
 			}
 
-			services.StartCoroutine(async_ReportAchievement(achievementDesc, 100, callback));
+			services.StartCoroutine(async_ReportAchievement(achievementDesc, percentComplete, callback));
 		}
 
 		private IEnumerator async_RequestAchievements(RequestAchievementsCallbackMethod callback)

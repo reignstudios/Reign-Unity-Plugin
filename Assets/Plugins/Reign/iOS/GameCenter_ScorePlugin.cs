@@ -48,7 +48,7 @@ namespace Reign.Plugin
 		private static extern IntPtr GameCenterReportScoreError();
 
 		[DllImport("__Internal", EntryPoint="GameCenterReportAchievement")]
-		private static extern void GameCenterReportAchievement(string achievementID);
+		private static extern void GameCenterReportAchievement(string achievementID, float percentComplete);
 
 		[DllImport("__Internal", EntryPoint="GameCenterReportAchievementDone")]
 		private static extern bool GameCenterReportAchievementDone();
@@ -122,10 +122,10 @@ namespace Reign.Plugin
 			throw new Exception("Failed to find LeaderboardID: " + leaderboardID);
 		}
 
-		public void ReportAchievement (string achievementID, ReportAchievementCallbackMethod callback, MonoBehaviour services)
+		public void ReportAchievement (string achievementID, float percentComplete, ReportAchievementCallbackMethod callback, MonoBehaviour services)
 		{
 			reportAchievementCallback = callback;
-			GameCenterReportAchievement(findNativeAchievementID(achievementID));
+			GameCenterReportAchievement(findNativeAchievementID(achievementID), percentComplete);
 		}
 
 		public void ReportScore (string leaderboardID, int score, ReportScoreCallbackMethod callback, MonoBehaviour services)

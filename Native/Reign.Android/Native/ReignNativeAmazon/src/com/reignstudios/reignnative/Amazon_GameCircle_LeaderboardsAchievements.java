@@ -77,14 +77,14 @@ public class Amazon_GameCircle_LeaderboardsAchievements implements AmazonGamesCa
 		});
 	}
 	
-	public static void ReportAchievement(final String id)
+	public static void ReportAchievement(final String id, final float percentComplete)
 	{
 		ReignUnityActivity.ReignContext.runOnUiThread(new Runnable()
 		{
 			public void run()
 			{
 				AchievementsClient acClient = client.getAchievementsClient();
-				AGResponseHandle<UpdateProgressResponse> handle = acClient.updateProgress(id, 100.0f);
+				AGResponseHandle<UpdateProgressResponse> handle = acClient.updateProgress(id, percentComplete);
 				 
 				// Optional callback to receive notification of success/failure.
 				handle.setCallback(new AGResponseCallback<UpdateProgressResponse>()

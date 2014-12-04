@@ -240,8 +240,9 @@ namespace Reign
 		/// Use to report a achievement.
 		/// </summary>
 		/// <param name="achievementID">Achievement ID.</param>
+		/// <param name="percentComplete">Percent Complete.</param>
 		/// <param name="callback">The callback that fires when done.</param>
-		public static void ReportAchievement(string achievementID, ReportAchievementCallbackMethod callback)
+		public static void ReportAchievement(string achievementID, float percentComplete, ReportAchievementCallbackMethod callback)
 		{
 			if (waitingForOperation)
 			{
@@ -249,9 +250,13 @@ namespace Reign
 				return;
 			}
 
+			// make sure percent is within range
+			if (percentComplete > 100f) percentComplete = 100f;
+			else if (percentComplete < 0f) percentComplete = 0f;
+
 			waitingForOperation = true;
 			reportAchievementCallback = callback;
-			plugin.ReportAchievement(achievementID, async_reportAchievementCallback, ReignServices.Singleton);
+			plugin.ReportAchievement(achievementID, percentComplete, async_reportAchievementCallback, ReignServices.Singleton);
 		}
 		
 		/// <summary>
@@ -378,9 +383,10 @@ namespace Reign.Plugin
 		/// Dumy method.
 		/// </summary>
 		/// <param name="achievementID"></param>
+		/// <param name="percentComplete"></param>
 		/// <param name="callback"></param>
 		/// <param name="services"></param>
-		public void ReportAchievement(string achievementID, ReportAchievementCallbackMethod callback, MonoBehaviour services)
+		public void ReportAchievement(string achievementID, float percentComplete, ReportAchievementCallbackMethod callback, MonoBehaviour services)
 		{
 			if (callback != null) callback(false, "Dumy Score Obj");
 		}

@@ -229,10 +229,10 @@ extern "C"
         return (char*)error;
     }
     
-    void GameCenterReportAchievement(const char* achievementID)
+    void GameCenterReportAchievement(const char* achievementID, float percentComplete)
     {
         NSString* nativeID = [[NSString alloc] initWithUTF8String:achievementID];
-        [native ReportAchievement:nativeID percentComplete:100];
+        [native ReportAchievement:nativeID percentComplete:(double)percentComplete];
     }
     
     bool GameCenterReportAchievementDone()
