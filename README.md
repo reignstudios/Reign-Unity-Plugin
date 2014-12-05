@@ -10,4 +10,4 @@ TODO
 
 Roadmap
 ========================================================================
-- Add Reign Score Leaderboard Achievement API to make up for Scoreoid being dead.
+- Add Reign-Scores Leaderboard Achievement API.  This will be a cross platform service/API for any platform.
