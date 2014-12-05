@@ -1,5 +1,6 @@
 ﻿#if UNITY_IPHONE
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
 
@@ -16,6 +17,7 @@ namespace Reign.Plugin
 		private AuthenticateCallbackMethod authenticateCallback;
 		private ReportScoreCallbackMethod reportScoreCallback;
 		private ReportAchievementCallbackMethod reportAchievementCallback;
+		private RequestAchievementsCallbackMethod requestAchievementsCallback;
 
 		[DllImport("__Internal", EntryPoint="InitGameCenter")]
 		private static extern void InitGameCenter();
@@ -58,6 +60,21 @@ namespace Reign.Plugin
 
 		[DllImport("__Internal", EntryPoint="GameCenterReportAchievementError")]
 		private static extern IntPtr GameCenterReportAchievementError();
+
+		[DllImport("__Internal", EntryPoint="GameCenterRequestAchievements")]
+		private static extern void GameCenterRequestAchievements();
+
+		[DllImport("__Internal", EntryPoint="GameCenterRequestAchievementDone")]
+		private static extern bool GameCenterRequestAchievementDone();
+
+		[DllImport("__Internal", EntryPoint="GameCenterRequestAchievementSucceeded")]
+		private static extern bool GameCenterRequestAchievementSucceeded();
+
+		[DllImport("__Internal", EntryPoint="GameCenterRequestAchievementError")]
+		private static extern IntPtr GameCenterRequestAchievementError();
+
+		[DllImport("__Internal", EntryPoint="GameCenterRequestAchievementResponse")]
+		private static extern IntPtr GameCenterRequestAchievementResponse();
 
 		[DllImport("__Internal", EntryPoint="GameCenterShowScoresPage")]
 		private static extern void GameCenterShowScoresPage(string leaderboardID);
@@ -136,7 +153,8 @@ namespace Reign.Plugin
 
 		public void RequestAchievements (RequestAchievementsCallbackMethod callback, MonoBehaviour services)
 		{
-			if (callback != null) callback(null, false, "Not supported on iOS");
+			requestAchievementsCallback = callback;
+			GameCenterRequestAchievements();
 		}
 
 		public void RequestScores (string leaderboardID, int offset, int range, RequestScoresCallbackMethod callback, MonoBehaviour services)
@@ -223,6 +241,43 @@ namespace Reign.Plugin
 					error = errorPtr != IntPtr.Zero ? Marshal.PtrToStringAnsi(errorPtr) : null;
 				}
 				reportAchievementCallback(succeeded, error);
+			}
+
+			// request achievements
+			if (GameCenterRequestAchievementDone() && requestAchievementsCallback != null)
+			{
+				bool succeeded = GameCenterRequestAchievementSucceeded();
+				string error = null;
+				if (!succeeded)
+				{
+					IntPtr errorPtr = GameCenterRequestAchievementError();
+					error = errorPtr != IntPtr.Zero ? Marshal.PtrToStringAnsi(errorPtr) : null;
+				}
+
+				IntPtr achievementPtr = GameCenterRequestAchievementResponse();
+				var achievementList = achievementPtr != IntPtr.Zero ? Marshal.PtrToStringAnsi(achievementPtr).Split(':') : null;
+				var achievements = new List<Achievement>();
+				foreach (var achievementsDesc in desc.AchievementDescs)
+				{
+					// find achievements
+					bool found = false;
+					float percentComplete = 0;
+					for (int i = 0; i < achievementList.Length-1; i += 2)
+					{
+						if (achievementList[i] == achievementsDesc.iOS_GameCenter_ID)
+						{
+							found = true;
+							percentComplete = (float)double.Parse(achievementList[i+1]);
+							break;
+						}
+					}
+
+					// add achievement
+					if (found) achievements.Add(new Achievement(percentComplete >= 100f, percentComplete, achievementsDesc.ID, achievementsDesc.Name, achievementsDesc.Desc, null, null));
+					else achievements.Add(new Achievement(false, 0, achievementsDesc.ID, achievementsDesc.Name, achievementsDesc.Desc, null, null));
+				}
+
+				requestAchievementsCallback(achievements.ToArray(), succeeded, error);
 			}
 		}
 	}

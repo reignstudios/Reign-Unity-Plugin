@@ -59,7 +59,7 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 		// iOS
 		leaderboard.iOS_ReignScores_ID = System.Guid.Empty;// Any unique value
-		leaderboard.iOS_GameCenter_ID = "Level1";// Set to your GameCenter leaderboard ID
+		leaderboard.iOS_GameCenter_ID = "";// Set to your GameCenter leaderboard ID
 
 		// Android
 		leaderboard.Android_ReignScores_ID = System.Guid.Empty;// Any unique value
@@ -94,7 +94,7 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 			// iOS
 			achievement.iOS_ReignScores_ID = System.Guid.Empty;// Any unique index value
-			achievement.iOS_GameCenter_ID = "Achievement1";// Set to your GameCenter achievement ID
+			achievement.iOS_GameCenter_ID = "";// Set to your GameCenter achievement ID
 
 			// Android
 			achievement.Android_ReignScores_ID = System.Guid.Empty;// Any unique value

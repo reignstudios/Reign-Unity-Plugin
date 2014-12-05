@@ -15,6 +15,10 @@
     bool reportAchievementDone, reportAchievementSucceeded;
     NSString* reportAchievementError;
     
+    bool requestAchievementDone, requestAchievementSucceeded;
+    NSString* requestAchievementError;
+    NSMutableString* requestAchievementResponse;
+    
     bool userAuthenticated, authenticateDone;
     NSString* authenticatedError, *userID;
 }
@@ -23,6 +27,7 @@
 - (void)Authenticate;
 - (void)ReportScore:(int64_t)score leaderboardID:(NSString*)leaderboardID;
 - (void)ReportAchievement:(NSString*)achievementID percentComplete:(double)percentComplete;
+- (void)RequestAchievements;
 - (void)ShowScoresPage:(NSString*)leaderboardID;
 - (void)ShowAchievementsPage;
 @end

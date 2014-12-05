@@ -119,6 +119,48 @@
      }];
 }
 
+- (void) RequestAchievements
+{
+    if (requestAchievementResponse != nil)
+    {
+        [requestAchievementResponse dealloc];
+        requestAchievementResponse = nil;
+    }
+    
+    [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error)
+    {
+        if (error != nil)
+        {
+            NSLog(@"RequestAchievements Error: %@", error.localizedDescription);
+            if (requestAchievementError != nil)
+            {
+                [requestAchievementError dealloc];
+                requestAchievementError = nil;
+            }
+            requestAchievementError = [[NSMutableString alloc] initWithString:error.localizedDescription];
+            requestAchievementSucceeded = false;
+            requestAchievementDone = true;
+        }
+        else if (achievements != nil)
+        {
+            NSLog(@"RequestAchievements Succeeded: %d", achievements.count);
+            requestAchievementResponse = [[NSMutableString alloc] initWithString:@""];
+            bool staring = true;
+            for (GKAchievement* a in achievements)
+            {
+                if (!staring) [requestAchievementResponse appendString:@":"];
+                staring = false;
+                [requestAchievementResponse appendString:a.identifier];
+                [requestAchievementResponse appendString:@":"];
+                [requestAchievementResponse appendString:[NSString stringWithFormat:@"%f", a.percentComplete]];
+            }
+            
+            requestAchievementSucceeded = true;
+            requestAchievementDone = true;
+        }
+    }];
+}
+
 - (void)leaderboardViewControllerDidFinish:(GKLeaderboardViewController *)viewController
 {
     [UnityGetGLViewController() dismissModalViewControllerAnimated: YES];
@@ -176,7 +218,6 @@ extern "C"
         native->authenticateDone = false;
         [native Authenticate];
     }
-    
     bool GameCenterCheckAuthenticateDone()
     {
         if (native == nil) return false;
@@ -254,6 +295,39 @@ extern "C"
         if (native->reportAchievementError == nil) return 0;
         const char* error = [native->reportAchievementError cStringUsingEncoding:NSUTF8StringEncoding];
         return (char*)error;
+    }
+    
+    void GameCenterRequestAchievements()
+    {
+        [native RequestAchievements];
+    }
+    
+    bool GameCenterRequestAchievementDone()
+    {
+        if (native == nil) return false;
+        bool value = native->requestAchievementDone;
+        native->requestAchievementDone = false;
+        return value;
+    }
+    
+    bool GameCenterRequestAchievementSucceeded()
+    {
+        if (native == nil) return false;
+        return native->requestAchievementSucceeded;
+    }
+    
+    char* GameCenterRequestAchievementError()
+    {
+        if (native->requestAchievementError == nil) return 0;
+        const char* error = [native->requestAchievementError cStringUsingEncoding:NSUTF8StringEncoding];
+        return (char*)error;
+    }
+    
+    char* GameCenterRequestAchievementResponse()
+    {
+        if (native->requestAchievementResponse == nil) return 0;
+        const char* response = [native->requestAchievementResponse cStringUsingEncoding:NSUTF8StringEncoding];
+        return (char*)response;
     }
     
     void GameCenterShowScoresPage(const char* leaderboardID)
