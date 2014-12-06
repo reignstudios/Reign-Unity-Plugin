@@ -77,6 +77,10 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		achievement.Name = "Achievement1";// Any name you want
 		achievement.Desc = "Achievement1 Desc...";// Any desc you want
 
+		// When you report an achievement you pass a PercentComplete value.
+		// Example: This allows you to change that ratio to something like (0-1000) before the achievement is unlocked.
+		achievement.PercentCompletedAtValue = 100;
+
 		// Editor
 		achievement.Editor_ReignScores_ID = System.Guid.Empty;// Any unique value
 

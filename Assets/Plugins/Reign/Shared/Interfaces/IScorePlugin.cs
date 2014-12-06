@@ -100,6 +100,11 @@ namespace Reign
 		/// </summary>
 		public string Desc;
 
+		/// <summary>
+		/// The number completed an achievement must until its unlocked. (Default = 100)
+		/// </summary>
+		public int PercentCompletedAtValue = 100;
+
 		// ReignScores
 		/// <summary>
 		/// ID value (Unique value)

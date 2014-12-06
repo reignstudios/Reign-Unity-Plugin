@@ -251,8 +251,7 @@ namespace Reign
 			}
 
 			// make sure percent is within range
-			if (percentComplete > 100f) percentComplete = 100f;
-			else if (percentComplete < 0f) percentComplete = 0f;
+			if (percentComplete < 0f) percentComplete = 0f;
 
 			waitingForOperation = true;
 			reportAchievementCallback = callback;
