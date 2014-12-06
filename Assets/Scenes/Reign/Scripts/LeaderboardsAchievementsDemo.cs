@@ -43,7 +43,7 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		
 		// Global
 		leaderboard.ID = "Level1";// Any unique ID value you want
-		leaderboard.Desc = "Level1 Desc...";// Any desc you want (NOTE: this only applies to APIs that don't have a native UI)
+		leaderboard.Desc = "Level1 Desc...";// Any desc you want
 
 		// Editor
 		leaderboard.Editor_ReignScores_ID = System.Guid.Empty;// Any unique value
@@ -68,38 +68,44 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 
 		// Achievements ---------------------------
-		var achievements = new AchievementDesc[14];
-		for (int i = 0; i != achievements.Length; ++i)
+		var achievements = new AchievementDesc[5];
+		var achievement = new AchievementDesc();
+		achievements[0] = achievement;
+
+		// Global
+		achievement.ID = "Achievement1";// Any unique ID value you want
+		achievement.Name = "Achievement1";// Any name you want
+		achievement.Desc = "Achievement1 Desc...";// Any desc you want
+
+		// Editor
+		achievement.Editor_ReignScores_ID = System.Guid.Empty;// Any unique value
+
+		// Win8
+		achievement.Win8_ReignScores_ID = System.Guid.Empty;// Any unique value
+
+		// WP8
+		achievement.WP8_ReignScores_ID = System.Guid.Empty;// Any unique value
+
+		// BB10
+		achievement.BB10_ReignScores_ID = System.Guid.Empty;// Any unique value
+
+		// iOS
+		achievement.iOS_ReignScores_ID = System.Guid.Empty;// Any unique index value
+		achievement.iOS_GameCenter_ID = "";// Set to your GameCenter achievement ID
+
+		// Android
+		achievement.Android_ReignScores_ID = System.Guid.Empty;// Any unique value
+		achievement.Android_GooglePlay_ID = "";// Set to your GooglePlay achievement ID (Not Name)
+		achievement.Android_GameCircle_ID = "";// Set to your GameCircle achievement ID (Not Name)
+
+		// Add other achievements...
+		for (int i = 1; i != achievements.Length; ++i)
 		{
-			string value = "Achievement" + (i+1);
-			var achievement = new AchievementDesc();
+			achievement = new AchievementDesc();
 			achievements[i] = achievement;
-
-			// Global
-			achievement.ID = value;// Any unique ID value you want
-			achievement.Name = value;// Any name you want (NOTE: this only applies to APIs that don't have a native UI)
-			achievement.Desc = value + " Desc...";// Any desc you want (NOTE: this only applies to APIs that don't have a native UI)
-
-			// Editor
-			achievement.Editor_ReignScores_ID = System.Guid.Empty;// Any unique value
-
-			// Win8
-			achievement.Win8_ReignScores_ID = System.Guid.Empty;// Any unique value
-
-			// WP8
-			achievement.WP8_ReignScores_ID = System.Guid.Empty;// Any unique value
-
-			// BB10
-			achievement.BB10_ReignScores_ID = System.Guid.Empty;// Any unique value
-
-			// iOS
-			achievement.iOS_ReignScores_ID = System.Guid.Empty;// Any unique index value
-			achievement.iOS_GameCenter_ID = "";// Set to your GameCenter achievement ID
-
-			// Android
-			achievement.Android_ReignScores_ID = System.Guid.Empty;// Any unique value
-			achievement.Android_GooglePlay_ID = "";// Set to your GooglePlay achievement ID (Not Name)
-			achievement.Android_GameCircle_ID = "";// Set to your GameCircle achievement ID (Not Name)
+			achievement.ID = "Achievement_TODO";
+			achievement.Name = "Achievement_TODO";
+			achievement.Desc = "Achievement_TODO Desc...";
 		}
 
 		// Desc ---------------------------

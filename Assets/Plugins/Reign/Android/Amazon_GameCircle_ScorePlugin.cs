@@ -64,7 +64,7 @@ namespace Reign.Plugin
 		public void ReportAchievement (string achievementID, float percentComplete, ReportAchievementCallbackMethod callback, MonoBehaviour services)
 		{
 			reportAchievementCallback = callback;
-			native.CallStatic("ReportAchievement", percentComplete, findAchievementID(achievementID));
+			native.CallStatic("ReportAchievement", findAchievementID(achievementID), percentComplete);
 		}
 
 		public void ReportScore (string leaderboardID, int score, ReportScoreCallbackMethod callback, MonoBehaviour services)
