@@ -62,20 +62,8 @@ namespace Reign.Plugin
 
 		public void ReportAchievement (string achievementID, float percentComplete, ReportAchievementCallbackMethod callback, MonoBehaviour services)
 		{
-			// find achievement desc
-			AchievementDesc found = null;
-			foreach (var a in desc.AchievementDescs)
-			{
-				if (a.ID == achievementID) found =  a;
-			}
-			throw new Exception("Failed to find AchievementID: " + achievementID);
-
-			// make sure value within range
-			if (percentComplete > found.PercentCompletedAtValue) percentComplete = found.PercentCompletedAtValue;
-
-			// request
 			reportAchievementCallback = callback;
-			native.CallStatic("ReportAchievement", findAchievementID(achievementID), (percentComplete / found.PercentCompletedAtValue) * 100f);
+			native.CallStatic("ReportAchievement", findAchievementID(achievementID), percentComplete);
 		}
 
 		public void ReportScore (string leaderboardID, int score, ReportScoreCallbackMethod callback, MonoBehaviour services)
