@@ -103,14 +103,15 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 		});
 	}
 	
-	public static void ReportAchievement(final String id, final float percentComplete)
+	public static void ReportAchievement(final String id, final float percentComplete, final boolean isIncrementalType)
 	{
 		ReignUnityActivity.ReignContext.runOnUiThread(new Runnable()
 		{
 			public void run()
 			{
-				//PendingResult<UpdateAchievementResult> result = Games.Achievements.unlockImmediate(client, id);
-				PendingResult<UpdateAchievementResult> result = Games.Achievements.setStepsImmediate(client, id, (int)percentComplete);
+				PendingResult<UpdateAchievementResult> result = null;
+				if (isIncrementalType) result = Games.Achievements.setStepsImmediate(client, id, (int)percentComplete);
+				else result = Games.Achievements.unlockImmediate(client, id);
 				ResultCallback<UpdateAchievementResult> resultCallback = new ResultCallback<UpdateAchievementResult>()
 				{
     		        @Override

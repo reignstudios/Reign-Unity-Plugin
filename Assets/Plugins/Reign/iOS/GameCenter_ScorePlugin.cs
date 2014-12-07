@@ -147,10 +147,13 @@ namespace Reign.Plugin
 			{
 				if (a.ID == achievementID) found =  a;
 			}
-			throw new Exception("Failed to find AchievementID: " + achievementID);
+			if (found == null) throw new Exception("Failed to find AchievementID: " + achievementID);
 
 			// make sure value within range
 			if (percentComplete > found.PercentCompletedAtValue) percentComplete = found.PercentCompletedAtValue;
+
+			// if non-incremental achievement, then force percent complete to 100%
+			if (found.IsIncremental) percentComplete = found.PercentCompletedAtValue;
 
 			// request
 			reportAchievementCallback = callback;

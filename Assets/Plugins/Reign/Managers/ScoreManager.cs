@@ -260,7 +260,6 @@ namespace Reign
 		
 		/// <summary>
 		/// Use to request achievements.
-		/// NOTE: Only supports ReignScores.
 		/// </summary>
 		/// <param name="callback">The callback that fires when done.</param>
 		public static void RequestAchievements(RequestAchievementsCallbackMethod callback)

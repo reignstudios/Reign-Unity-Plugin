@@ -79,7 +79,11 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 		// When you report an achievement you pass a PercentComplete value.
 		// Example: This allows you to change that ratio to something like (0-1000) before the achievement is unlocked.
-		achievement.PercentCompletedAtValue = 100;// NOTE: For GooglePlay you must match this value in the developer dashboard
+		achievement.PercentCompletedAtValue = 100;// NOTE: For GooglePlay you must match this value in the developer dashboard under "How many steps are needed?" option.
+
+		// Mark if you want Achievement to use PercentCompleted value or not.
+		// Marking this true will make the "PercentComplete" value irrelevant.
+		achievement.IsIncremental = true;
 
 		// Editor
 		achievement.Editor_ReignScores_ID = System.Guid.Empty;// Any unique value

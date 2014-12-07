@@ -105,6 +105,11 @@ namespace Reign
 		/// </summary>
 		public int PercentCompletedAtValue = 100;
 
+		/// <summary>
+		/// Mark true if you want to use Incremental/PercentCompleted achievement. (Default = false)
+		/// </summary>
+		public bool IsIncremental;
+
 		// ReignScores
 		/// <summary>
 		/// ID value (Unique value)
