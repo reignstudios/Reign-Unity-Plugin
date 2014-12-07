@@ -174,7 +174,8 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 								if (!starting) requestAchievementsResult += ":";
 								starting = false;
 								requestAchievementsResult += a.getAchievementId();
-								requestAchievementsResult += ":" + a.getCurrentSteps();
+								if (a.getType() == Achievement.TYPE_INCREMENTAL) requestAchievementsResult += ":" + a.getCurrentSteps();
+								else requestAchievementsResult += ":" + (a.getState() == Achievement.STATE_UNLOCKED ? "Unlocked" : "NotUnlocked");
 							}
 							
 							events.add("RequestAchievements:Success");

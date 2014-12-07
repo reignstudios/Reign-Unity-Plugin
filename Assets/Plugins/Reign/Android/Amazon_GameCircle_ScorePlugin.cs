@@ -184,6 +184,12 @@ namespace Reign.Plugin
 								if (descObj.Android_GameCircle_ID == achievementValues[i]) found = descObj;
 							}
 
+							if (found == null)
+							{
+								Debug.LogError("Failed to find achievement: " + achievementValues[i]);
+								continue;
+							}
+
 							// add achievement
 							float percentComplete = float.Parse(achievementValues[i+1]);
 							achievements.Add(new Achievement(percentComplete >= 100f, percentComplete, found.ID, found.Name, found.Desc, null, null));

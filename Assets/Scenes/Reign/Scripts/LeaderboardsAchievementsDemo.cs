@@ -111,9 +111,9 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		{
 			achievement = new AchievementDesc();
 			achievements[i] = achievement;
-			achievement.ID = "Achievement_TODO";
-			achievement.Name = "Achievement_TODO";
-			achievement.Desc = "Achievement_TODO Desc...";
+			achievement.ID = "Achievement_TODO" + i;
+			achievement.Name = "Achievement_TODO" + i;
+			achievement.Desc = "Achievement_TODO Desc" + i;
 		}
 
 		// Desc ---------------------------

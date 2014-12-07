@@ -181,9 +181,23 @@ namespace Reign.Plugin
 									if (descObj.Android_GooglePlay_ID == achievementValues[i]) found = descObj;
 								}
 
+								if (found == null)
+								{
+									Debug.LogError("Failed to find achievement: " + achievementValues[i]);
+									continue;
+								}
+
 								// add achievement
-								float percentComplete = float.Parse(achievementValues[i+1]);
-								achievements.Add(new Achievement(percentComplete >= 100f, percentComplete, found.ID, found.Name, found.Desc, null, null));
+								float percentComplete = 0;
+								if (float.TryParse(achievementValues[i+1], out percentComplete))
+								{
+									achievements.Add(new Achievement(percentComplete >= found.PercentCompletedAtValue, percentComplete, found.ID, found.Name, found.Desc, null, null));
+								}
+								else
+								{
+									bool isComplete = achievementValues[i+1] == "Unlocked";
+									achievements.Add(new Achievement(isComplete, isComplete ? found.PercentCompletedAtValue : 0, found.ID, found.Name, found.Desc, null, null));
+								}
 							}
 
 							requestAchievementsCallback(achievements.ToArray(), success, eventValues[1]);
