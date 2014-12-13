@@ -7,6 +7,10 @@ using System;
 using System.IO;
 using System.Collections;
 using Reign;
+using ImageTools.IO.Jpeg;
+using ImageTools;
+using ImageTools.Filtering;
+using ImageTools.IO.Png;
 
 public class StreamsDemo : MonoBehaviour
 {
@@ -148,10 +152,20 @@ public class StreamsDemo : MonoBehaviour
 		
 		try
 		{
-			var data = new byte[stream.Length];
-			stream.Read(data, 0, data.Length);
-			currentImage = new Texture2D(4, 4);
-			currentImage.LoadImage(data);
+			var decoder = new PngDecoder();
+			//decoder.UseLegacyLibrary = true;
+			var image = new ExtendedImage();
+			decoder.Decode(image, stream);
+			var newImage = ExtendedImage.Resize(image, 32, 32, new NearestNeighborResizer());
+
+			currentImage = new Texture2D(newImage.PixelWidth, newImage.PixelHeight);
+			currentImage.SetPixels(newImage.Colors);
+			currentImage.Apply();
+
+			//var data = new byte[stream.Length];
+			//stream.Read(data, 0, data.Length);
+			//currentImage = new Texture2D(4, 4);
+			//currentImage.LoadImage(data);
 		}
 		catch (Exception e)
 		{

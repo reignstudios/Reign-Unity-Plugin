@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.IO;
-using Reign.ImageTools;
 using System;
 using System.Collections.Generic;
+using ImageTools.IO.Gif;
+using ImageTools;
 
 namespace Reign
 {

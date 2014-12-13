@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using Reign.ImageTools;
 using System.Collections;
 using System.IO;
 using System.Xml.Serialization;
