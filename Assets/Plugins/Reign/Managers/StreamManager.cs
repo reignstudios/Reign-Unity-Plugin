@@ -493,7 +493,20 @@ namespace Reign
 		/// <param name="streamLoadedCallback">The callback that fires when done.</param>
 		public static void LoadFileDialog(FolderLocations folderLocation, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
-			LoadFileDialog(folderLocation, 0, 0, 10, 10, fileTypes, streamLoadedCallback);
+			LoadFileDialog(folderLocation, 0, 0, 0, 0, 10, 10, fileTypes, streamLoadedCallback);
+		}
+
+		/// <summary>
+		/// Use to have to user pic a file. (Remember to dispose loaded stream)
+		/// </summary>
+		/// <param name="folderLocation">Folder location from where the user should choose from.</param>
+		/// <param name="maxWidth">Image size returned will not be above the Max Width value (set 0 to disable)</param>
+		/// <param name="maxHeight">Image size returned will not be above the Max Height value (set 0 to disable)</param>
+		/// <param name="fileTypes">File types the user can see in file popup.</param>
+		/// <param name="streamLoadedCallback">The callback that fires when done.</param>
+		public static void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+		{
+			LoadFileDialog(folderLocation, maxWidth, maxHeight, 0, 0, 10, 10, fileTypes, streamLoadedCallback);
 		}
 		
 		/// <summary>
@@ -508,6 +521,24 @@ namespace Reign
 		/// <param name="fileTypes">File types the user can see in file popup.</param>
 		/// <param name="streamLoadedCallback">The callback that fires when done.</param>
 		public static void LoadFileDialog(FolderLocations folderLocation, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+		{
+			LoadFileDialog(folderLocation, 0, 0, 0, 0, 10, 10, fileTypes, streamLoadedCallback);
+		}
+
+		/// <summary>
+		/// Use to have to user pic a file on iOS. (Remember to dispose loaded stream)
+		/// NOTE: The x, y, width, height is ONLY for iOS (other platforms ignore these values).
+		/// </summary>
+		/// <param name="folderLocation">Folder location from where the user should choose from.</param>
+		/// <param name="maxWidth">Image size returned will not be above the Max Width value (set 0 to disable)</param>
+		/// <param name="maxHeight">Image size returned will not be above the Max Height value (set 0 to disable)</param>
+		/// <param name="x">iOS iPad dlg X.</param>
+		/// <param name="y">iOS iPad dlg Y.</param>
+		/// <param name="width">iOS iPad dlg Width.</param>
+		/// <param name="height">iOS iPad dlg Height.</param>
+		/// <param name="fileTypes">File types the user can see in file popup.</param>
+		/// <param name="streamLoadedCallback">The callback that fires when done.</param>
+		public static void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
 			if (loadingStream)
 			{
@@ -524,9 +555,9 @@ namespace Reign
 		
 			#if ASYNC
 			asyncLoadDone = false;
-			plugin.LoadFileDialog(folderLocation, x, y, width, height, fileTypes, async_streamLoadedCallback);
+			plugin.LoadFileDialog(folderLocation, maxWidth, maxHeight, x, y, width, height, fileTypes, async_streamLoadedCallback);
 			#else
-			plugin.LoadFileDialog(folderLocation, x, y, width, height, fileTypes, noAsync_streamLoadedCallback);
+			plugin.LoadFileDialog(folderLocation, maxWidth, maxHeight, x, y, width, height, fileTypes, noAsync_streamLoadedCallback);
 			#endif
 		}
 

@@ -112,7 +112,7 @@ namespace Reign.Plugin
 			if (streamSavedCallback != null) streamSavedCallback(false);
 		}
 		
-		public virtual void LoadFileDialog(FolderLocations folderLocation, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+		public virtual void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
 			Debug.LogError("LoadFileDialog not supported on this Platform!");
 			streamLoadedCallback(null, false);

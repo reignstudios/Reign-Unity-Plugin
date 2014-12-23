@@ -9,9 +9,16 @@ using Windows.Storage.Pickers;
 using System.Collections.Generic;
 using Windows.UI.Core;
 
+#if UNITY_METRO
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Graphics.Imaging;
+using Windows.Storage.Streams;
+#endif
+
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Phone.Tasks;
+using System.Windows.Media.Imaging;
 #endif
 
 namespace Reign.Plugin
@@ -300,10 +307,10 @@ namespace Reign.Plugin
 		}
 		#endif
 
-		public void LoadFileDialog(FolderLocations folderLocation, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+		public void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
 			if (streamLoadedCallback == null) return;
-			loadFileDialogAsync(folderLocation, fileTypes, streamLoadedCallback);
+			loadFileDialogAsync(folderLocation, maxWidth, maxHeight, fileTypes, streamLoadedCallback);
 		}
 
 		#if WINDOWS_PHONE
@@ -311,19 +318,21 @@ namespace Reign.Plugin
 		{
 			var names = fileName.Split('.');
 			if (names.Length < 2) return null;
-			return '.' + names[names.Length-1];
+			return '.' + names[names.Length - 1];
 		}
 
 		private StreamLoadedCallbackMethod photoChooserTask_StreamLoadedCallback;
 		private string[] photoChooserTask_fileTypes;
+		private int photoChooserTask_maxWidth, photoChooserTask_maxHeight;
 		void photoChooserTask_Completed(object sender, PhotoResult e)
 		{
 			var callback = photoChooserTask_StreamLoadedCallback;
 			var fileTypes = photoChooserTask_fileTypes;
+			int maxWidth = photoChooserTask_maxWidth, maxHeight = photoChooserTask_maxHeight;
 			photoChooserTask_StreamLoadedCallback = null;
 			photoChooserTask_fileTypes = null;
 			photoChooser = null;
-			
+
 			if (e.TaskResult != TaskResult.OK)
 			{
 				if (callback != null) callback(null, false);
@@ -335,7 +344,34 @@ namespace Reign.Plugin
 			{
 				if (getFileExt(type).ToLower() == fileExt)
 				{
-					if (callback != null) callback(e.ChosenPhoto, e.TaskResult == TaskResult.OK);
+					if (callback != null && e.TaskResult == TaskResult.OK)
+					{
+						var stream = e.ChosenPhoto;
+						if (maxWidth == 0 || maxHeight == 0)
+						{
+							callback(stream, true);
+						}
+						else
+						{
+							var image = new BitmapImage();
+							image.CreateOptions = BitmapCreateOptions.None;
+							image.SetSource(stream);
+
+							var scaledStream = new MemoryStream();
+							var newImage = new WriteableBitmap(image);
+							Vector2 newSize;
+							if (image.PixelWidth > maxWidth || image.PixelHeight > maxHeight) newSize = Reign.MathUtilities.FitInView(newImage.PixelWidth, newImage.PixelHeight, maxWidth, maxHeight);
+							else newSize = new Vector2(image.PixelWidth, image.PixelHeight);
+							newImage.SaveJpeg(scaledStream, (int)newSize.x, (int)newSize.y, 0, 95);
+							scaledStream.Position = 0;
+							callback(scaledStream, true);
+						}
+					}
+					else if (callback != null)
+					{
+						callback(null, false);
+					}
+
 					return;
 				}
 			}
@@ -345,9 +381,9 @@ namespace Reign.Plugin
 		#endif
 
 		#if WINDOWS_PHONE
-		private void loadFileDialogAsync(FolderLocations folderLocation, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+		private void loadFileDialogAsync(FolderLocations folderLocation, int maxWidth, int maxHeight, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		#else
-		private async void loadFileDialogAsync(FolderLocations folderLocation, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+		private async void loadFileDialogAsync(FolderLocations folderLocation, int maxWidth, int maxHeight, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		#endif
 		{
 			#if WINDOWS_PHONE
@@ -367,6 +403,8 @@ namespace Reign.Plugin
 						photoChooser.Completed += photoChooserTask_Completed;
 						photoChooserTask_StreamLoadedCallback = streamLoadedCallback;
 						photoChooserTask_fileTypes = fileTypes;
+						photoChooserTask_maxWidth = maxWidth;
+						photoChooserTask_maxHeight = maxHeight;
 						photoChooser.Show();
 						return;
 					}
@@ -382,8 +420,32 @@ namespace Reign.Plugin
 					var file = await picker.PickSingleFileAsync();
 					if (file != null)
 					{
-						stream = await file.OpenStreamForReadAsync();
-						streamLoadedCallback(stream, true);
+						if (maxWidth == 0 || maxHeight == 0)
+						{
+							stream = await file.OpenStreamForReadAsync();
+							streamLoadedCallback(stream, true);
+						}
+						else
+						{
+							#if UNITY_METRO
+							using (var tempStream = await file.OpenStreamForReadAsync())
+							{
+								var decoder = await BitmapDecoder.CreateAsync(tempStream.AsRandomAccessStream());
+								
+								var newStream = new InMemoryRandomAccessStream();
+								var encoder = await BitmapEncoder.CreateForTranscodingAsync(newStream, decoder);
+								Vector2 newSize;
+								if (decoder.PixelWidth > maxWidth || decoder.PixelHeight > maxHeight) newSize = Reign.MathUtilities.FitInView(decoder.PixelWidth, decoder.PixelHeight, maxWidth, maxHeight);
+								else newSize = new Vector2(decoder.PixelWidth, decoder.PixelHeight);
+								encoder.BitmapTransform.ScaledWidth = (uint)newSize.x;
+								encoder.BitmapTransform.ScaledHeight = (uint)newSize.y;
+								await encoder.FlushAsync();
+								stream = newStream.AsStream();
+							}
+
+							streamLoadedCallback(stream, true);
+							#endif
+						}
 					}
 					else
 					{
@@ -466,9 +528,9 @@ namespace Reign.Plugin
 			Native.SaveFileDialog(data, folderLocation, fileTypes, streamSavedCallback);
 		}
 
-		public void LoadFileDialog(FolderLocations folderLocation, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+		public void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
-			Native.LoadFileDialog(folderLocation, x, y, width, height, fileTypes, streamLoadedCallback);
+			Native.LoadFileDialog(folderLocation, maxWidth, maxHeight, x, y, width, height, fileTypes, streamLoadedCallback);
 		}
 
 		public void Update()

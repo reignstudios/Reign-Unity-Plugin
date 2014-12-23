@@ -3,6 +3,10 @@ using UnityEngine;
 using System.Collections;
 using UnityEditor;
 using System.IO;
+using ImageTools.IO.Png;
+using ImageTools.Filtering;
+using ImageTools;
+using System;
 
 namespace Reign.Plugin
 {
@@ -47,12 +51,48 @@ namespace Reign.Plugin
 			}
 		}
 
-		public override void LoadFileDialog(FolderLocations folderLocation, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+		public override void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
 			if (streamLoadedCallback == null) return;
 			string fileName = EditorUtility.OpenFilePanel("Load file", "", "png");
-			if (!string.IsNullOrEmpty(fileName)) streamLoadedCallback(new FileStream(fileName, FileMode.Open, FileAccess.Read), true);
-			else streamLoadedCallback(null, false);
+			if (!string.IsNullOrEmpty(fileName))
+			{
+				if (maxWidth == 0 || maxHeight == 0)
+				{
+					streamLoadedCallback(new FileStream(fileName, FileMode.Open, FileAccess.Read), true);
+				}
+				else
+				{
+					var newStream = new MemoryStream();
+					try
+					{
+						using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+						{
+							var decoder = new PngDecoder();
+							var image = new ExtendedImage();
+							decoder.Decode(image, stream);
+							var newImage = ExtendedImage.Resize(image, 32, 32, new NearestNeighborResizer());
+
+							var encoder = new PngEncoder();
+							encoder.Encode(newImage, newStream);
+						}
+					}
+					catch (Exception e)
+					{
+						newStream.Dispose();
+						newStream = null;
+						Debug.LogError(e.Message);
+					}
+					finally
+					{
+						streamLoadedCallback(newStream, true);
+					}
+				}
+			}
+			else
+			{
+				streamLoadedCallback(null, false);
+			}
 		}
 	}
 }

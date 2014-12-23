@@ -7,10 +7,6 @@ using System;
 using System.IO;
 using System.Collections;
 using Reign;
-using ImageTools.IO.Jpeg;
-using ImageTools;
-using ImageTools.Filtering;
-using ImageTools.IO.Png;
 
 public class StreamsDemo : MonoBehaviour
 {
@@ -37,6 +33,24 @@ public class StreamsDemo : MonoBehaviour
 		// NOTE: Other usfull methods...
 		//StreamManager.SaveScreenShotToPictures(...);
 		//StreamManager.MakeFourCC(...);
+
+		// NOTE: With ImageTools you can do stuff like >>>
+		// <<< Decode images and resize them: (Example)
+		/*
+		var decoder = new PngDecoder();
+		var image = new ExtendedImage();
+		decoder.Decode(image, stream);
+		var newImage = ExtendedImage.Resize(image, 32, 32, new NearestNeighborResizer());
+		currentImage = new Texture2D(newImage.PixelWidth, newImage.PixelHeight);
+		currentImage.SetPixels(newImage.Colors);
+		currentImage.Apply();
+		*/
+
+		// <<< Encode images to other formats Unity doesn't support: (Example)
+		/*
+		var encoder = new PngEncoder();
+		encoder.Encode(image, stream);
+		*/
 	}
 
 	void OnGUI()
@@ -104,7 +118,7 @@ public class StreamsDemo : MonoBehaviour
 		{
 			waiting = true;
 			// NOTE: Unity only supports loading png and jpg data
-			StreamManager.LoadFileDialog(FolderLocations.Pictures, new string[]{".png", ".jpg"}, imageLoadedCallback);
+			StreamManager.LoadFileDialog(FolderLocations.Pictures, 128, 128, new string[]{".png", ".jpg", ".jpeg"}, imageLoadedCallback);
 		}
 	}
 
@@ -152,20 +166,10 @@ public class StreamsDemo : MonoBehaviour
 		
 		try
 		{
-			var decoder = new PngDecoder();
-			//decoder.UseLegacyLibrary = true;
-			var image = new ExtendedImage();
-			decoder.Decode(image, stream);
-			var newImage = ExtendedImage.Resize(image, 32, 32, new NearestNeighborResizer());
-
-			currentImage = new Texture2D(newImage.PixelWidth, newImage.PixelHeight);
-			currentImage.SetPixels(newImage.Colors);
-			currentImage.Apply();
-
-			//var data = new byte[stream.Length];
-			//stream.Read(data, 0, data.Length);
-			//currentImage = new Texture2D(4, 4);
-			//currentImage.LoadImage(data);
+			var data = new byte[stream.Length];
+			stream.Read(data, 0, data.Length);
+			currentImage = new Texture2D(4, 4);
+			currentImage.LoadImage(data);
 		}
 		catch (Exception e)
 		{
