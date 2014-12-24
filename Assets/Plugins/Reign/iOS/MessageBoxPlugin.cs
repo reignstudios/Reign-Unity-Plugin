@@ -1,10 +1,10 @@
-﻿#if UNITY_IPHONE && !UNITY_EDITOR
+﻿#if UNITY_IPHONE
 using System;
 using System.Runtime.InteropServices;
 
 namespace Reign.Plugin
 {
-	public class MessageBoxPlugin : IMessageBoxPlugin
+	public class MessageBoxPlugin_iOS : IMessageBoxPlugin
 	{
 		private MessageBoxCallback callback;
 		
@@ -23,12 +23,12 @@ namespace Reign.Plugin
 		[DllImport("__Internal", EntryPoint="MessageBoxCancelClicked")]
 		private static extern bool MessageBoxCancelClicked();
 	
-		public MessageBoxPlugin()
+		public MessageBoxPlugin_iOS()
 		{
 			InitMessageBox();
 		}
 		
-		~MessageBoxPlugin()
+		~MessageBoxPlugin_iOS()
 		{
 			DisposeMessageBox();
 		}

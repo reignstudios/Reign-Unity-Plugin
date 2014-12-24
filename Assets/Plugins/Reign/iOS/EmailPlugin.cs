@@ -1,10 +1,10 @@
-﻿#if UNITY_IPHONE && !UNITY_EDITOR
+﻿#if UNITY_IPHONE
 using System;
 using System.Runtime.InteropServices;
 
 namespace Reign.Plugin
 {
-	public class EmailPlugin : IEmailPlugin
+	public class EmailPlugin_iOS : IEmailPlugin
 	{
 		[DllImport("__Internal", EntryPoint="InitEmail")]
 		private static extern void InitEmail();
@@ -15,12 +15,12 @@ namespace Reign.Plugin
 		[DllImport("__Internal", EntryPoint="SendEmail")]
 		private static extern void SendEmail(string to, string subject, string body);
 	
-		public EmailPlugin()
+		public EmailPlugin_iOS()
 		{
 			InitEmail();
 		}
 		
-		~EmailPlugin()
+		~EmailPlugin_iOS()
 		{
 			DisposeEmail();
 		}

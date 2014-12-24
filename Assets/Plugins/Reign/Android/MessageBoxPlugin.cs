@@ -1,20 +1,20 @@
-﻿#if UNITY_ANDROID && !UNITY_EDITOR
+﻿#if UNITY_ANDROID
 using System;
 using UnityEngine;
 
 namespace Reign.Plugin
 {
-	public class MessageBoxPlugin : IMessageBoxPlugin
+	public class MessageBoxPlugin_Android : IMessageBoxPlugin
 	{
 		private AndroidJavaClass native;
 		private MessageBoxCallback callback;
 	
-		public MessageBoxPlugin()
+		public MessageBoxPlugin_Android()
 		{
 			native = new AndroidJavaClass("com.reignstudios.reignnative.MessageBoxNative");
 		}
 		
-		~MessageBoxPlugin()
+		~MessageBoxPlugin_Android()
 		{
 			if (native != null)
 			{

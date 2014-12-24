@@ -73,6 +73,12 @@ namespace Reign
 			#if !DISABLE_REIGN
 			#if UNITY_WINRT && !UNITY_EDITOR
 			plugin = new StreamPlugin_WinRT();
+			#elif UNITY_ANDROID
+			plugin = new StreamPlugin_Android();
+			#elif UNITY_IOS
+			plugin = new StreamPlugin_iOS();
+			#elif UNITY_BLACKBERRY
+			plugin = new StreamPlugin_BB10();
 			#else
 			plugin = new StreamPlugin();
 			#endif

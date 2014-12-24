@@ -1,4 +1,4 @@
-﻿#if UNITY_BLACKBERRY && !UNITY_EDITOR
+﻿#if UNITY_BLACKBERRY
 using System;
 using UnityEngine;
 using System.Runtime.InteropServices;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Reign.Plugin
 {
-	public class InAppPurchasePlugin : IInAppPurchasePlugin
+	public class InAppPurchasePlugin_BB10 : IInAppPurchasePlugin
 	{
 		public bool IsTrial {get{return false;}}
 		public InAppPurchaseID[] InAppIDs {get; private set;}
@@ -42,12 +42,12 @@ namespace Reign.Plugin
 		[DllImport("libbps", EntryPoint="paymentservice_event_get_price")]
 		private static extern IntPtr paymentservice_event_get_price(IntPtr _event);
 		
-		static InAppPurchasePlugin()
+		static InAppPurchasePlugin_BB10()
 		{
 			paymentservice_request_events(0);
 		}
 
-		public InAppPurchasePlugin(InAppPurchaseDesc desc, InAppPurchaseCreatedCallbackMethod callback)
+		public InAppPurchasePlugin_BB10(InAppPurchaseDesc desc, InAppPurchaseCreatedCallbackMethod callback)
 		{
 			bool pass = true;
 			try

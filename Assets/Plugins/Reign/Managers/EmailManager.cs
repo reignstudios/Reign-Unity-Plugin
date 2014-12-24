@@ -22,6 +22,12 @@ namespace Reign
 			#if !DISABLE_REIGN
 			#if UNITY_WINRT && !UNITY_EDITOR
 			plugin = new EmailPlugin_WinRT();
+			#elif UNITY_ANDROID
+			plugin = new EmailPlugin_Android();
+			#elif UNITY_IOS
+			plugin = new EmailPlugin_iOS();
+			#elif UNITY_BLACKBERRY
+			plugin = new EmailPlugin_BB10();
 			#else
 			plugin = new EmailPlugin();
 			#endif

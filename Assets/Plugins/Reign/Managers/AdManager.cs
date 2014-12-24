@@ -333,20 +333,20 @@ namespace Reign.Plugin
 			else throw new Exception("Unsuported WP8_AdAPI: " + desc.WP8_AdAPI);
 			#elif UNITY_BB10
 			if (desc.BB10_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
-			else if (desc.BB10_AdAPI == AdAPIs.BlackBerryAdvertising) return new BlackBerryAdvertising_AdPlugin(desc, callback);
+			else if (desc.BB10_AdAPI == AdAPIs.BlackBerryAdvertising) return new BlackBerryAdvertising_AdPlugin_BB10(desc, callback);
 			else if (desc.BB10_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback, ReignServices.Singleton);
 			else throw new Exception("Unsuported BB10_AdAPI: " + desc.BB10_AdAPI);
 			#elif UNITY_IOS
 			if (desc.iOS_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
-			else if (desc.iOS_AdAPI == AdAPIs.iAd) return new iAd_AdPlugin(desc, callback);
-			else if (desc.iOS_AdAPI == AdAPIs.AdMob) return new AdMob_AdPlugin(desc, callback);
-			else if (desc.iOS_AdAPI == AdAPIs.DFP) return new DFP_AdPlugin(desc, callback);
+			else if (desc.iOS_AdAPI == AdAPIs.iAd) return new iAd_AdPlugin_iOS(desc, callback);
+			else if (desc.iOS_AdAPI == AdAPIs.AdMob) return new AdMob_AdPlugin_iOS(desc, callback);
+			else if (desc.iOS_AdAPI == AdAPIs.DFP) return new DFP_AdPlugin_iOS(desc, callback);
 			else throw new Exception("Unsuported iOS_AdAPI: " + desc.iOS_AdAPI);
 			#elif UNITY_ANDROID
 			if (desc.Android_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
-			else if (desc.Android_AdAPI == AdAPIs.AdMob) return new AdMob_AdPlugin(desc, callback);
-			else if (desc.Android_AdAPI == AdAPIs.DFP) return new DFP_AdPlugin(desc, callback);
-			else if (desc.Android_AdAPI == AdAPIs.AmazonAds) return new Amazon_AdPlugin(desc, callback);
+			else if (desc.Android_AdAPI == AdAPIs.AdMob) return new AdMob_AdPlugin_Android(desc, callback);
+			else if (desc.Android_AdAPI == AdAPIs.DFP) return new DFP_AdPlugin_Android(desc, callback);
+			else if (desc.Android_AdAPI == AdAPIs.AmazonAds) return new Amazon_AdPlugin_Android(desc, callback);
 			else throw new Exception("Unsuported Android_AdAPI: " + desc.Android_AdAPI);
 			#else
 			return new Dumy_AdPlugin(desc, callback);

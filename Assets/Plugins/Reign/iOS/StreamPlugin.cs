@@ -1,4 +1,4 @@
-﻿#if UNITY_IPHONE && !UNITY_EDITOR
+﻿#if UNITY_IPHONE
 using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices;
@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Reign.Plugin
 {
-	public class StreamPlugin : StreamPluginBase
+	public class StreamPlugin_iOS : StreamPluginBase
 	{
 		[DllImport("__Internal", EntryPoint="InitStream")]
 		private static extern void InitStream();
@@ -33,7 +33,7 @@ namespace Reign.Plugin
 		[DllImport("__Internal", EntryPoint="LoadImagePicker")]
 		private static extern void LoadImagePicker(int x, int y, int width, int height);
 		
-		public StreamPlugin()
+		public StreamPlugin_iOS()
 		{
 			InitStream();
 		}
@@ -118,7 +118,7 @@ namespace Reign.Plugin
 			}
 		}
 
-		public override void LoadFileDialog(FolderLocations folderLocation, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+		public override void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
 			if (folderLocation != FolderLocations.Pictures)
 			{

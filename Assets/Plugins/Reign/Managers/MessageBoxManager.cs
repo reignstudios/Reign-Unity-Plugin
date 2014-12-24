@@ -26,6 +26,12 @@ namespace Reign
 			#if !DISABLE_REIGN
 			#if UNITY_WINRT && !UNITY_EDITOR
 			plugin = new MessageBoxPlugin_WinRT();
+			#elif UNITY_ANDROID
+			plugin = new MessageBoxPlugin_Android();
+			#elif UNITY_IOS
+			plugin = new MessageBoxPlugin_iOS();
+			#elif UNITY_BLACKBERRY
+			plugin = new MessageBoxPlugin_BB10();
 			#else
 			plugin = new MessageBoxPlugin();
 			#endif

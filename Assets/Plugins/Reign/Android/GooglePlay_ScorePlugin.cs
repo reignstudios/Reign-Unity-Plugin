@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Reign.Plugin
 {
-	public class GooglePlay_ScorePlugin : IScorePlugin
+	public class GooglePlay_ScorePlugin_Android : IScorePlugin
 	{
 		public bool IsAuthenticated {get; private set;}
 		public bool PerformingGUIOperation {get; private set;}
@@ -21,7 +21,7 @@ namespace Reign.Plugin
 
 		private ScoreDesc desc;
 
-		public GooglePlay_ScorePlugin (ScoreDesc desc, CreatedScoreAPICallbackMethod createdCallback)
+		public GooglePlay_ScorePlugin_Android (ScoreDesc desc, CreatedScoreAPICallbackMethod createdCallback)
 		{
 			this.desc = desc;
 			this.createdCallback = createdCallback;

@@ -1,11 +1,11 @@
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_ANDROID
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Reign.Plugin
 {
-	public class Amazon_InAppPurchasePlugin : IInAppPurchasePlugin
+	public class Amazon_InAppPurchasePlugin_Android : IInAppPurchasePlugin
 	{
 		private bool testTrialMode;
 		public bool IsTrial {get{return testTrialMode;}}
@@ -18,7 +18,7 @@ namespace Reign.Plugin
 		private InAppPurchaseRestoreCallbackMethod restoreCallback;
 		private InAppPurchaseCreatedCallbackMethod createdCallback;
 	
-		public Amazon_InAppPurchasePlugin (InAppPurchaseDesc desc, InAppPurchaseCreatedCallbackMethod createdCallback)
+		public Amazon_InAppPurchasePlugin_Android(InAppPurchaseDesc desc, InAppPurchaseCreatedCallbackMethod createdCallback)
 		{
 			this.createdCallback = createdCallback;
 			try
@@ -48,7 +48,7 @@ namespace Reign.Plugin
 			}
 		}
 		
-		~Amazon_InAppPurchasePlugin()
+		~Amazon_InAppPurchasePlugin_Android()
 		{
 			if (native != null)
 			{

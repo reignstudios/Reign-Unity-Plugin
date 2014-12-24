@@ -1,14 +1,14 @@
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_ANDROID
 using System;
 using UnityEngine;
 
 namespace Reign.Plugin
 {
-    public class MarketingPlugin : IIMarketingPlugin
+    public class MarketingPlugin_Android : IIMarketingPlugin
     {
 		private AndroidJavaClass nativeGooglePlay, nativeAmazon;
 		
-		public MarketingPlugin()
+		public MarketingPlugin_Android()
 		{
 			nativeGooglePlay = new AndroidJavaClass("com.reignstudios.reignnative.GooglePlay_MarketingNative");
 			nativeAmazon = new AndroidJavaClass("com.reignstudios.reignnative.Amazon_MarketingNative");

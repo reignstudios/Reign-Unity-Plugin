@@ -1,9 +1,9 @@
-#if UNITY_BLACKBERRY && !UNITY_EDITOR
+#if UNITY_BLACKBERRY
 using System;
 
 namespace Reign.Plugin
 {
-    public class MarketingPlugin : IIMarketingPlugin
+    public class MarketingPlugin_BB10 : IIMarketingPlugin
     {
 		private void invokeStore(string appID)
 		{

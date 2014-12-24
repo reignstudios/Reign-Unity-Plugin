@@ -1,11 +1,11 @@
-﻿#if UNITY_IPHONE && !UNITY_EDITOR
+﻿#if UNITY_IPHONE
 using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Reign.Plugin
 {
-	public class AdMob_InterstitialAdPlugin : IInterstitialAdPlugin
+	public class AdMob_InterstitialAdPlugin_iOS : IInterstitialAdPlugin
 	{
 		private IntPtr native;
 		private InterstitialAdEventCallbackMethod eventCallback;
@@ -31,7 +31,7 @@ namespace Reign.Plugin
 		[DllImport("__Internal", EntryPoint="AdMob_Interstitial_Cache")]
 		private static extern void AdMob_Interstitial_Cache(IntPtr native);
 		
-		public AdMob_InterstitialAdPlugin (InterstitialAdDesc desc, InterstitialAdCreatedCallbackMethod callback)
+		public AdMob_InterstitialAdPlugin_iOS (InterstitialAdDesc desc, InterstitialAdCreatedCallbackMethod callback)
 		{
 			bool pass = true;
 			try
@@ -50,7 +50,7 @@ namespace Reign.Plugin
 			if (callback != null) callback(pass);
 		}
 		
-		~AdMob_InterstitialAdPlugin()
+		~AdMob_InterstitialAdPlugin_iOS()
 		{
 			Dispose();
 		}

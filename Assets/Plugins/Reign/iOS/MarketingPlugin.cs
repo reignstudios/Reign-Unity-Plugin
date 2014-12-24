@@ -1,10 +1,10 @@
-#if UNITY_IPHONE && !UNITY_EDITOR
+#if UNITY_IPHONE
 using System;
 using UnityEngine;
 
 namespace Reign.Plugin
 {
-    public class MarketingPlugin : IIMarketingPlugin
+    public class MarketingPlugin_iOS : IIMarketingPlugin
     {
 		private int osMajorVersion()
 		{

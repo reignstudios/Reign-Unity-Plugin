@@ -1,10 +1,10 @@
-﻿#if UNITY_BLACKBERRY && !UNITY_EDITOR
+﻿#if UNITY_BLACKBERRY
 using System;
 using System.Runtime.InteropServices;
 
 namespace Reign.Plugin
 {
-	public class EmailPlugin : IEmailPlugin
+	public class EmailPlugin_BB10 : IEmailPlugin
 	{
 		private IntPtr invoke;
 		

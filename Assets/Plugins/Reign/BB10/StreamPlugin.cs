@@ -1,4 +1,4 @@
-﻿#if UNITY_BLACKBERRY && !UNITY_EDITOR
+﻿#if UNITY_BLACKBERRY
 using UnityEngine;
 using System.Collections;
 using System;
@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace Reign.Plugin
 {
-	public class StreamPlugin : StreamPluginBase
+	public class StreamPlugin_BB10 : StreamPluginBase
 	{
 		private IntPtr invoke;
 		private const int NAVIGATOR_INVOKE_TARGET_RESULT = 0x13;
@@ -48,7 +48,7 @@ namespace Reign.Plugin
 			}
 		}
 
-		public override void LoadFileDialog(FolderLocations folderLocation, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+		public override void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
 			if (folderLocation != FolderLocations.Pictures)
 			{

@@ -1,23 +1,23 @@
-﻿#if UNITY_ANDROID && !UNITY_EDITOR
+﻿#if UNITY_ANDROID
 using UnityEngine;
 using System.Collections;
 using System.IO;
 
 namespace Reign.Plugin
 {
-	public class StreamPlugin : StreamPluginBase
+	public class StreamPlugin_Android : StreamPluginBase
 	{
 		private UnityEngine.AndroidJavaClass native;
 		StreamSavedCallbackMethod streamFileSavedCallback;
 		StreamLoadedCallbackMethod streamFileLoadedCallback;
 		
-		public StreamPlugin()
+		public StreamPlugin_Android()
 		{
 			native = new UnityEngine.AndroidJavaClass("com.reignstudios.reignnative.StreamNative");
 			native.CallStatic("Init");
 		}
 		
-		~StreamPlugin()
+		~StreamPlugin_Android()
 		{
 			Dispose();
 		}
@@ -86,7 +86,7 @@ namespace Reign.Plugin
 			}
 		}
 
-		public override void LoadFileDialog(FolderLocations folderLocation, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+		public override void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
 			if (folderLocation != FolderLocations.Pictures)
 			{

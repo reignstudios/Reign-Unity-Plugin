@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Reign.Plugin
 {
-	public class GameCenter_ScorePlugin : IScorePlugin
+	public class GameCenter_ScorePlugin_iOS : IScorePlugin
 	{
 		private bool waitingToAuthenticate;
 		public bool IsAuthenticated {get; private set;}
@@ -82,7 +82,7 @@ namespace Reign.Plugin
 		[DllImport("__Internal", EntryPoint="GameCeneterShowAchievementsPage")]
 		private static extern void GameCeneterShowAchievementsPage();
 
-		public GameCenter_ScorePlugin (ScoreDesc desc, CreatedScoreAPICallbackMethod callback)
+		public GameCenter_ScorePlugin_iOS (ScoreDesc desc, CreatedScoreAPICallbackMethod callback)
 		{
 			this.desc = desc;
 

@@ -1,17 +1,17 @@
-﻿#if UNITY_ANDROID && !UNITY_EDITOR
+﻿#if UNITY_ANDROID
 using System;
 using UnityEngine;
 
 namespace Reign.Plugin
 {
-	public class AdMob_InterstitialAdPlugin : IInterstitialAdPlugin
+	public class AdMob_InterstitialAdPlugin_Android : IInterstitialAdPlugin
 	{
 		private string id;
 		private AndroidJavaClass native;
 		private InterstitialAdEventCallbackMethod eventCallback;
 		private InterstitialAdCreatedCallbackMethod createdCallback;
 		
-		public AdMob_InterstitialAdPlugin (InterstitialAdDesc desc, InterstitialAdCreatedCallbackMethod createdCallback)
+		public AdMob_InterstitialAdPlugin_Android(InterstitialAdDesc desc, InterstitialAdCreatedCallbackMethod createdCallback)
 		{
 			this.createdCallback = createdCallback;
 			try
@@ -28,7 +28,7 @@ namespace Reign.Plugin
 			}
 		}
 		
-		~AdMob_InterstitialAdPlugin()
+		~AdMob_InterstitialAdPlugin_Android()
 		{
 			if (native != null)
 			{

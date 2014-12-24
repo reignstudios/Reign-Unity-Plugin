@@ -1,17 +1,17 @@
-﻿#if UNITY_ANDROID && !UNITY_EDITOR
+﻿#if UNITY_ANDROID
 using System;
 using UnityEngine;
 
 namespace Reign.Plugin
 {
-	public class DFP_InterstitialAdPlugin : IInterstitialAdPlugin
+	public class DFP_InterstitialAdPlugin_Android : IInterstitialAdPlugin
 	{
 		private string id;
 		private AndroidJavaClass native;
 		private InterstitialAdEventCallbackMethod eventCallback;
 		private InterstitialAdCreatedCallbackMethod createdCallback;
 
-		public DFP_InterstitialAdPlugin (InterstitialAdDesc desc, InterstitialAdCreatedCallbackMethod createdCallback)
+		public DFP_InterstitialAdPlugin_Android (InterstitialAdDesc desc, InterstitialAdCreatedCallbackMethod createdCallback)
 		{
 			this.createdCallback = createdCallback;
 			try
@@ -28,7 +28,7 @@ namespace Reign.Plugin
 			}
 		}
 
-		~DFP_InterstitialAdPlugin()
+		~DFP_InterstitialAdPlugin_Android()
 		{
 			if (native != null)
 			{

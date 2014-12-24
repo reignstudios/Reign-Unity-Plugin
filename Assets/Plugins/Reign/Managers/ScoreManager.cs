@@ -489,13 +489,13 @@ namespace Reign.Plugin
 			#elif UNITY_ANDROID
 			if (desc.Android_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
 			else if (desc.Android_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
-			else if (desc.Android_ScoreAPI == ScoreAPIs.GooglePlay) return new GooglePlay_ScorePlugin(desc, callback);
-			else if (desc.Android_ScoreAPI == ScoreAPIs.GameCircle) return new Amazon_GameCircle_ScorePlugin(desc, callback);
+			else if (desc.Android_ScoreAPI == ScoreAPIs.GooglePlay) return new GooglePlay_ScorePlugin_Android(desc, callback);
+			else if (desc.Android_ScoreAPI == ScoreAPIs.GameCircle) return new Amazon_GameCircle_ScorePlugin_Android(desc, callback);
 			else throw new Exception("Unsuported Android_ScoreAPI: " + desc.Android_ScoreAPI);
 			#elif UNITY_IOS
 			if (desc.iOS_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
 			else if (desc.iOS_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
-			else if (desc.iOS_ScoreAPI == ScoreAPIs.GameCenter) return new GameCenter_ScorePlugin(desc, callback);
+			else if (desc.iOS_ScoreAPI == ScoreAPIs.GameCenter) return new GameCenter_ScorePlugin_iOS(desc, callback);
 			else throw new Exception("Unsuported iOS_ScoreAPI: " + desc.iOS_ScoreAPI);
 			#elif UNITY_BB10
 			if (desc.BB10_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);

@@ -1,11 +1,11 @@
-﻿#if UNITY_ANDROID && !UNITY_EDITOR
+﻿#if UNITY_ANDROID
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Reign.Plugin
 {
-	public class Amazon_GameCircle_ScorePlugin : IScorePlugin
+	public class Amazon_GameCircle_ScorePlugin_Android : IScorePlugin
 	{
 		public bool IsAuthenticated {get; private set;}
 		public bool PerformingGUIOperation {get; private set;}
@@ -20,7 +20,7 @@ namespace Reign.Plugin
 
 		private ScoreDesc desc;
 
-		public Amazon_GameCircle_ScorePlugin (ScoreDesc desc, CreatedScoreAPICallbackMethod createdCallback)
+		public Amazon_GameCircle_ScorePlugin_Android(ScoreDesc desc, CreatedScoreAPICallbackMethod createdCallback)
 		{
 			this.desc = desc;
 			try

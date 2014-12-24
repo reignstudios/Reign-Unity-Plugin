@@ -541,17 +541,17 @@ namespace Reign.Plugin
 			else throw new Exception("Unsuported WP8_InAppPurchaseAPI " + desc.WP8_InAppPurchaseAPI);
 			#elif UNITY_BB10
 			if (desc.BB10_InAppPurchaseAPI == InAppPurchaseAPIs.None) return new Dumy_InAppPurchasePlugin(desc, callback);
-			else if (desc.BB10_InAppPurchaseAPI == InAppPurchaseAPIs.BlackBerryWorld) return new InAppPurchasePlugin(desc, callback);
+			else if (desc.BB10_InAppPurchaseAPI == InAppPurchaseAPIs.BlackBerryWorld) return new InAppPurchasePlugin_BB10(desc, callback);
 			else throw new Exception("Unsuported BB10_InAppPurchaseAPI: " + desc.BB10_InAppPurchaseAPI);
 			#elif UNITY_IOS
 			if (desc.iOS_InAppPurchaseAPI == InAppPurchaseAPIs.None) return new Dumy_InAppPurchasePlugin(desc, callback);
-			else if (desc.iOS_InAppPurchaseAPI == InAppPurchaseAPIs.AppleStore) return new AppleStore_InAppPurchasePlugin(desc, callback);
+			else if (desc.iOS_InAppPurchaseAPI == InAppPurchaseAPIs.AppleStore) return new AppleStore_InAppPurchasePlugin_iOS(desc, callback);
 			else throw new Exception("Unsuported iOS_InAppPurchaseAPI: " + desc.iOS_InAppPurchaseAPI);
 			#elif UNITY_ANDROID
 			if (desc.Android_InAppPurchaseAPI == InAppPurchaseAPIs.None) return new Dumy_InAppPurchasePlugin(desc, callback);
-			else if (desc.Android_InAppPurchaseAPI == InAppPurchaseAPIs.GooglePlay) return new GooglePlay_InAppPurchasePlugin(desc, callback);
-			else if (desc.Android_InAppPurchaseAPI == InAppPurchaseAPIs.Amazon) return new Amazon_InAppPurchasePlugin(desc, callback);
-			else if (desc.Android_InAppPurchaseAPI == InAppPurchaseAPIs.Samsung) return new Samsung_InAppPurchasePlugin(desc, callback);
+			else if (desc.Android_InAppPurchaseAPI == InAppPurchaseAPIs.GooglePlay) return new GooglePlay_InAppPurchasePlugin_Android(desc, callback);
+			else if (desc.Android_InAppPurchaseAPI == InAppPurchaseAPIs.Amazon) return new Amazon_InAppPurchasePlugin_Android(desc, callback);
+			else if (desc.Android_InAppPurchaseAPI == InAppPurchaseAPIs.Samsung) return new Samsung_InAppPurchasePlugin_Android(desc, callback);
 			else throw new Exception("Unsuported Android_InAppPurchaseAPI: " + desc.Android_InAppPurchaseAPI);
 			#else
 			return new Dumy_InAppPurchasePlugin(desc, callback);

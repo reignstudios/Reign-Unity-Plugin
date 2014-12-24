@@ -1,10 +1,10 @@
-﻿#if UNITY_BLACKBERRY && !UNITY_EDITOR
+﻿#if UNITY_BLACKBERRY
 using System;
 using System.Runtime.InteropServices;
 
 namespace Reign.Plugin
 {
-	public class MessageBoxPlugin : IMessageBoxPlugin
+	public class MessageBoxPlugin_BB10 : IMessageBoxPlugin
 	{
 		private IntPtr dialog;
 	

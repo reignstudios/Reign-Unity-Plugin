@@ -1,4 +1,4 @@
-#if UNITY_BLACKBERRY && !UNITY_EDITOR
+#if UNITY_BLACKBERRY
 using System;
 using System.Runtime.InteropServices;
 

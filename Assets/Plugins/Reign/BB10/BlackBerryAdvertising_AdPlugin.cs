@@ -1,11 +1,11 @@
-﻿#if UNITY_BLACKBERRY && !UNITY_EDITOR
+﻿#if UNITY_BLACKBERRY
 using System;
 using UnityEngine;
 using System.Runtime.InteropServices;
 
 namespace Reign.Plugin
 {
-    public class BlackBerryAdvertising_AdPlugin : IAdPlugin
+    public class BlackBerryAdvertising_AdPlugin_BB10 : IAdPlugin
     {
     	private bool visible = true;
 		public bool Visible
@@ -131,7 +131,7 @@ namespace Reign.Plugin
 		[DllImport("libbps", EntryPoint="screen_get_event_property_iv")]
 		private static extern int screen_get_event_property_iv(IntPtr _screen_event, int name, ref int parm);
 
-		public BlackBerryAdvertising_AdPlugin(AdDesc desc, AdCreatedCallbackMethod createdCallback)
+		public BlackBerryAdvertising_AdPlugin_BB10(AdDesc desc, AdCreatedCallbackMethod createdCallback)
 		{
 			try
 			{

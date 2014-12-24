@@ -26,6 +26,12 @@ namespace Reign
 			#if !DISABLE_REIGN
 			#if UNITY_WINRT && !UNITY_EDITOR
 			plugin = new MarketingPlugin_WinRT();
+			#elif UNITY_ANDROID
+			plugin = new MarketingPlugin_Android();
+			#elif UNITY_IOS
+			plugin = new MarketingPlugin_iOS();
+			#elif UNITY_BLACKBERRY
+			plugin = new MarketingPlugin_BB10();
 			#else
 			plugin = new MarketingPlugin();
 			#endif

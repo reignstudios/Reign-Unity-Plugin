@@ -295,13 +295,13 @@ namespace Reign.Plugin
 			else throw new Exception("Unsuported WP8_AdAPI: " + desc.WP8_AdAPI);
 			#elif UNITY_IOS
 			if (desc.iOS_AdAPI == InterstitialAdAPIs.None) return new Dumy_InterstitialAdPlugin(desc, callback);
-			else if (desc.iOS_AdAPI == InterstitialAdAPIs.AdMob) return new AdMob_InterstitialAdPlugin(desc, callback);
-			else if (desc.iOS_AdAPI == InterstitialAdAPIs.DFP) return new DFP_InterstitialAdPlugin(desc, callback);
+			else if (desc.iOS_AdAPI == InterstitialAdAPIs.AdMob) return new AdMob_InterstitialAdPlugin_iOS(desc, callback);
+			else if (desc.iOS_AdAPI == InterstitialAdAPIs.DFP) return new DFP_InterstitialAdPlugin_iOS(desc, callback);
 			else throw new Exception("Unsuported iOS_AdAPI: " + desc.iOS_AdAPI);
 			#elif UNITY_ANDROID
 			if (desc.Android_AdAPI == InterstitialAdAPIs.None) return new Dumy_InterstitialAdPlugin(desc, callback);
-			else if (desc.Android_AdAPI == InterstitialAdAPIs.AdMob) return new AdMob_InterstitialAdPlugin(desc, callback);
-			else if (desc.Android_AdAPI == InterstitialAdAPIs.DFP) return new DFP_InterstitialAdPlugin(desc, callback);
+			else if (desc.Android_AdAPI == InterstitialAdAPIs.AdMob) return new AdMob_InterstitialAdPlugin_Android(desc, callback);
+			else if (desc.Android_AdAPI == InterstitialAdAPIs.DFP) return new DFP_InterstitialAdPlugin_Android(desc, callback);
 			else throw new Exception("Unsuported Android_AdAPI: " + desc.Android_AdAPI);
 			#else
 			return new Dumy_InterstitialAdPlugin(desc, callback);

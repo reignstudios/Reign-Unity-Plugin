@@ -1,11 +1,11 @@
-﻿#if UNITY_IPHONE && !UNITY_EDITOR
+﻿#if UNITY_IPHONE
 using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Reign.Plugin
 {
-	public class DFP_AdPlugin : IAdPlugin
+	public class DFP_AdPlugin_iOS : IAdPlugin
 	{
 		private bool visible;
 		public bool Visible
@@ -44,7 +44,7 @@ namespace Reign.Plugin
 		[DllImport("__Internal", EntryPoint="DFP_GetNextAdEvent")]
 		private static extern IntPtr DFP_GetNextAdEvent(IntPtr native);
 
-		public DFP_AdPlugin(AdDesc desc, AdCreatedCallbackMethod createdCallback)
+		public DFP_AdPlugin_iOS(AdDesc desc, AdCreatedCallbackMethod createdCallback)
 		{
 			bool pass = true;
 			try
@@ -65,7 +65,7 @@ namespace Reign.Plugin
 			if (createdCallback != null) createdCallback(pass);
 		}
 
-		~DFP_AdPlugin()
+		~DFP_AdPlugin_iOS()
 		{
 			Dispose();
 		}

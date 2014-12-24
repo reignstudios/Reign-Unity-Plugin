@@ -1,4 +1,4 @@
-﻿#if UNITY_IPHONE && !UNITY_EDITOR
+﻿#if UNITY_IPHONE
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Reign.Plugin
 {
-	public class AppleStore_InAppPurchasePlugin : IInAppPurchasePlugin
+	public class AppleStore_InAppPurchasePlugin_iOS : IInAppPurchasePlugin
 	{
 		public bool IsTrial {get{return false;}}
 		public InAppPurchaseID[] InAppIDs {get; private set;}
@@ -46,7 +46,7 @@ namespace Reign.Plugin
 		[DllImport("__Internal", EntryPoint="GetInAppPurchaseProductInfo")]
 		private unsafe static extern byte** GetInAppPurchaseProductInfo(IntPtr native);
 
-		public AppleStore_InAppPurchasePlugin(InAppPurchaseDesc desc, InAppPurchaseCreatedCallbackMethod callback)
+		public AppleStore_InAppPurchasePlugin_iOS(InAppPurchaseDesc desc, InAppPurchaseCreatedCallbackMethod callback)
 		{
 			bool pass = true;
 			try
@@ -80,7 +80,7 @@ namespace Reign.Plugin
 			if (callback != null) callback(pass);
 		}
 		
-		~AppleStore_InAppPurchasePlugin()
+		~AppleStore_InAppPurchasePlugin_iOS()
 		{
 			DisposeInAppPurchase(native);
 			native = IntPtr.Zero;

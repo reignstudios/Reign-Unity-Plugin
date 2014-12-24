@@ -1,10 +1,10 @@
-﻿#if UNITY_ANDROID && !UNITY_EDITOR
+﻿#if UNITY_ANDROID
 using System;
 using UnityEngine;
 
 namespace Reign.Plugin
 {
-    public class AdMob_AdPlugin : IAdPlugin
+    public class AdMob_AdPlugin_Android : IAdPlugin
     {
     	private bool visible;
 		public bool Visible
@@ -22,7 +22,7 @@ namespace Reign.Plugin
 		private AdEventCallbackMethod eventCallback;
 		private AdCreatedCallbackMethod createdCallback;
 
-		public AdMob_AdPlugin(AdDesc desc, AdCreatedCallbackMethod createdCallback)
+		public AdMob_AdPlugin_Android(AdDesc desc, AdCreatedCallbackMethod createdCallback)
 		{
 			this.createdCallback = createdCallback;
 			try
@@ -40,7 +40,7 @@ namespace Reign.Plugin
 			}
 		}
 		
-		~AdMob_AdPlugin()
+		~AdMob_AdPlugin_Android()
 		{
 			if (native != null)
 			{

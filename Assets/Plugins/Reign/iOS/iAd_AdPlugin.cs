@@ -1,10 +1,10 @@
-﻿#if UNITY_IPHONE && !UNITY_EDITOR
+﻿#if UNITY_IPHONE
 using System;
 using System.Runtime.InteropServices;
 
 namespace Reign.Plugin
 {
-    public class iAd_AdPlugin : IAdPlugin
+    public class iAd_AdPlugin_iOS : IAdPlugin
     {
     	private bool visible;
 		public bool Visible
@@ -41,7 +41,7 @@ namespace Reign.Plugin
 		[DllImport("__Internal", EntryPoint="iAd_GetNextAdEvent")]
 		private static extern IntPtr iAd_GetNextAdEvent(IntPtr native);
 
-		public iAd_AdPlugin(AdDesc desc, AdCreatedCallbackMethod createdCallback)
+		public iAd_AdPlugin_iOS(AdDesc desc, AdCreatedCallbackMethod createdCallback)
 		{
 			eventCallback = desc.EventCallback;
 			native = iAd_InitAd(desc.Testing);
@@ -52,7 +52,7 @@ namespace Reign.Plugin
 			if (createdCallback != null) createdCallback(true);
 		}
 		
-		~iAd_AdPlugin()
+		~iAd_AdPlugin_iOS()
 		{
 			Dispose();
 		}

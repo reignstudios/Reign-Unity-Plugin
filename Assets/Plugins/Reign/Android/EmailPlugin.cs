@@ -1,19 +1,19 @@
-﻿#if UNITY_ANDROID && !UNITY_EDITOR
+﻿#if UNITY_ANDROID
 using System;
 using UnityEngine;
 
 namespace Reign.Plugin
 {
-	public class EmailPlugin : IEmailPlugin
+	public class EmailPlugin_Android : IEmailPlugin
 	{
 		private AndroidJavaClass native;
 		
-		public EmailPlugin()
+		public EmailPlugin_Android()
 		{
 			native = new AndroidJavaClass("com.reignstudios.reignnative.EmailNative");
 		}
 		
-		~EmailPlugin()
+		~EmailPlugin_Android()
 		{
 			if (native != null)
 			{
