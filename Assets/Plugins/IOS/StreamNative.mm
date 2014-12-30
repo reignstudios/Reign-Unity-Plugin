@@ -59,9 +59,9 @@
 
 - (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info
 {
-	// grab the image
-	UIImage *image;
-	image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    // grab the image
+    UIImage *image;
+    image = [info objectForKey:UIImagePickerControllerOriginalImage];
     
     // rotate image to fit correct pixel width and height
     if (image.imageOrientation == UIImageOrientationLeft)
@@ -81,28 +81,58 @@
         image = [self correctImageRotation:image :image.size.width :image.size.height];
     }
     
-	// process image
+    // process image
     [self performSelector:@selector(processImageFromImagePicker:) withObject:image];
     
-	// dimiss the picker
-	[self dismissWrappedController];
+    // dimiss the picker
+    [self dismissWrappedController];
 }
 
 - (void)dismissWrappedController
 {
-    //UnityPause(false);
     if (popoverViewController != nil)
     {
         [popoverViewController dismissPopoverAnimated:YES];
         popoverViewController = nil;
     }
     
-	UIViewController *vc = UnityGetGLViewController();
-	if(vc) [vc dismissModalViewControllerAnimated:YES];
+    UIViewController *vc = UnityGetGLViewController();
+    if(vc) [vc dismissModalViewControllerAnimated:YES];
 }
 
+void fitInView(float objectWidth, float objectHeight, float viewWidth, float viewHeight, float* newWidth, float* newHeight)
+{
+    float objectSlope = objectHeight / objectWidth;
+    float viewSlope = viewHeight / viewWidth;
+    
+    if (objectSlope >= viewSlope)
+    {
+        *newWidth = (objectWidth/objectHeight) * viewHeight;
+        *newHeight = viewHeight;
+    }
+    else
+    {
+        *newWidth = viewWidth;
+        *newHeight = (objectHeight/objectWidth) * viewWidth;
+    }
+}
+
+int ShowPhotoPicker_maxWidth, ShowPhotoPicker_maxHeight;
 - (void)processImageFromImagePicker:(UIImage*)image
 {
+    UIImage* newImage = image;
+    if (ShowPhotoPicker_maxWidth != 0 && ShowPhotoPicker_maxHeight != 0)
+    {
+        float newWidth = 0, newHeight = 0;
+        fitInView(image.size.width, image.size.height, ShowPhotoPicker_maxWidth, ShowPhotoPicker_maxHeight, &newWidth, &newHeight);
+        CGSize newSize = CGSizeMake(newWidth, newHeight);
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+        [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+        newImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
+    
     NSData *pngData = UIImagePNGRepresentation(image);
     char* tempData = (char*)[pngData bytes];
     imageDataSize = (int)pngData.length;
@@ -115,22 +145,21 @@
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController*)popoverController
 {
-	if (popoverViewController != nil)
+    if (popoverViewController != nil)
     {
         [popoverViewController release];
         popoverViewController = nil;
     }
-    //
-	//UnityPause(false);
+    
     ImageLoadSucceeded = false;
     ImageLoadDone = true;
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController*)picker
 {
-	[self dismissWrappedController];
+    [self dismissWrappedController];
     
-	//UnityPause(false);
+    //UnityPause(false);
     ImageLoadSucceeded = false;
     ImageLoadDone = true;
 }
@@ -147,48 +176,50 @@
 
 - (void)showViewController:(UIViewController*)viewController
 {
-	//UnityPause(true);
-	
-	// cancel the previous delayed call to dismiss the view controller if it exists
-	[NSObject cancelPreviousPerformRequestsWithTarget:self];
+    //UnityPause(true);
+    
+    // cancel the previous delayed call to dismiss the view controller if it exists
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
     
     // show the picker
-	UIViewController *vc = UnityGetGLViewController();
-	[vc presentModalViewController:viewController animated:YES];
+    UIViewController *vc = UnityGetGLViewController();
+    [vc presentModalViewController:viewController animated:YES];
 }
 
-- (void)ShowPhotoPicker:(UIImagePickerControllerSourceType)type
+- (void)ShowPhotoPicker:(UIImagePickerControllerSourceType)type maxWidth:(int)maxWidth maxHeight:(int)maxHeight
 {
     UIImagePickerController *picker = [[[UIImagePickerController alloc] init] autorelease];
-	picker.delegate = self;
-	picker.sourceType = type;
-	picker.allowsEditing = false;
+    picker.delegate = self;
+    picker.sourceType = type;
+    picker.allowsEditing = false;
     
+    ShowPhotoPicker_maxWidth = maxWidth;
+    ShowPhotoPicker_maxHeight = maxHeight;
     ImageLoadSucceeded = false;
     ImageLoadDone = false;
     
     // We need to display this in a popover on iPad
     NSString* version = [[UIDevice currentDevice] systemVersion];
-	if([version integerValue] < 8.0 && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && type != UIImagePickerControllerSourceTypeCamera)
-	{
-		/*Class popoverClass = NSClassFromString(@"UIPopoverController");
-		if(!popoverClass)
-        {
-            ImageLoadSucceeded = false;
-            ImageLoadDone = true;
-            return;
-        }*/
+    if([version integerValue] < 8.0 && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && type != UIImagePickerControllerSourceTypeCamera)
+    {
+        /*Class popoverClass = NSClassFromString(@"UIPopoverController");
+         if(!popoverClass)
+         {
+         ImageLoadSucceeded = false;
+         ImageLoadDone = true;
+         return;
+         }*/
         
-		//popoverViewController = [[popoverClass alloc] initWithContentViewController:picker];
+        //popoverViewController = [[popoverClass alloc] initWithContentViewController:picker];
         popoverViewController = [[UIPopoverController alloc] initWithContentViewController:picker];
         [popoverViewController setDelegate:self];
-		//picker.modalInPopover = YES;
-		
-		// Display the popover
+        //picker.modalInPopover = YES;
+        
+        // Display the popover
         UIWindow* window = [UIApplication sharedApplication].keyWindow;
         [popoverViewController presentPopoverFromRect:PopoverRect inView:window permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-	}
-	else
+    }
+    else
     {
         [self showViewController:picker];
     }
@@ -251,9 +282,9 @@ extern "C"
         return native->ImageLoadSucceeded;
     }
     
-    void LoadImagePicker(int x, int y, int width, int height)
+    void LoadImagePicker(int maxWidth, int maxHeight, int x, int y, int width, int height)
     {
         native->PopoverRect = CGRectMake(x, y, width, height);
-        [native ShowPhotoPicker:UIImagePickerControllerSourceTypePhotoLibrary];
+        [native ShowPhotoPicker:UIImagePickerControllerSourceTypePhotoLibrary maxWidth:maxWidth maxHeight:maxHeight];
     }
 }

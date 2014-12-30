@@ -31,7 +31,7 @@ namespace Reign.Plugin
 		private unsafe static extern bool CheckImageLoadSucceededStatus(ref IntPtr data, int* dataSize);
 		
 		[DllImport("__Internal", EntryPoint="LoadImagePicker")]
-		private static extern void LoadImagePicker(int x, int y, int width, int height);
+		private static extern void LoadImagePicker(int maxWidth, int maxHeight, int x, int y, int width, int height);
 		
 		public StreamPlugin_iOS()
 		{
@@ -128,7 +128,7 @@ namespace Reign.Plugin
 			else
 			{
 				streamFileLoadedCallback = streamLoadedCallback;
-				LoadImagePicker(x, y, width, height);
+				LoadImagePicker(maxWidth, maxHeight, x, y, width, height);
 			}
 		}
 	}

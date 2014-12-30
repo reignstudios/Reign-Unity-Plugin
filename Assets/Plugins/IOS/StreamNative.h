@@ -19,5 +19,5 @@
 }
 
 - (void)SaveImageToPhotoAlbum:(char*)data dataSize:(int)dataSize;
-- (void)ShowPhotoPicker:(UIImagePickerControllerSourceType)type;
+- (void)ShowPhotoPicker:(UIImagePickerControllerSourceType)type maxWidth:(int)maxWidth maxHeight:(int)maxHeight;
 @end
