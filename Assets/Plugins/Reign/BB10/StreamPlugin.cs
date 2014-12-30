@@ -7,8 +7,47 @@ using System.Runtime.InteropServices;
 
 namespace Reign.Plugin
 {
+	/*struct img_decode_callouts_t
+	{
+		public IntPtr choose_format_f;
+		public IntPtr setup_f;
+		public IntPtr abort_f;
+		public IntPtr scanline_f;
+		public IntPtr set_palette_f;
+		public IntPtr set_transparency_f;
+		public IntPtr frame_f;
+		public IntPtr set_value_f;
+		public uint data;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	struct img_t
+	{
+		public IntPtr data;
+		public uint stride;
+		public uint w, h;
+		public uint format;// enum type
+		public uint npalette;
+		public IntPtr palette;
+		public uint flags;
+		public uint rgb32;
+		public uint quality;    
+	}*/
+
 	public class StreamPlugin_BB10 : StreamPluginBase
 	{
+		/*[DllImport("libimg", EntryPoint="img_load_file")]
+		private static unsafe extern int img_load_file(IntPtr ilib, string path, img_decode_callouts_t* callouts, img_t* img);
+
+		[DllImport("libimg", EntryPoint="img_resize_fs")]
+		private static unsafe extern int img_resize_fs(img_t* src, img_t* dst);
+
+		[DllImport("libimg", EntryPoint="img_lib_attach")]
+		private static unsafe extern int img_lib_attach(IntPtr* ilib);
+
+		[DllImport("libimg", EntryPoint="img_lib_detach")]
+		private static unsafe extern void img_lib_detach(IntPtr ilib);*/
+
 		private IntPtr invoke;
 		private const int NAVIGATOR_INVOKE_TARGET_RESULT = 0x13;
 		private const int NAVIGATOR_CHILD_CARD_CLOSED = 0x21;
@@ -127,10 +166,80 @@ namespace Reign.Plugin
 											MemoryStream stream = null;
 											using (var file = new FileStream(path+fileName, FileMode.Open, FileAccess.Read))
 											{
-												var data = new byte[file.Length];
-												file.Read(data, 0, data.Length);
-												stream = new MemoryStream(data);
+												if (maxWidth != 0 && maxHeight != 0)
+												{
+													ImageTools.IO.IImageDecoder decoder  = null;
+													switch (Path.GetExtension(fileName).ToLower())
+													{
+														case ".jpg": decoder = new ImageTools.IO.Jpeg.JpegDecoder(); break;
+														case ".jpeg": decoder = new ImageTools.IO.Jpeg.JpegDecoder(); break;
+														case ".png": decoder = new ImageTools.IO.Png.PngDecoder(); break;
+														default:
+															Debug.LogError("Unsuported file ext type: " + Path.GetExtension(fileName));
+															streamLoadedCallback(null, false);
+															return;
+													}
+													var image = new ImageTools.ExtendedImage();
+													decoder.Decode(image, file);
+													var newSize = MathUtilities.FitInView(image.PixelWidth, image.PixelHeight, maxWidth, maxHeight);
+													var newImage = ImageTools.ExtendedImage.Resize(image, (int)newSize.x, (int)newSize.y, new ImageTools.Filtering.NearestNeighborResizer());
+													var encoder = new ImageTools.IO.Jpeg.JpegEncoder();
+													stream = new MemoryStream();
+													encoder.Encode(newImage, stream);
+													stream.Position = 0;
+
+													/*unsafe
+													{
+														IntPtr ilib = IntPtr.Zero;
+														if (img_lib_attach(&ilib) != 0)
+														{
+															Debug.LogError("Failed: img_lib_attach");
+															streamLoadedCallback(null, false);
+															return;
+														}
+
+														img_t image = new img_t();
+														image.flags = 0x00000002;
+														image.format = 32 | 0x00000100 | 0x00001000;
+														img_decode_callouts_t callouts = new img_decode_callouts_t();
+														if (img_load_file(ilib, "file://"+path+fileName, &callouts, &image) != 0)
+														{
+															img_t newImage = new img_t();
+															if (img_resize_fs(&image, &newImage) != 0)
+															{
+																Debug.LogError("Failed: img_resize_fs");
+																streamLoadedCallback(null, false);
+																return;
+															}
+
+															Debug.Log("WIDTH: " + image.w);
+															Debug.Log("HEIGHT: " + image.h);
+															streamLoadedCallback(null, false);
+															return;
+															//byte* data = (byte*)newImage.data.ToPointer();
+															//byte[] managedData = new byte[newImage.stride];
+
+															//stream = new MemoryStream();
+														}
+														else
+														{
+															Debug.LogError("Failed to load image file: " + path + fileName);
+															streamLoadedCallback(null, false);
+															return;
+														}
+
+														img_lib_detach(ilib);
+													}*/
+												}
+												else
+												{
+													var data = new byte[file.Length];
+													file.Read(data, 0, data.Length);
+													stream = new MemoryStream(data);
+													stream.Position = 0;
+												}
 											}
+
 											streamLoadedCallback(stream, true);
 											return;
 										}
