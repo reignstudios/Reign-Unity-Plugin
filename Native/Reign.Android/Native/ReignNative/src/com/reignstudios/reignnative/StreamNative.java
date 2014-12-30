@@ -50,8 +50,10 @@ public class StreamNative implements ReignActivityCallbacks
 		});
 	}
 	
-	private static float[] fitInView(float objectWidth, float objectHeight, float viewWidth, float viewHeight)
+	private static float[] fitInViewIfLarger(float objectWidth, float objectHeight, float viewWidth, float viewHeight)
 	{
+		if (objectWidth <= viewWidth && objectHeight <= viewHeight) return new float[]{objectWidth, objectHeight};
+		
 		float objectSlope = objectHeight / objectWidth;
 		float viewSlope = viewHeight / viewWidth;
 	
@@ -111,7 +113,7 @@ public class StreamNative implements ReignActivityCallbacks
 				if (LoadImage_maxWidth != 0 && LoadImage_maxHeight != 0)
 				{
 					Bitmap bmp = BitmapFactory.decodeByteArray(loadImageData, 0, loadImageData.length);
-					float[] newSize = fitInView(bmp.getWidth(), bmp.getHeight(), LoadImage_maxWidth, LoadImage_maxHeight);
+					float[] newSize = fitInViewIfLarger(bmp.getWidth(), bmp.getHeight(), LoadImage_maxWidth, LoadImage_maxHeight);
 					
 					bmp = Bitmap.createScaledBitmap(bmp, (int)newSize[0], (int)newSize[1], true);
 					ByteArrayOutputStream stream = new ByteArrayOutputStream();

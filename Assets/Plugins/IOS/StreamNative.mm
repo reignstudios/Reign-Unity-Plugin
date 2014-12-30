@@ -100,8 +100,15 @@
     if(vc) [vc dismissModalViewControllerAnimated:YES];
 }
 
-void fitInView(float objectWidth, float objectHeight, float viewWidth, float viewHeight, float* newWidth, float* newHeight)
+void fitInViewIfLarger(float objectWidth, float objectHeight, float viewWidth, float viewHeight, float* newWidth, float* newHeight)
 {
+    if (objectWidth <= viewWidth && objectHeight <= viewHeight)
+    {
+        *newWidth = objectWidth;
+        *newHeight = objectHeight;
+        return;
+    }
+    
     float objectSlope = objectHeight / objectWidth;
     float viewSlope = viewHeight / viewWidth;
     
@@ -124,7 +131,7 @@ int ShowPhotoPicker_maxWidth, ShowPhotoPicker_maxHeight;
     if (ShowPhotoPicker_maxWidth != 0 && ShowPhotoPicker_maxHeight != 0)
     {
         float newWidth = 0, newHeight = 0;
-        fitInView(image.size.width, image.size.height, ShowPhotoPicker_maxWidth, ShowPhotoPicker_maxHeight, &newWidth, &newHeight);
+        fitInViewIfLarger(image.size.width, image.size.height, ShowPhotoPicker_maxWidth, ShowPhotoPicker_maxHeight, &newWidth, &newHeight);
         CGSize newSize = CGSizeMake(newWidth, newHeight);
         
         UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
