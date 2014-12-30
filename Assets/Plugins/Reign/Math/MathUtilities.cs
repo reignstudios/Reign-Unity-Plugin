@@ -19,6 +19,66 @@ namespace Reign
 		public const float Pi2 = Mathf.PI * 2;
 
 		/// <summary>
+		/// Use to fit one object into another if the object is larger.
+		/// </summary>
+		/// <param name="objectWidth">Obj to fit width.</param>
+		/// <param name="objectHeight">Obj to fit height.</param>
+		/// <param name="viewWidth">View to fit Obj into width.</param>
+		/// <param name="viewHeight">View to fit Obj into height.</param>
+		/// <returns>Returns new size.</returns>
+		public static Vector2 FitInViewIfLarger(float objectWidth, float objectHeight, float viewWidth, float viewHeight)
+		{
+			Vector2 objectSize, viewSize;
+			objectSize.x = objectWidth;
+			objectSize.y = objectHeight;
+			viewSize.x = viewWidth;
+			viewSize.y = viewHeight;
+			return FitInViewIfLarger(objectSize, viewSize);
+		}
+	
+		/// <summary>
+		/// Use to fit one object into another if the object is larger.
+		/// </summary>
+		/// <param name="objectSize">Obj to fit size.</param>
+		/// <param name="viewSize">View to fit Obj into size.</param>
+		/// <returns>Returns new size.</returns>
+		public static Vector2 FitInViewIfLarger(Vector2 objectSize, Vector2 viewSize)
+		{
+			if (objectSize.x <= viewSize.x && objectSize.y <= viewSize.y) return objectSize;
+			return FitInView(objectSize, viewSize);
+		}
+
+		/// <summary>
+		/// Use to fit one object into another if the object is smaller.
+		/// </summary>
+		/// <param name="objectWidth">Obj to fit width.</param>
+		/// <param name="objectHeight">Obj to fit height.</param>
+		/// <param name="viewWidth">View to fit Obj into width.</param>
+		/// <param name="viewHeight">View to fit Obj into height.</param>
+		/// <returns>Returns new size.</returns>
+		public static Vector2 FitInViewIfSmaller(float objectWidth, float objectHeight, float viewWidth, float viewHeight)
+		{
+			Vector2 objectSize, viewSize;
+			objectSize.x = objectWidth;
+			objectSize.y = objectHeight;
+			viewSize.x = viewWidth;
+			viewSize.y = viewHeight;
+			return FitInViewIfSmaller(objectSize, viewSize);
+		}
+	
+		/// <summary>
+		/// Use to fit one object into another if the object is smaller.
+		/// </summary>
+		/// <param name="objectSize">Obj to fit size.</param>
+		/// <param name="viewSize">View to fit Obj into size.</param>
+		/// <returns>Returns new size.</returns>
+		public static Vector2 FitInViewIfSmaller(Vector2 objectSize, Vector2 viewSize)
+		{
+			if (objectSize.x >= viewSize.x || objectSize.y >= viewSize.y) return objectSize;
+			return FitInView(objectSize, viewSize);
+		}
+
+		/// <summary>
 		/// Use to fit one object into another.
 		/// </summary>
 		/// <param name="objectWidth">Obj to fit width.</param>

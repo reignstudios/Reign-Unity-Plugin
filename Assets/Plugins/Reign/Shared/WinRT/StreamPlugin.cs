@@ -360,7 +360,7 @@ namespace Reign.Plugin
 							var scaledStream = new MemoryStream();
 							var newImage = new WriteableBitmap(image);
 							Vector2 newSize;
-							if (image.PixelWidth > maxWidth || image.PixelHeight > maxHeight) newSize = Reign.MathUtilities.FitInView(newImage.PixelWidth, newImage.PixelHeight, maxWidth, maxHeight);
+							if (image.PixelWidth > maxWidth || image.PixelHeight > maxHeight) newSize = Reign.MathUtilities.FitInViewIfLarger(newImage.PixelWidth, newImage.PixelHeight, maxWidth, maxHeight);
 							else newSize = new Vector2(image.PixelWidth, image.PixelHeight);
 							newImage.SaveJpeg(scaledStream, (int)newSize.x, (int)newSize.y, 0, 95);
 							scaledStream.Position = 0;
@@ -435,7 +435,7 @@ namespace Reign.Plugin
 								var newStream = new InMemoryRandomAccessStream();
 								var encoder = await BitmapEncoder.CreateForTranscodingAsync(newStream, decoder);
 								Vector2 newSize;
-								if (decoder.PixelWidth > maxWidth || decoder.PixelHeight > maxHeight) newSize = Reign.MathUtilities.FitInView(decoder.PixelWidth, decoder.PixelHeight, maxWidth, maxHeight);
+								if (decoder.PixelWidth > maxWidth || decoder.PixelHeight > maxHeight) newSize = Reign.MathUtilities.FitInViewIfLarger(decoder.PixelWidth, decoder.PixelHeight, maxWidth, maxHeight);
 								else newSize = new Vector2(decoder.PixelWidth, decoder.PixelHeight);
 								encoder.BitmapTransform.ScaledWidth = (uint)newSize.x;
 								encoder.BitmapTransform.ScaledHeight = (uint)newSize.y;

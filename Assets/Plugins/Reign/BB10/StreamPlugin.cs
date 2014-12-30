@@ -181,7 +181,7 @@ namespace Reign.Plugin
 													}
 													var image = new ImageTools.ExtendedImage();
 													decoder.Decode(image, file);
-													var newSize = MathUtilities.FitInView(image.PixelWidth, image.PixelHeight, maxWidth, maxHeight);
+													var newSize = MathUtilities.FitInViewIfLarger(image.PixelWidth, image.PixelHeight, maxWidth, maxHeight);
 													var newImage = ImageTools.ExtendedImage.Resize(image, (int)newSize.x, (int)newSize.y, new ImageTools.Filtering.NearestNeighborResizer());
 													var encoder = new ImageTools.IO.Jpeg.JpegEncoder();
 													stream = new MemoryStream();
