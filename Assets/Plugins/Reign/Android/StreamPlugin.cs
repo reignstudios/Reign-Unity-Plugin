@@ -96,7 +96,7 @@ namespace Reign.Plugin
 			else
 			{
 				streamFileLoadedCallback = streamLoadedCallback;
-				native.CallStatic("LoadImage");
+				native.CallStatic("LoadImage", maxWidth, maxHeight);
 			}
 		}
 	}

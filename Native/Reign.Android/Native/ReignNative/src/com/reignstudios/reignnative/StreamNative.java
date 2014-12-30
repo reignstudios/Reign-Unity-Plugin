@@ -1,5 +1,6 @@
 package com.reignstudios.reignnative;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -49,11 +50,23 @@ public class StreamNative implements ReignActivityCallbacks
 		});
 	}
 	
-	public static void LoadImage()
+	private static float[] fitInView(float objectWidth, float objectHeight, float viewWidth, float viewHeight)
+	{
+		float objectSlope = objectHeight / objectWidth;
+		float viewSlope = viewHeight / viewWidth;
+	
+		if (objectSlope >= viewSlope) return new float[]{(objectWidth/objectHeight) * viewHeight, viewHeight};
+		else return new float[]{viewWidth, (objectHeight/objectWidth) * viewWidth};
+	}
+	
+	private static int LoadImage_maxWidth, LoadImage_maxHeight;
+	public static void LoadImage(final int maxWidth, final int maxHeight)
 	{
 		loadImageSucceeded = false;
 		loadImageDone = false;
 		
+		LoadImage_maxWidth = maxWidth;
+		LoadImage_maxHeight = maxHeight;
 		ReignUnityActivity.ReignContext.runOnUiThread(new Runnable()
 		{
 			public void run()
@@ -93,6 +106,20 @@ public class StreamNative implements ReignActivityCallbacks
 				String fileName = cursor.getString(idx);
 				
 				loadImageData = readFile(fileName);
+				
+				// resize image if needed
+				if (LoadImage_maxWidth != 0 && LoadImage_maxHeight != 0)
+				{
+					Bitmap bmp = BitmapFactory.decodeByteArray(loadImageData, 0, loadImageData.length);
+					float[] newSize = fitInView(bmp.getWidth(), bmp.getHeight(), LoadImage_maxWidth, LoadImage_maxHeight);
+					
+					bmp = Bitmap.createScaledBitmap(bmp, (int)newSize[0], (int)newSize[1], true);
+					ByteArrayOutputStream stream = new ByteArrayOutputStream();
+					bmp.compress(Bitmap.CompressFormat.JPEG, 95, stream);
+					loadImageData = stream.toByteArray();
+					stream.close();
+				}
+				
 				loadImageSucceeded = true;
 				loadImageDone = true;
 				
