@@ -107,6 +107,8 @@ public static class ExportPlugins
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Tools/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/Code/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/Interfaces/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/ImageTools/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/SharpZipLib/", files);
 
 		// add specific files
 		files.Add(Application.dataPath + "/Plugins/Reign/VersionInfo/ReignVersionCheck");
