@@ -57,7 +57,7 @@ public class Amazon_InAppPurchaseNative implements PurchasingListener, ReignActi
 					obj.put("price", 0.99);
 					obj.put("title", skus[i]);
 					obj.put("description", skus[i] + " Desc will go here...");
-					obj.put("smallIconUrl",  "http://reign-studios-tools.com/ReignUnityPluginResources/amazon-Apps-icon.png");
+					obj.put("smallIconUrl",  "http://reign-studios-services.com/ReignUnityPluginResources/amazon-Apps-icon.png");
 					rootObj.put(skus[i], obj);
 					skuSet.add(skus[i]);
 				}
