@@ -8,7 +8,12 @@ using UnityEngine;
 using Windows.UI.Core;
 
 #if UNITY_METRO
+#if UNITY_WP_8_1
+using Microsoft.Advertising.Mobile.UI;
+using Microsoft.Advertising.Mobile.Common;
+#else
 using Microsoft.Advertising.WinRT.UI;
+#endif
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endif

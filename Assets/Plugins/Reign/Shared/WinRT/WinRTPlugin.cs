@@ -9,7 +9,9 @@ using Reign.Plugin;
 using System.Threading;
 
 #if UNITY_METRO
+#if !UNITY_WP_8_1
 using Windows.UI.ApplicationSettings;
+#endif
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.ViewManagement;
@@ -30,25 +32,33 @@ namespace Reign
 		public static CoreWindow CoreWindow {get; private set;}
 		private static string privacyPolicyURL;
 
+		#if UNITY_WP_8_1
+		public static void Init(Grid adGrid)
+		#else
 		public static void Init(Grid adGrid, string privacyPolicyURL, bool usePrivacyPolicy)
+		#endif
 		{
 			CoreWindow = CoreWindow.GetForCurrentThread();
 			WinRTPlugin.AdGrid = adGrid;
 
+			#if !UNITY_WP_8_1
 			if (usePrivacyPolicy)
 			{
 				WinRTPlugin.privacyPolicyURL = privacyPolicyURL;
 				SettingsPane.GetForCurrentView().CommandsRequested += showPrivacyPolicy;
 			}
+			#endif
 
 			initMethodPointers();
 		}
 
+		#if !UNITY_WP_8_1
 		private static void showPrivacyPolicy(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
 		{
 			var privacyPolicyCommand = new SettingsCommand("privacyPolicy","Privacy Policy", (uiCommand) => {launchPrivacyPolicyUrl();});
 			args.Request.ApplicationCommands.Add(privacyPolicyCommand);
 		}
+		#endif
 
 		private static async void launchPrivacyPolicyUrl()
 		{
