@@ -120,6 +120,12 @@ public class StreamsDemo : MonoBehaviour
 			// NOTE: Unity only supports loading png and jpg data
 			StreamManager.LoadFileDialog(FolderLocations.Pictures, 128, 128, new string[]{".png", ".jpg", ".jpeg"}, imageLoadedCallback);
 		}
+
+		if (!waiting && GUI.Button(new Rect(0, ((332+128)*scale)+offset, 128, 64*scale), "Camera Picker"))
+		{
+			waiting = true;
+			StreamManager.LoadCameraPicker(CameraQuality.Med, 128, 128, imageLoadedCallback);
+		}
 	}
 
 	private void dataFileSavedCallback(bool succeeded)

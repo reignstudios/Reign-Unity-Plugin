@@ -23,7 +23,8 @@ namespace Reign
 		SaveFile,
 		SaveFileDialog,
 		LoadFile,
-		LoadFileDialog
+		LoadFileDialog,
+		LoadCameraPicker
 	}
 
 	class StreamManagerQue
@@ -36,9 +37,11 @@ namespace Reign
 
 		public string FileName;
 		public FolderLocations FolderLocation;
+		public CameraQuality CameraQuality;
 		public Stream Stream;
 		public byte[] Data;
 		public string[] FileTypes;
+		public int MaxWidth, MaxHeight;
 
 		public StreamManagerQue(StreamManagerQueTypes type)
 		{
@@ -238,6 +241,16 @@ namespace Reign
 							ques.Remove(que);
 						}
 						break;
+
+					case StreamManagerQueTypes.LoadCameraPicker:
+						if (!loadingStream)
+						{
+							LoadCameraPicker(que.CameraQuality, que.MaxWidth, que.MaxHeight, que.streamLoadedCallback);
+							ques.Remove(que);
+						}
+						break;
+
+					default: Debug.LogError("Unsuported StreamManagerQueTypes: " + que); break;
 				}
 			}
 		}
@@ -564,6 +577,46 @@ namespace Reign
 			plugin.LoadFileDialog(folderLocation, maxWidth, maxHeight, x, y, width, height, fileTypes, async_streamLoadedCallback);
 			#else
 			plugin.LoadFileDialog(folderLocation, maxWidth, maxHeight, x, y, width, height, fileTypes, noAsync_streamLoadedCallback);
+			#endif
+		}
+
+		/// <summary>
+		/// Use to have the user take a picture with there native camera
+		/// </summary>
+		/// <param name="streamLoadedCallback">Callback fired when done</param>
+		public static void LoadCameraPicker(CameraQuality quality, StreamLoadedCallbackMethod streamLoadedCallback)
+		{
+			LoadCameraPicker(quality, 0, 0, streamLoadedCallback);
+		}
+
+		/// <summary>
+		/// Use to have the user take a picture with there native camera
+		/// </summary>
+		/// <param name="quality">Camera resolution quality</param>
+		/// <param name="maxWidth">Image size returned will not be above the Max Width value (set 0 to disable)</param>
+		/// <param name="maxHeight">Image size returned will not be above the Max Height value (set 0 to disable)</param>
+		/// <param name="streamLoadedCallback">Callback fired when done</param>
+		public static void LoadCameraPicker(CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback)
+		{
+			if (loadingStream)
+			{
+				var que = new StreamManagerQue(StreamManagerQueTypes.LoadCameraPicker);
+				que.streamLoadedCallback = streamLoadedCallback;
+				que.MaxWidth = maxWidth;
+				que.MaxHeight = maxHeight;
+				que.CameraQuality = quality;
+				ques.Add(que);
+				return;
+			}
+
+			loadingStream = true;
+			StreamManager.streamLoadedCallback = streamLoadedCallback;
+
+			#if ASYNC
+			asyncLoadDone = false;
+			plugin.LoadCameraPicker(quality, maxWidth, maxHeight, async_streamLoadedCallback);
+			#else
+			plugin.LoadCameraPicker(quality, maxWidth, maxHeight, noAsync_streamLoadedCallback);
 			#endif
 		}
 

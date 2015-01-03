@@ -39,6 +39,13 @@ namespace Reign
 		Video
 	}
 
+	public enum CameraQuality
+	{
+		Low,
+		Med,
+		High
+	}
+
 	/// <summary>
 	/// Used to check for existing files
 	/// </summary>
@@ -145,6 +152,15 @@ namespace Reign.Plugin
 		/// <param name="fileTypes">File types use can see in popup</param>
 		/// <param name="streamLoadedCallback">Callback fired when done</param>
 		void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback);
+
+		/// <summary>
+		/// Use to have the user take a picture with there native camera
+		/// </summary>
+		/// <param name="quality">Camera resolution quality</param>
+		/// <param name="maxWidth">Image size returned will not be above the Max Width value (set 0 to disable)</param>
+		/// <param name="maxHeight">Image size returned will not be above the Max Height value (set 0 to disable)</param>
+		/// <param name="streamLoadedCallback">Callback fired when done</param>
+		void LoadCameraPicker(CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback);
 
 		/// <summary>
 		/// Used to handle internal events

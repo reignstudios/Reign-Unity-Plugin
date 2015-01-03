@@ -115,7 +115,13 @@ namespace Reign.Plugin
 		public virtual void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
 			Debug.LogError("LoadFileDialog not supported on this Platform!");
-			streamLoadedCallback(null, false);
+			if (streamLoadedCallback != null) streamLoadedCallback(null, false);
+		}
+
+		public virtual void LoadCameraPicker(CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback)
+		{
+			Debug.LogError("LoadCameraPicker not supported on this Platform!");
+			if (streamLoadedCallback != null) streamLoadedCallback(null, false);
 		}
 	}
 }

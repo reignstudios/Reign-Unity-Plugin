@@ -13,6 +13,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
+using Windows.Media.Capture;
 #endif
 
 #if WINDOWS_PHONE
@@ -353,17 +354,7 @@ namespace Reign.Plugin
 						}
 						else
 						{
-							var image = new BitmapImage();
-							image.CreateOptions = BitmapCreateOptions.None;
-							image.SetSource(stream);
-
-							var scaledStream = new MemoryStream();
-							var newImage = new WriteableBitmap(image);
-							Vector2 newSize;
-							if (image.PixelWidth > maxWidth || image.PixelHeight > maxHeight) newSize = Reign.MathUtilities.FitInViewIfLarger(newImage.PixelWidth, newImage.PixelHeight, maxWidth, maxHeight);
-							else newSize = new Vector2(image.PixelWidth, image.PixelHeight);
-							newImage.SaveJpeg(scaledStream, (int)newSize.x, (int)newSize.y, 0, 95);
-							scaledStream.Position = 0;
+							var scaledStream = resizeImageStream(stream, maxWidth, maxHeight);
 							callback(scaledStream, true);
 						}
 					}
@@ -430,17 +421,7 @@ namespace Reign.Plugin
 							#if UNITY_METRO
 							using (var tempStream = await file.OpenStreamForReadAsync())
 							{
-								var decoder = await BitmapDecoder.CreateAsync(tempStream.AsRandomAccessStream());
-								
-								var newStream = new InMemoryRandomAccessStream();
-								var encoder = await BitmapEncoder.CreateForTranscodingAsync(newStream, decoder);
-								Vector2 newSize;
-								if (decoder.PixelWidth > maxWidth || decoder.PixelHeight > maxHeight) newSize = Reign.MathUtilities.FitInViewIfLarger(decoder.PixelWidth, decoder.PixelHeight, maxWidth, maxHeight);
-								else newSize = new Vector2(decoder.PixelWidth, decoder.PixelHeight);
-								encoder.BitmapTransform.ScaledWidth = (uint)newSize.x;
-								encoder.BitmapTransform.ScaledHeight = (uint)newSize.y;
-								await encoder.FlushAsync();
-								stream = newStream.AsStream();
+								stream = await resizeImageStream(tempStream.AsRandomAccessStream(), maxWidth, maxHeight);
 							}
 
 							streamLoadedCallback(stream, true);
@@ -475,6 +456,129 @@ namespace Reign.Plugin
 
 			return folder;
 		}
+
+		#if WINDOWS_PHONE
+		private Stream resizeImageStream(Stream imageStream, int maxWidth, int maxHeight)
+		#else
+		private async Task<Stream> resizeImageStream(IRandomAccessStream imageStream, int maxWidth, int maxHeight)
+		#endif
+		{
+			#if WINDOWS_PHONE
+			var image = new BitmapImage();
+			image.CreateOptions = BitmapCreateOptions.None;
+			image.SetSource(imageStream);
+
+			var scaledStream = new MemoryStream();
+			var newImage = new WriteableBitmap(image);
+			Vector2 newSize;
+			if (image.PixelWidth > maxWidth || image.PixelHeight > maxHeight) newSize = Reign.MathUtilities.FitInViewIfLarger(newImage.PixelWidth, newImage.PixelHeight, maxWidth, maxHeight);
+			else newSize = new Vector2(image.PixelWidth, image.PixelHeight);
+			newImage.SaveJpeg(scaledStream, (int)newSize.x, (int)newSize.y, 0, 95);
+			scaledStream.Position = 0;
+
+			return scaledStream;
+			#else
+			var decoder = await BitmapDecoder.CreateAsync(imageStream);
+								
+			var newStream = new InMemoryRandomAccessStream();
+			var encoder = await BitmapEncoder.CreateForTranscodingAsync(newStream, decoder);
+			Vector2 newSize;
+			if (decoder.PixelWidth > maxWidth || decoder.PixelHeight > maxHeight) newSize = Reign.MathUtilities.FitInViewIfLarger(decoder.PixelWidth, decoder.PixelHeight, maxWidth, maxHeight);
+			else newSize = new Vector2(decoder.PixelWidth, decoder.PixelHeight);
+			encoder.BitmapTransform.ScaledWidth = (uint)newSize.x;
+			encoder.BitmapTransform.ScaledHeight = (uint)newSize.y;
+			await encoder.FlushAsync();
+
+			return newStream.AsStream();
+			#endif
+		}
+
+		public void LoadCameraPicker(CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback)
+		{
+			if (streamLoadedCallback == null) streamLoadedCallback(null, false);
+			else loadCameraPickerAsync(quality, maxWidth, maxHeight, streamLoadedCallback);
+		}
+
+		#if WINDOWS_PHONE
+		private void loadCameraPickerAsync(CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback)
+		#else
+		private async void loadCameraPickerAsync(CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback)
+		#endif
+		{
+			#if WINDOWS_PHONE
+			WinRTPlugin.Dispatcher.BeginInvoke(delegate()
+			{
+				loadCameraPicker_streamLoadedCallback = streamLoadedCallback;
+				loadCameraPicker_maxWidth = maxWidth;
+				loadCameraPicker_maxHeight = maxHeight;
+
+				var cameraCaptureTask = new CameraCaptureTask();
+				cameraCaptureTask.Completed += new EventHandler<PhotoResult>(cameraCaptureTask_Completed);
+				cameraCaptureTask.Show();
+			});
+			#else
+			await WinRTPlugin.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async delegate()
+			{
+				try
+				{
+					var cameraUI = new CameraCaptureUI();
+					cameraUI.PhotoSettings.AllowCropping = false;
+					switch (quality)
+					{
+						case CameraQuality.Low: cameraUI.PhotoSettings.MaxResolution = CameraCaptureUIMaxPhotoResolution.SmallVga; break;
+						case CameraQuality.Med: cameraUI.PhotoSettings.MaxResolution = CameraCaptureUIMaxPhotoResolution.MediumXga; break;
+						case CameraQuality.High: cameraUI.PhotoSettings.MaxResolution = CameraCaptureUIMaxPhotoResolution.HighestAvailable; break;
+					}
+
+					var capturedMedia = await cameraUI.CaptureFileAsync(CameraCaptureUIMode.Photo);
+					if (capturedMedia != null)
+					{
+						using (var cameraStream = await capturedMedia.OpenAsync(FileAccessMode.Read))
+						{
+							if (maxWidth == 0 || maxHeight == 0)
+							{
+								streamLoadedCallback(cameraStream.AsStream(), true);
+							}
+							else
+							{
+								var stream = await resizeImageStream(cameraStream, maxWidth, maxHeight);
+								streamLoadedCallback(stream, true);
+							}
+						}
+					}
+					else
+					{
+						streamLoadedCallback(null, false);
+					}
+				}
+				catch (Exception e)
+				{
+					Debug.LogError(e.Message);
+					streamLoadedCallback(null, false);
+				}
+			});
+			#endif
+		}
+
+		#if WINDOWS_PHONE
+		StreamLoadedCallbackMethod loadCameraPicker_streamLoadedCallback;
+		int loadCameraPicker_maxWidth, loadCameraPicker_maxHeight;
+		private void cameraCaptureTask_Completed(object sender, PhotoResult e)
+		{
+			if (e.TaskResult == TaskResult.OK)
+			{
+				if (loadCameraPicker_maxWidth == 0 || loadCameraPicker_maxHeight == 0)
+				{
+					loadCameraPicker_streamLoadedCallback(e.ChosenPhoto, true);
+				}
+				else
+				{
+					var stream = resizeImageStream(e.ChosenPhoto, loadCameraPicker_maxWidth, loadCameraPicker_maxHeight);
+					loadCameraPicker_streamLoadedCallback(stream, true);
+				}
+			}
+		}
+		#endif
 	}
 }
 #elif UNITY_WINRT
@@ -531,6 +635,11 @@ namespace Reign.Plugin
 		public void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
 			Native.LoadFileDialog(folderLocation, maxWidth, maxHeight, x, y, width, height, fileTypes, streamLoadedCallback);
+		}
+
+		public void LoadCameraPicker(CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback)
+		{
+			Native.LoadCameraPicker(quality, maxWidth, maxHeight, streamLoadedCallback);
 		}
 
 		public void Update()
