@@ -51,6 +51,7 @@ public class GooglePlay_InAppPurchaseNative implements ReignActivityCallbacks
 		            public void onIabSetupFinished(IabResult result)
 		            {
 		            	initStatus = result.isSuccess() ? 1 : 2;
+		            	
 		            	// we consume apps to reset the buy menu for testing
 		            	/*try
 		            	{

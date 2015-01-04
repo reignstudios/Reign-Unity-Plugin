@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 
 public class ReignUnityActivity extends UnityPlayerActivity
 {
-	private static final String logTag = "Reign";
+	private static final String logTag = "Reign_Activity";
 	public static ReignUnityActivity ReignContext;
 	public static RelativeLayout ContentView;
 	private List<ReignActivityCallbacks> callbacks;
@@ -32,7 +32,7 @@ public class ReignUnityActivity extends UnityPlayerActivity
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 		addContentView(ContentView, params);
 		
-		Log.d("ReignUnityActivity", "onCreate called!");
+		Log.d(logTag, "onCreate called!");
 	}
 	
 	public static void AddCallbacks(ReignActivityCallbacks callbacks)
@@ -83,7 +83,7 @@ public class ReignUnityActivity extends UnityPlayerActivity
     @Override
     protected void onDestroy()
     {
-    	Log.d("ReignUnityActivity", "onDestroy called!");
+    	Log.d(logTag, "onDestroy called!");
     	ReignContext = null;
     	ContentView = null;
     	callbacks = null;

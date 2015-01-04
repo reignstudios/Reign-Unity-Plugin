@@ -99,6 +99,12 @@ namespace Reign.Plugin
 				native.CallStatic("LoadImage", maxWidth, maxHeight);
 			}
 		}
+
+		public override void LoadCameraPicker (CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback)
+		{
+			streamFileLoadedCallback = streamLoadedCallback;
+			native.CallStatic("LoadCameraPicker", maxWidth, maxHeight);
+		}
 	}
 }
 #endif
