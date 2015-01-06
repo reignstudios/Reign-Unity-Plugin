@@ -32,6 +32,9 @@ namespace Reign.Plugin
 		
 		[DllImport("__Internal", EntryPoint="LoadImagePicker")]
 		private static extern void LoadImagePicker(int maxWidth, int maxHeight, int x, int y, int width, int height);
+
+		[DllImport("__Internal", EntryPoint="LoadCameraPicker")]
+		private static extern void LoadCameraPicker(int maxWidth, int maxHeight);
 		
 		public StreamPlugin_iOS()
 		{
@@ -130,6 +133,12 @@ namespace Reign.Plugin
 				streamFileLoadedCallback = streamLoadedCallback;
 				LoadImagePicker(maxWidth, maxHeight, x, y, width, height);
 			}
+		}
+
+		public override void LoadCameraPicker (CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback)
+		{
+			streamFileLoadedCallback = streamLoadedCallback;
+			LoadCameraPicker(maxWidth, maxHeight);
 		}
 	}
 }

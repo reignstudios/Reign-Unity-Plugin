@@ -39,10 +39,24 @@ namespace Reign
 		Video
 	}
 
+	/// <summary>
+	/// Camera resolution quality.
+	/// </summary>
 	public enum CameraQuality
 	{
+		/// <summary>
+		/// Low rez
+		/// </summary>
 		Low,
+
+		/// <summary>
+		/// Med rez
+		/// </summary>
 		Med,
+
+		/// <summary>
+		/// High Rez
+		/// </summary>
 		High
 	}
 

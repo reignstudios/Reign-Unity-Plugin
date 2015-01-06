@@ -294,4 +294,10 @@ extern "C"
         native->PopoverRect = CGRectMake(x, y, width, height);
         [native ShowPhotoPicker:UIImagePickerControllerSourceTypePhotoLibrary maxWidth:maxWidth maxHeight:maxHeight];
     }
+    
+    void LoadCameraPicker(int maxWidth, int maxHeight)
+    {
+        native->PopoverRect = CGRectMake(0, 0, 0, 0);
+        [native ShowPhotoPicker:UIImagePickerControllerSourceTypeCamera maxWidth:maxWidth maxHeight:maxHeight];
+    }
 }

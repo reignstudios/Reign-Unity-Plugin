@@ -583,6 +583,7 @@ namespace Reign
 		/// <summary>
 		/// Use to have the user take a picture with there native camera
 		/// </summary>
+		/// <param name="quality">Camera resolution quality (Has no effect on some defices)</param>
 		/// <param name="streamLoadedCallback">Callback fired when done</param>
 		public static void LoadCameraPicker(CameraQuality quality, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
@@ -592,7 +593,7 @@ namespace Reign
 		/// <summary>
 		/// Use to have the user take a picture with there native camera
 		/// </summary>
-		/// <param name="quality">Camera resolution quality</param>
+		/// <param name="quality">Camera resolution quality (Has no effect on some defices)</param>
 		/// <param name="maxWidth">Image size returned will not be above the Max Width value (set 0 to disable)</param>
 		/// <param name="maxHeight">Image size returned will not be above the Max Height value (set 0 to disable)</param>
 		/// <param name="streamLoadedCallback">Callback fired when done</param>
