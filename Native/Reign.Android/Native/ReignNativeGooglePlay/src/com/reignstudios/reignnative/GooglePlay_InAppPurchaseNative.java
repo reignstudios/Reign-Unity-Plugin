@@ -113,7 +113,7 @@ public class GooglePlay_InAppPurchaseNative implements ReignActivityCallbacks
 		{
 			public void run()
 			{
-				helper.queryInventoryAsync(getProductInfoListener, skuList);
+				helper.queryInventoryAsync(true, skuList, getProductInfoListener);
 			}
 		});
 	}
