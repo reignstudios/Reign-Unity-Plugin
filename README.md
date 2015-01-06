@@ -10,7 +10,6 @@ TODO
 
 Roadmap
 ========================================================================
-- Add native camera image picking.
 - Add Reign-Scores Leaderboard Achievement API.  This will be a cross platform service/API for any platform.
 - Add InputEx for easy cross platform controller support.
 - Add Desktop platform support.
