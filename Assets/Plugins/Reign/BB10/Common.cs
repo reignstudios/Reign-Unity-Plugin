@@ -49,6 +49,9 @@ namespace Reign
 		
 		[DllImport("libbps", EntryPoint="navigator_invoke_invocation_set_type")]
 		public static extern int navigator_invoke_invocation_set_type(IntPtr invoke, string type);
+
+		[DllImport("libbps", EntryPoint="navigator_invoke_invocation_set_data")]
+		public static extern int navigator_invoke_invocation_set_data(IntPtr invoke, IntPtr data, int data_length);
 		
 		[DllImport("libbps", EntryPoint="navigator_invoke_invocation_set_uri")]
 		public static extern int navigator_invoke_invocation_set_uri(IntPtr invoke, string uri);
