@@ -11,6 +11,16 @@ using System.IO;
 
 public static class ExportPlugins
 {
+	[MenuItem("Reign Dev/Reset Asset Defaults")]
+	static void ResetAssetDefaults()
+	{
+		using (var stream = new FileStream(Application.dataPath+"/Editor/Reign/ReviewSettings", FileMode.Create, FileAccess.Write, FileShare.None))
+		using (var reader = new StreamWriter(stream))
+		{
+			reader.Write("0");
+		}
+	}
+
 	[MenuItem("Reign Dev/Add Version Number")]
 	static void AddVersionNumber()
 	{

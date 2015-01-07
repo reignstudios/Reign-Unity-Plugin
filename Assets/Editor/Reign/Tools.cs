@@ -39,6 +39,7 @@ namespace Reign.EditorTools
 			}
 
 			AssetDatabase.Refresh();
+			Debug.Log("Merge Folders Done!");
 		}
 
 		static void gatherFilePaths(string path, List<string> files)
@@ -294,118 +295,6 @@ namespace Reign.EditorTools
 					addPostProjectReferences(doc, pathToBuiltProject, "", productName, "");
 					doc.Save(projPath);
 				}
-
-				// add compiler directives
-				//foreach (var element in csProj.Root.Elements())
-				//{
-				//	if (element.Name.LocalName != "PropertyGroup") continue;
-				//	foreach (var subElement in element.Elements())
-				//	{
-				//		if (subElement.Name.LocalName == "DefineConstants")
-				//		{
-				//			// make sure we need to add compiler directive
-				//			bool needToAdd = true;
-				//			foreach (var name in subElement.Value.Split(';', ' '))
-				//			{
-				//				if (name == "REIGN_POSTBUILD")
-				//				{
-				//					needToAdd = false;
-				//					break;
-				//				}
-				//			}
-
-				//			// add compiler directive
-				//			if (needToAdd) subElement.Value += ";REIGN_POSTBUILD";
-				//		}
-				//	}
-				//}
-
-				// find cs source ItemGroup
-				//XElement sourceElementRoot = null;
-				//foreach (var element in csProj.Root.Elements())
-				//{
-				//	if (element.Name.LocalName != "ItemGroup") continue;
-				//	foreach (var subElement in element.Elements())
-				//	{
-				//		if (subElement.Name.LocalName == "Compile")
-				//		{
-				//			sourceElementRoot = element;
-				//			break;
-				//		}
-				//	}
-
-				//	if (sourceElementRoot != null) break;
-				//}
-
-				//if (sourceElementRoot != null)
-				//{
-				//	var csSources = new string[]
-				//	{
-				//		"Shared/WinRT/EmailPlugin.cs",
-				//		"Shared/WinRT/MarketingPlugin.cs",
-				//		"Shared/WinRT/MessageBoxPlugin.cs",
-				//		"Shared/WinRT/MicrosoftAdvertising_AdPlugin.cs",
-				//		"Shared/WinRT/MicrosoftStore_InAppPurchasePlugin.cs",
-				//		"Shared/WinRT/StreamPlugin.cs",
-				//		"Shared/WinRT/WinRTPlugin.cs",
-
-				//		#if UNITY_WP8
-				//		"WP8/AdMob_AdPlugin.cs",
-				//		"WP8/AdMob_InterstitialAdPlugin.cs",
-
-				//		"WP8/CurrentAppSimulator/CurrentApp.cs",
-				//		"WP8/CurrentAppSimulator/LicenseInformation.cs",
-				//		"WP8/CurrentAppSimulator/ListingInformation.cs",
-				//		"WP8/CurrentAppSimulator/MockIAP.cs",
-				//		"WP8/CurrentAppSimulator/MockReceiptState.cs",
-				//		"WP8/CurrentAppSimulator/MockReceiptStore.cs",
-				//		"WP8/CurrentAppSimulator/ProductLicense.cs",
-				//		"WP8/CurrentAppSimulator/ProductListing.cs",
-				//		#endif
-				//	};
-
-				//	foreach (var source in csSources)
-				//	{
-				//		// copy cs file
-				//		string sourcePath = string.Format("{0}/{1}/{2}", Application.dataPath, "Plugins/Reign", source);
-				//		string sourceFileName = Path.GetFileName(source);
-				//		File.Copy(sourcePath, string.Format("{0}/{1}/{2}", pathToBuiltProject, productName, sourceFileName), true);
-
-				//		// make sure we need to reference the file
-				//		bool needToRefFile = true;
-				//		foreach (var element in sourceElementRoot.Elements())
-				//		{
-				//			if (element.Name.LocalName == "Compile")
-				//			{
-				//				foreach (var a in element.Attributes())
-				//				{
-				//					if (a.Name.LocalName == "Include" && a.Value == sourceFileName)
-				//					{
-				//						needToRefFile = false;
-				//						break;
-				//					}
-				//				}
-				//			}
-
-				//			if (!needToRefFile) break;
-				//		}
-
-				//		// add reference to cs proj
-				//		if (needToRefFile)
-				//		{
-				//			var name = XName.Get("Compile", csProj.Root.GetDefaultNamespace().NamespaceName);
-				//			var newSource = new XElement(name);
-				//			newSource.SetAttributeValue(XName.Get("Include"), sourceFileName);
-				//			sourceElementRoot.Add(newSource);
-				//		}
-				//	}
-				//}
-				//else
-				//{
-				//	Debug.LogError("Reign Post Build Error: Failed to find CS source element in proj!");
-				//}
-
-				//csProj.Save(projPath);
 			}
     	}
 	}
