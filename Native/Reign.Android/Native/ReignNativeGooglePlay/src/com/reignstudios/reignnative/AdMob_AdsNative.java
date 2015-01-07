@@ -213,12 +213,12 @@ public class AdMob_AdsNative
 		{
 			case 0:
 				viewParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-				viewParams.addRule(RelativeLayout.ALIGN_LEFT);
+				viewParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 				break;
 				
 			case 1:
 				viewParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-				viewParams.addRule(RelativeLayout.ALIGN_RIGHT);
+				viewParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 				break;
 				
 			case 2:
@@ -228,12 +228,12 @@ public class AdMob_AdsNative
 				
 			case 3:
 				viewParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-				viewParams.addRule(RelativeLayout.ALIGN_LEFT);
+				viewParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 				break;
 				
 			case 4:
 				viewParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-				viewParams.addRule(RelativeLayout.ALIGN_RIGHT);
+				viewParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 				break;
 				
 			case 5:

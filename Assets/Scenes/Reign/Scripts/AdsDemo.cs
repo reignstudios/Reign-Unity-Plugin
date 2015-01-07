@@ -101,7 +101,7 @@ public class AdsDemo : MonoBehaviour
 		desc.Android_AdAPI = AdAPIs.AdMob;// Choose between AdMob or AmazonAds
 		#endif
 			
-		desc.Android_AdMob_UnitID = "";// NOTE: You can use legacy (PublisherID) too, You MUST have this even for Testing!
+		desc.Android_AdMob_UnitID = "";// NOTE: You MUST have this even for Testing!
 		desc.Android_AdMob_AdGravity = AdGravity.BottomCenter;
 		desc.Android_AdMob_AdSize = Android_AdMob_AdSize.Banner_320x50;
 			
