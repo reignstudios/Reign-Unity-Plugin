@@ -37,6 +37,8 @@ namespace Reign.EditorTools
 				Directory.CreateDirectory(Path.GetDirectoryName(newDst));
 				File.Copy(file, newDst, true);
 			}
+
+			AssetDatabase.Refresh();
 		}
 
 		static void gatherFilePaths(string path, List<string> files)
