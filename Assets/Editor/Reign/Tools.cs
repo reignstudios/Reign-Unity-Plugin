@@ -13,11 +13,48 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System;
+using System.Collections.Generic;
 
 namespace Reign.EditorTools
 {
 	public static class Tools
 	{
+		[MenuItem("Edit/Reign/Tools/Merge Folders")]
+		static void MergeFolders()
+		{
+			string src = EditorUtility.OpenFolderPanel("Src Folder", "", "");
+			if (string.IsNullOrEmpty(src)) return;
+			string dst = EditorUtility.OpenFolderPanel("Dst Folder", "", "");
+			if (string.IsNullOrEmpty(dst)) return;
+
+			Debug.Log("Src Folder: " + src);
+			Debug.Log("Dst Folder: " + dst);
+			var files = new List<string>();
+			gatherFilePaths(src, files);
+			foreach (var file in files)
+			{
+				string newDst = dst + file.Substring(src.Length);
+				Directory.CreateDirectory(Path.GetDirectoryName(newDst));
+				File.Copy(file, newDst, true);
+			}
+		}
+
+		static void gatherFilePaths(string path, List<string> files)
+		{
+			// add files in path
+			var dir = new DirectoryInfo(path);
+			foreach (var file in dir.GetFiles())
+			{
+				if ((file.Attributes & FileAttributes.Hidden) == 0 && (file.Attributes & FileAttributes.Directory) == 0) files.Add(file.FullName);
+			}
+
+			// add sub paths
+			foreach (var subPath in Directory.GetDirectories(path))
+			{
+				gatherFilePaths(subPath, files);
+			}
+		}
+
 		[MenuItem("Edit/Reign/Tools/Merge Reign Android Manifest")]
 		static void MergeAndroidManifest()
 		{
