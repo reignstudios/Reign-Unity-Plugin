@@ -15,6 +15,7 @@ using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.ViewManagement;
+using Windows.ApplicationModel.Activation;
 #endif
 
 #if WINDOWS_PHONE
@@ -30,7 +31,9 @@ namespace Reign
 
 		#if UNITY_METRO
 		public static CoreWindow CoreWindow {get; private set;}
+		#if !UNITY_WP_8_1
 		private static string privacyPolicyURL;
+		#endif
 
 		#if UNITY_WP_8_1
 		public static void Init(Grid adGrid)
@@ -52,19 +55,32 @@ namespace Reign
 			initMethodPointers();
 		}
 
+		#if UNITY_WP_8_1
+		public static void OnActivated(IActivatedEventArgs args)
+		{
+			switch (args.Kind)
+			{
+				case ActivationKind.PickFileContinuation:
+					var data = args as IFileOpenPickerContinuationEventArgs;
+					StreamPlugin_Native.loadFileDialog_Callback(data);
+					break;
+			}
+		}
+		#endif
+
 		#if !UNITY_WP_8_1
 		private static void showPrivacyPolicy(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
 		{
 			var privacyPolicyCommand = new SettingsCommand("privacyPolicy","Privacy Policy", (uiCommand) => {launchPrivacyPolicyUrl();});
 			args.Request.ApplicationCommands.Add(privacyPolicyCommand);
 		}
-		#endif
 
 		private static async void launchPrivacyPolicyUrl()
 		{
 			Uri privacyPolicyUrl = new Uri(privacyPolicyURL);
 			var result = await Windows.System.Launcher.LaunchUriAsync(privacyPolicyUrl);
 		}
+		#endif
 		#endif
 
 		#if WINDOWS_PHONE

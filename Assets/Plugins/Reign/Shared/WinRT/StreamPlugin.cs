@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 using System.Collections.Generic;
 using Windows.UI.Core;
+using System.Linq;
 
 #if UNITY_METRO
 using Windows.UI.Xaml.Media.Imaging;
@@ -271,7 +272,7 @@ namespace Reign.Plugin
 
 		public void SaveFileDialog(byte[] data, FolderLocations folderLocation, string[] fileTypes, StreamSavedCallbackMethod streamSavedCallback)
 		{
-			#if UNITY_METRO
+			#if UNITY_METRO && !UNITY_WP_8_1
 			saveFileDialogAsync(data, folderLocation, fileTypes, streamSavedCallback);
 			#else
 			Debug.LogError("SaveFileDialog not supported on WP8!");
@@ -279,7 +280,7 @@ namespace Reign.Plugin
 			#endif
 		}
 
-		#if UNITY_METRO
+		#if UNITY_METRO && !UNITY_WP_8_1
 		private async void saveFileDialogAsync(byte[] data, FolderLocations folderLocation, string[] fileTypes, StreamSavedCallbackMethod streamSavedCallback)
 		{
 			await WinRTPlugin.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async delegate()
@@ -371,6 +372,47 @@ namespace Reign.Plugin
 		}
 		#endif
 
+		#if UNITY_WP_8_1
+		private static FileOpenPicker LoadFileDialog_picker;
+		private static StreamLoadedCallbackMethod LoadFileDialog_streamLoadedCallback;
+		private static int LoadFileDialog_maxWidth, LoadFileDialog_maxHeight;
+		internal static async void loadFileDialog_Callback(Windows.ApplicationModel.Activation.IFileOpenPickerContinuationEventArgs data)
+		{
+			if (data == null)
+			{
+				LoadFileDialog_streamLoadedCallback(null, false);
+				return;
+			}
+
+			var files = data.Files;
+			if (files != null && files.Count >= 1)
+			{
+				var file = files[0];
+				Stream stream = null;
+				if (LoadFileDialog_maxWidth == 0 || LoadFileDialog_maxHeight == 0)
+				{
+					stream = await file.OpenStreamForReadAsync();
+					LoadFileDialog_streamLoadedCallback(stream, true);
+				}
+				else
+				{
+					using (var tempStream = await file.OpenStreamForReadAsync())
+					{
+						stream = await resizeImageStream(tempStream.AsRandomAccessStream(), LoadFileDialog_maxWidth, LoadFileDialog_maxHeight);
+					}
+
+					LoadFileDialog_streamLoadedCallback(stream, true);
+				}
+			}
+			else
+			{
+				LoadFileDialog_streamLoadedCallback(null, false);
+			}
+
+			LoadFileDialog_picker = null;
+		}
+		#endif
+
 		#if WINDOWS_PHONE
 		private void loadFileDialogAsync(FolderLocations folderLocation, int maxWidth, int maxHeight, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		#else
@@ -379,6 +421,8 @@ namespace Reign.Plugin
 		{
 			#if WINDOWS_PHONE
 			WinRTPlugin.Dispatcher.BeginInvoke(async delegate()
+			#elif UNITY_WP_8_1
+			await WinRTPlugin.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, delegate()
 			#else
 			await WinRTPlugin.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async delegate()
 			#endif
@@ -408,6 +452,13 @@ namespace Reign.Plugin
 					}
 
 					picker.SuggestedStartLocation = getFolderType(folderLocation);
+					#if UNITY_WP_8_1
+					LoadFileDialog_picker = picker;
+					LoadFileDialog_streamLoadedCallback = streamLoadedCallback;
+					LoadFileDialog_maxWidth = maxWidth;
+					LoadFileDialog_maxHeight = maxHeight;
+					picker.PickSingleFileAndContinue();
+					#else
 					var file = await picker.PickSingleFileAsync();
 					if (file != null)
 					{
@@ -432,6 +483,7 @@ namespace Reign.Plugin
 					{
 						streamLoadedCallback(null, false);
 					}
+					#endif
 				}
 				catch (Exception e)
 				{
@@ -458,9 +510,9 @@ namespace Reign.Plugin
 		}
 
 		#if WINDOWS_PHONE
-		private Stream resizeImageStream(Stream imageStream, int maxWidth, int maxHeight)
+		private static Stream resizeImageStream(Stream imageStream, int maxWidth, int maxHeight)
 		#else
-		private async Task<Stream> resizeImageStream(IRandomAccessStream imageStream, int maxWidth, int maxHeight)
+		private static async Task<Stream> resizeImageStream(IRandomAccessStream imageStream, int maxWidth, int maxHeight)
 		#endif
 		{
 			#if WINDOWS_PHONE
@@ -499,7 +551,7 @@ namespace Reign.Plugin
 			else loadCameraPickerAsync(quality, maxWidth, maxHeight, streamLoadedCallback);
 		}
 
-		#if WINDOWS_PHONE
+		#if WINDOWS_PHONE || UNITY_WP_8_1
 		private void loadCameraPickerAsync(CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback)
 		#else
 		private async void loadCameraPickerAsync(CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback)
@@ -516,6 +568,8 @@ namespace Reign.Plugin
 				cameraCaptureTask.Completed += new EventHandler<PhotoResult>(cameraCaptureTask_Completed);
 				cameraCaptureTask.Show();
 			});
+			#elif UNITY_WP_8_1
+			loadFileDialogAsync(FolderLocations.Pictures, maxWidth, maxHeight, new string[]{".jpg"}, streamLoadedCallback);
 			#else
 			await WinRTPlugin.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async delegate()
 			{
