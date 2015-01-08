@@ -124,6 +124,7 @@ public static class ExportPlugins
 		files.Add(Application.dataPath + "/Plugins/Reign/VersionInfo/ReignVersionCheck");
 		files.Add(Application.dataPath + "/Plugins/Reign/ReadMe.txt");
 		files.Add(Application.dataPath + "/smcs.rsp");
+		files.Add(Application.dataPath + "/gmcs.rsp");
 
 		return files;
 	}
