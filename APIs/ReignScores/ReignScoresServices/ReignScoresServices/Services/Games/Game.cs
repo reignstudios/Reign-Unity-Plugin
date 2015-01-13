@@ -1,0 +1,91 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace ReignScores.Services.Games
+{
+	public static class Game
+	{
+		private const string gameAPIKey = "04E0676D-AAF8-4836-A584-DE0C1D618D84";
+
+		public static string CreateUser(string apiKey, string gameID, string username, string password)
+		{
+			string response = ResponseTool.CheckAPIKey(apiKey, gameAPIKey);
+			if (response != null) return response;
+
+			using (var conn = DataManager.CreateConnectionObject())
+			{
+				conn.Open();
+				using (var command = conn.CreateCommand())
+				{
+					string passwordEncrypted = SecurityManager.Hash(password);
+					var userID = Guid.NewGuid();
+					string values = string.Format("('{0}', '{1}', '{2}', '{3}', '{4}')", userID, gameID, username, passwordEncrypted, DateTime.UtcNow);
+					command.CommandText = "INSERT INTO Users (ID, GameID, Username, Password, DateCreated) VALUES " + values;
+					if (command.ExecuteNonQuery() == 1)
+					{
+						var webResponse = new WebResponse(ResponseTypes.Succeeded)
+						{
+							UserID = userID.ToString()
+						};
+						return ResponseTool.GenerateXML(webResponse);
+					}
+					else
+					{
+						var webResponse = new WebResponse(ResponseTypes.Error)
+						{
+							ErrorMessage = "Failed to properly create user"
+						};
+						return ResponseTool.GenerateXML(webResponse);
+					}
+				}
+			}
+		}
+
+		public static string RequestScores(string apiKey, string leaderboardID, string limit)
+		{
+			string response = ResponseTool.CheckAPIKey(apiKey, gameAPIKey);
+			if (response != null) return response;
+
+			using (var conn = DataManager.CreateConnectionObject())
+			{
+				conn.Open();
+				using (var command = conn.CreateCommand())
+				{
+					var webResponse = new WebResponse(ResponseTypes.Succeeded);
+					webResponse.Scores = new List<WebResponse_Score>();
+
+					// get all leaderboard usersIDs
+					command.CommandText = string.Format("SELECT UserID, Score FROM Scores WHERE LeaderboardID = '{0}'", leaderboardID);// TODO add limit
+					using (var reader = command.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							webResponse.Scores.Add(new WebResponse_Score()
+							{
+								UserID = reader["UserID"].ToString(),
+								Score = int.Parse(reader["Score"].ToString())
+							});
+						}
+					}
+
+					// get all usernames for IDs
+					foreach (var score in webResponse.Scores)
+					{
+						command.CommandText = string.Format("SELECT Username FROM Users WHERE ID = '{0}'", score.UserID);
+						using (var reader = command.ExecuteReader())
+						{
+							while (reader.Read())
+							{
+								score.Username = reader["Username"].ToString();
+							}
+						}
+					}
+
+					return ResponseTool.GenerateXML(webResponse);
+				}
+			}
+		}
+	}
+}
