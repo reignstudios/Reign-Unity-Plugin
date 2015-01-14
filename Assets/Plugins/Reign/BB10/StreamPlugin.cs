@@ -87,6 +87,18 @@ namespace Reign.Plugin
 			}
 		}
 
+		private string[] addUppers(string[] fileTypes)
+		{
+			var items = new System.Collections.Generic.List<string>();
+			foreach (var type in fileTypes)
+			{
+				items.Add(type);
+				items.Add(type.ToUpper());
+			}
+
+			return items.ToArray();
+		}
+
 		public override void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
 			if (folderLocation != FolderLocations.Pictures)
@@ -123,10 +135,11 @@ namespace Reign.Plugin
 
 				var dataPathPatterns = new string[]
 				{
-					@"file\://(/accounts/1000/shared/photos/)([\w|\.]*)",
-					@"file\://(/accounts/1000/shared/camera/)([\w|\.]*)"
+					@"file\://(/accounts/1000/shared/photos/)([\w|\.|\-]*)",
+					@"file\://(/accounts/1000/shared/camera/)([\w|\.|\-]*)",
+					@"file\://(/accounts/1000/shared/downloads/)([\w|\.|\-]*)"
 				};
-				waitAndProcessImage(fileTypes, dataPathPatterns, maxWidth, maxHeight, streamLoadedCallback);
+				waitAndProcessImage(addUppers(fileTypes), dataPathPatterns, maxWidth, maxHeight, streamLoadedCallback);
 			
 				Common.navigator_invoke_invocation_destroy(invoke);
 			}
@@ -175,10 +188,10 @@ namespace Reign.Plugin
 			};
 			var dataPathPatterns = new string[]
 			{
-				@"(/accounts/1000/shared/camera/)([\w|\.]*)",
-				@"(/accounts/1000/shared/photos/)([\w|\.]*)"
+				@"(/accounts/1000/shared/camera/)([\w|\.|\-]*)",
+				@"(/accounts/1000/shared/photos/)([\w|\.|\-]*)"
 			};
-			waitAndProcessImage(fileTypes, dataPathPatterns, maxWidth, maxHeight, streamLoadedCallback);
+			waitAndProcessImage(addUppers(fileTypes), dataPathPatterns, maxWidth, maxHeight, streamLoadedCallback);
 
 			Common.navigator_invoke_invocation_destroy(invoke);
 			Marshal.FreeHGlobal(namePtr);
