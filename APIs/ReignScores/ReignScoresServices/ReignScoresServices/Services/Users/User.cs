@@ -21,7 +21,7 @@ namespace ReignScores.Services.Users
 				using (var command = conn.CreateCommand())
 				{
 					string passwordEncrypted = SecurityManager.Hash(password);
-					command.CommandText = string.Format("SELECT ID FROM Users WHERE GameID = '{0}' and UserID = '{1}' and Password = '{2}'", gameID, username, passwordEncrypted);
+					command.CommandText = string.Format("SELECT ID FROM Users WHERE GameID = '{0}' and Username = '{1}' and Password = '{2}'", gameID, username, passwordEncrypted);
 					using (var reader = command.ExecuteReader())
 					{
 						if (reader.Read())
@@ -56,7 +56,7 @@ namespace ReignScores.Services.Users
 				using (var command = conn.CreateCommand())
 				{
 					// check if score already exists
-					command.CommandText = string.Format("SELECT ID, Score FROM Scores WHERE UserID = '{0}' and LeaderboardID = '{1}'", userID, leaderboardID);
+					command.CommandText = string.Format("SELECT Score FROM Scores WHERE ID = '{0}' and LeaderboardID = '{1}'", userID, leaderboardID);
 					string id = null;
 					int currentScore = 0;
 					using (var reader = command.ExecuteReader())
@@ -141,8 +141,8 @@ namespace ReignScores.Services.Users
 					if (id == null)
 					{
 						// create achievement
-						string values = string.Format("(NEWID(), '{0}', '{1}', '{2}')", userID, achievementID, percentComplete);
-						command.CommandText = "INSERT INTO Achievements (ID, UserID, LeaderboardID, PercentComplete) VALUES " + values;
+						string values = string.Format("(NEWID(), '{0}', '{1}', '{2}', '{3}')", userID, achievementID, percentComplete, DateTime.UtcNow);
+						command.CommandText = "INSERT INTO Achievements (ID, UserID, AchievementID, PercentComplete, Date) VALUES " + values;
 						if (command.ExecuteNonQuery() == 1)
 						{
 							var webResponse = new WebResponse(ResponseTypes.Succeeded);
@@ -160,7 +160,7 @@ namespace ReignScores.Services.Users
 					else if (int.Parse(percentComplete) > currentPercentComplete)
 					{
 						// update existing achievement
-						command.CommandText = string.Format("UPDATE Achievements SET PercentComplete = {0} WHERE ID = '{1}'", percentComplete, id);
+						command.CommandText = string.Format("UPDATE Achievements SET Date = '{0}', PercentComplete = {1} WHERE ID = '{2}'", DateTime.UtcNow, percentComplete, id);
 						if (command.ExecuteNonQuery() == 1)
 						{
 							var webResponse = new WebResponse(ResponseTypes.Succeeded);

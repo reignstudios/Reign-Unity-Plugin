@@ -19,6 +19,21 @@ namespace ReignScores.Services.Games
 				conn.Open();
 				using (var command = conn.CreateCommand())
 				{
+					// make sure username doesn't already exist
+					command.CommandText = string.Format("SELECT ID FROM Users WHERE Username = '{0}'", username);
+					using (var reader = command.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							var webResponse = new WebResponse(ResponseTypes.Error)
+							{
+								ErrorMessage = "Username already exists"
+							};
+							return ResponseTool.GenerateXML(webResponse);
+						}
+					}
+
+					// create account
 					string passwordEncrypted = SecurityManager.Hash(password);
 					var userID = Guid.NewGuid();
 					string values = string.Format("('{0}', '{1}', '{2}', '{3}', '{4}')", userID, gameID, username, passwordEncrypted, DateTime.UtcNow);

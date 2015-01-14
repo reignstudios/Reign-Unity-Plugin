@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 public class LoginManager : MonoBehaviour
 {
+	public static Guid ClientID;
+
 	public GameObject CreateAccountCanvas, ClientMainScreenCanvas;
 	public Button CreateAccountButton, LoginButton;
 	public InputField UsernameField, PasswordField;
@@ -44,6 +47,7 @@ public class LoginManager : MonoBehaviour
 		if (succeeded)
 		{
 			Debug.Log("Logged In with ClientID: " + response.ClientID);
+			ClientID = new Guid(response.ClientID);
 			ClientMainScreenCanvas.SetActive(true);
 			this.gameObject.SetActive(false);
 		}

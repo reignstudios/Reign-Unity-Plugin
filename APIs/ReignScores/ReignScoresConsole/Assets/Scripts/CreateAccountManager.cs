@@ -23,13 +23,13 @@ public class CreateAccountManager : MonoBehaviour
 	private void create_Clicked()
 	{
 		// validate input fields
-		if (UsernameField.text.Length <= 5)
+		if (UsernameField.text.Length < 6)
 		{
 			Debug.LogError("Username must be at least 6 characters long!");
 			return;
 		}
 
-		if (PasswordField.text.Length <= 5)
+		if (PasswordField.text.Length < 6)
 		{
 			Debug.LogError("Password must be at least 6 characters long!");
 			return;

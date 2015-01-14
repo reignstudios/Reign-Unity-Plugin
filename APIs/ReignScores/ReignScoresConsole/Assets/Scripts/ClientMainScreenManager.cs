@@ -1,15 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
-public class ClientMainScreenManager : MonoBehaviour {
+public class ClientMainScreenManager : MonoBehaviour
+{
+	public GameObject ManageGamesCanvas, CreateGameCanvas;
+	public Button ManagerGamesButton, CreateGameButton;
 
-	// Use this for initialization
-	void Start () {
-	
+	void Start()
+	{
+		ManagerGamesButton.onClick.AddListener(manageGames_Clicked);
+		CreateGameButton.onClick.AddListener(createGame_Clicked);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	private void manageGames_Clicked()
+	{
+		ManageGamesCanvas.SetActive(true);
+		this.gameObject.SetActive(false);
+		ManageGamesManager.Refresh();
+	}
+
+	private void createGame_Clicked()
+	{
+		CreateGameCanvas.SetActive(true);
+		this.gameObject.SetActive(false);
 	}
 }

@@ -26,6 +26,12 @@ namespace ReignScores.Services
 		[XmlElement("PercentComplete")] public float PercentComplete;
 	}
 
+	public class WebResponse_Game
+	{
+		[XmlElement("ID")] public string ID;
+		[XmlElement("Name")] public string Name;
+	}
+
 	[XmlRoot("ClientResponse")]
 	public class WebResponse
 	{
@@ -35,6 +41,7 @@ namespace ReignScores.Services
 		[XmlElement("UserID")] public string UserID;
 		[XmlElement("Score")] public List<WebResponse_Score> Scores;
 		[XmlElement("Achievement")] public List<WebResponse_Achievement> Achievements;
+		[XmlElement("Games")] public List<WebResponse_Game> Games;
 
 		public WebResponse() {}
 		public WebResponse(ResponseTypes type)
