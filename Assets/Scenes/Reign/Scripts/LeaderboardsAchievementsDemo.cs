@@ -8,6 +8,7 @@ using Reign;
 public class LeaderboardsAchievementsDemo : MonoBehaviour
 {
 	public static LeaderboardsAchievementsDemo Singleton;
+	public GameObject ReignScores_Renderer;
 	public Texture BackgroundTexture, ScoreBoardTexture, AchievementBoardTexture;
 	public Texture CloseBoxNormal, CloseBoxHover;
 	public Texture PrevNormal, PrevHover, NextNormal, NextHover;
@@ -117,52 +118,56 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		}
 
 		// Desc ---------------------------
-		string reignScores_gameID = "";
+		const string reignScores_gameID = "B2A24047-0487-41C4-B151-0F175BB54D0E";// Get this ID from the Reign-Scores Console.
 		var desc = new ScoreDesc();
+		desc.ReignScores_UI = ReignScores_Renderer.GetComponent<MonoBehaviour>() as IScores_UI;
+		desc.ReignScores_ServicesURL = "http://localhost:5537/Services/";// Set to your server!
+		desc.ReignScores_GameKey = "04E0676D-AAF8-4836-A584-DE0C1D618D84";// Set to your servers game_api_key!
+		desc.ReignScores_UserKey = "CE8E55E1-F383-4F05-9388-5C89F27B7FF2";// Set to your servers user_api_key!
 		desc.LeaderboardDescs = leaderboards;
 		desc.AchievementDescs = achievements;
 
 		// Global (Take note that you can adjust the built in ReignScores UI below)
-		desc.ReignScores_EnableTestRects = false;
-		desc.ReignScores_AutoTriggerAuthenticateGUI = true;
-		desc.ReignScores_BackgroudTexture = BackgroundTexture;
+		//desc.ReignScores_EnableTestRects = false;
+		//desc.ReignScores_AutoTriggerAuthenticateGUI = true;
+		//desc.ReignScores_BackgroudTexture = BackgroundTexture;
 
-		desc.ReignScores_TopScoresToListPerPage = 10;
-		desc.ReignScores_TopScoreBoardTexture = ScoreBoardTexture;
-		desc.ReignScores_TopScoreBoardFrame_Usernames = TopScoreUsernameFrame;
-		desc.ReignScores_TopScoreBoardFrame_Scores = TopScoreFrame;
-		desc.ReignScores_TopScoreBoardFrame_CloseBox = CloseBoxFrame;
-		desc.ReignScores_TopScoreBoardButton_CloseNormal = CloseBoxNormal;
-		desc.ReignScores_TopScoreBoardButton_CloseHover = CloseBoxHover;
-		desc.ReignScores_TopScoreBoardFrame_PrevButton = PrefFrame;
-		desc.ReignScores_TopScoreBoardButton_PrevNormal = PrevNormal;
-		desc.ReignScores_TopScoreBoardButton_PrevHover = PrevHover;
-		desc.ReignScores_TopScoreBoardFrame_NextButton = NextFrame;
-		desc.ReignScores_TopScoreBoardButton_NextNormal = NextNormal;
-		desc.ReignScores_TopScoreBoardButton_NextHover = NextHover;
-		desc.ReignScores_TopScoreBoardFont_Size = 18;
-		desc.ReignScores_TopScoreBoardFont_Color = Color.white;
+		//desc.ReignScores_TopScoresToListPerPage = 10;
+		//desc.ReignScores_TopScoreBoardTexture = ScoreBoardTexture;
+		//desc.ReignScores_TopScoreBoardFrame_Usernames = TopScoreUsernameFrame;
+		//desc.ReignScores_TopScoreBoardFrame_Scores = TopScoreFrame;
+		//desc.ReignScores_TopScoreBoardFrame_CloseBox = CloseBoxFrame;
+		//desc.ReignScores_TopScoreBoardButton_CloseNormal = CloseBoxNormal;
+		//desc.ReignScores_TopScoreBoardButton_CloseHover = CloseBoxHover;
+		//desc.ReignScores_TopScoreBoardFrame_PrevButton = PrefFrame;
+		//desc.ReignScores_TopScoreBoardButton_PrevNormal = PrevNormal;
+		//desc.ReignScores_TopScoreBoardButton_PrevHover = PrevHover;
+		//desc.ReignScores_TopScoreBoardFrame_NextButton = NextFrame;
+		//desc.ReignScores_TopScoreBoardButton_NextNormal = NextNormal;
+		//desc.ReignScores_TopScoreBoardButton_NextHover = NextHover;
+		//desc.ReignScores_TopScoreBoardFont_Size = 18;
+		//desc.ReignScores_TopScoreBoardFont_Color = Color.white;
 
-		desc.ReignScores_AchievementsToListPerPage = 10;
-		desc.ReignScores_AchievementBoardTexture = AchievementBoardTexture;
-		desc.ReignScores_AchievementBoardFrame_Names = AchievementNameFrame;
-		desc.ReignScores_AchievementBoardFrame_Descs = AchievementDescFrame;
-		desc.ReignScores_AchievementBoardFrame_CloseBox = CloseBoxFrame;
-		desc.ReignScores_AchievementBoardButton_CloseNormal = CloseBoxNormal;
-		desc.ReignScores_AchievementBoardButton_CloseHover = CloseBoxHover;
-		desc.ReignScores_AchievementBoardFrame_PrevButton = PrefFrame;
-		desc.ReignScores_AchievementBoardButton_PrevNormal = PrevNormal;
-		desc.ReignScores_AchievementBoardButton_PrevHover = PrevHover;
-		desc.ReignScores_AchievementBoardFrame_NextButton = NextFrame;
-		desc.ReignScores_AchievementBoardButton_NextNormal = NextNormal;
-		desc.ReignScores_AchievementBoardButton_NextHover = NextHover;
-		desc.ReignScores_AchievementBoardFont_Size = 18;
-		desc.ReignScores_AchievementBoardFont_Color = Color.white;
+		//desc.ReignScores_AchievementsToListPerPage = 10;
+		//desc.ReignScores_AchievementBoardTexture = AchievementBoardTexture;
+		//desc.ReignScores_AchievementBoardFrame_Names = AchievementNameFrame;
+		//desc.ReignScores_AchievementBoardFrame_Descs = AchievementDescFrame;
+		//desc.ReignScores_AchievementBoardFrame_CloseBox = CloseBoxFrame;
+		//desc.ReignScores_AchievementBoardButton_CloseNormal = CloseBoxNormal;
+		//desc.ReignScores_AchievementBoardButton_CloseHover = CloseBoxHover;
+		//desc.ReignScores_AchievementBoardFrame_PrevButton = PrefFrame;
+		//desc.ReignScores_AchievementBoardButton_PrevNormal = PrevNormal;
+		//desc.ReignScores_AchievementBoardButton_PrevHover = PrevHover;
+		//desc.ReignScores_AchievementBoardFrame_NextButton = NextFrame;
+		//desc.ReignScores_AchievementBoardButton_NextNormal = NextNormal;
+		//desc.ReignScores_AchievementBoardButton_NextHover = NextHover;
+		//desc.ReignScores_AchievementBoardFont_Size = 18;
+		//desc.ReignScores_AchievementBoardFont_Color = Color.white;
 
-		desc.ReignScores_LoginTitle = "Login";
-		desc.ReignScores_CreateUserTitle = "Create Account";
-		desc.ReignScores_AudioSource = audio;
-		desc.ReignScores_ButtonClick = ButtonClick;
+		//desc.ReignScores_LoginTitle = "Login";
+		//desc.ReignScores_CreateUserTitle = "Create Account";
+		//desc.ReignScores_AudioSource = audio;
+		//desc.ReignScores_ButtonClick = ButtonClick;
 		desc.ReignScores_ScoreFormatCallback = scoreFormatCallback;
 
 		// Editor
@@ -241,21 +246,18 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 	void OnGUI()
 	{
-		// disable any unwanted gui if this is enabled to make room for the built-in Reign ReignScores GUI.
-		if (ScoreManager.PerformingGUIOperation) return;
-
-		float offset = 0;
-		GUI.Label(new Rect((Screen.width/2)-(256*.5f), offset, 256, 32), "<< Leaderboards & Achievements Demo >>", uiStyle);
-		if (GUI.Button(new Rect(0, offset, 64, 32), "Back"))
-		{
-			gameObject.SetActive(false);
-			Application.LoadLevel("MainDemo");
-			return;
-		}
-		offset += 34;
-
 		if (ScoreManager.IsAuthenticated)
 		{
+			float offset = 0;
+			GUI.Label(new Rect((Screen.width/2)-(256*.5f), offset, 256, 32), "<< Leaderboards & Achievements Demo >>", uiStyle);
+			if (GUI.Button(new Rect(0, offset, 64, 32), "Back"))
+			{
+				gameObject.SetActive(false);
+				Application.LoadLevel("MainDemo");
+				return;
+			}
+			offset += 34;
+
 			GUI.Label(new Rect(0, offset, Screen.width, Screen.height/8), "Authenticated Username: " + ScoreManager.Username);
 
 			// Show Leaderboards

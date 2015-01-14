@@ -20,7 +20,7 @@ namespace ReignScores.Services.Games
 				using (var command = conn.CreateCommand())
 				{
 					// make sure username doesn't already exist
-					command.CommandText = string.Format("SELECT ID FROM Users WHERE Username = '{0}'", username);
+					command.CommandText = string.Format("SELECT ID FROM Users WHERE GameID = '{0}' and Username = '{1}'", gameID, username);
 					using (var reader = command.ExecuteReader())
 					{
 						if (reader.Read())
@@ -42,7 +42,8 @@ namespace ReignScores.Services.Games
 					{
 						var webResponse = new WebResponse(ResponseTypes.Succeeded)
 						{
-							UserID = userID.ToString()
+							UserID = userID.ToString(),
+							Username = username
 						};
 						return ResponseTool.GenerateXML(webResponse);
 					}

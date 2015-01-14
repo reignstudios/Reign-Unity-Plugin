@@ -15,19 +15,6 @@ namespace Reign
 	public static class ScoreManager
 	{
 		/// <summary>
-		/// Use to check if the API is doing GUI operations.
-		/// NOTE: If ReignScores, you should disable your UI to let the Reign UI take over.
-		/// </summary>
-		public static bool PerformingGUIOperation
-		{
-			get
-			{
-				if (plugin == null) return false;
-				return plugin.PerformingGUIOperation;
-			}
-		}
-
-		/// <summary>
 		/// Use to check if the user is authenticated.
 		/// </summary>
 		public static bool IsAuthenticated
@@ -319,7 +306,6 @@ namespace Reign.Plugin
 	/// </summary>
 	public class Dumy_ScorePluginPlugin : IScorePlugin
 	{
-		public bool PerformingGUIOperation {get; private set;}
 		public bool IsAuthenticated {get; private set;}
 		public string Username {get; private set;}
 
@@ -329,7 +315,6 @@ namespace Reign.Plugin
 		/// <param name="desc">Score desc.</param>
 		public Dumy_ScorePluginPlugin(ScoreDesc desc, CreatedScoreAPICallbackMethod callback)
 		{
-			PerformingGUIOperation = false;
 			IsAuthenticated = false;
 			Username = "???";
 			if (callback != null) callback(false, "Dumy Score object");

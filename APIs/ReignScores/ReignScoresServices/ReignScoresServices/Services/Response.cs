@@ -39,6 +39,7 @@ namespace ReignScores.Services
 		[XmlElement("ErrorMessage")] public string ErrorMessage;
 		[XmlElement("ClientID")] public string ClientID;
 		[XmlElement("UserID")] public string UserID;
+		[XmlElement("Username")] public string Username;
 		[XmlElement("Score")] public List<WebResponse_Score> Scores;
 		[XmlElement("Achievement")] public List<WebResponse_Achievement> Achievements;
 		[XmlElement("Games")] public List<WebResponse_Game> Games;

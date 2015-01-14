@@ -21,14 +21,15 @@ namespace ReignScores.Services.Users
 				using (var command = conn.CreateCommand())
 				{
 					string passwordEncrypted = SecurityManager.Hash(password);
-					command.CommandText = string.Format("SELECT ID FROM Users WHERE GameID = '{0}' and Username = '{1}' and Password = '{2}'", gameID, username, passwordEncrypted);
+					command.CommandText = string.Format("SELECT ID, Username FROM Users WHERE GameID = '{0}' and Username = '{1}' and Password = '{2}'", gameID, username, passwordEncrypted);
 					using (var reader = command.ExecuteReader())
 					{
 						if (reader.Read())
 						{
 							var webResponse = new WebResponse(ResponseTypes.Succeeded)
 							{
-								UserID = reader["ID"].ToString()
+								UserID = reader["ID"].ToString(),
+								Username = reader["Username"].ToString()
 							};
 							return ResponseTool.GenerateXML(webResponse);
 						}

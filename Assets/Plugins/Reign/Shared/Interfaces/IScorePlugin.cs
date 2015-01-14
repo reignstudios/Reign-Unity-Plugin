@@ -138,6 +138,15 @@ namespace Reign
 	}
 
 	/// <summary>
+	/// Use to implement your own Score UI
+	/// </summary>
+	public interface IScores_UI
+	{
+		void RequestLogin();
+		void LoginCallback(bool succeeded);
+	}
+
+	/// <summary>
 	/// Score desc object
 	/// </summary>
 	public class ScoreDesc
@@ -149,117 +158,137 @@ namespace Reign
 		public ScoreAPIs Editor_ScoreAPI = ScoreAPIs.None, Win32_ScoreAPI = ScoreAPIs.None, OSX_ScoreAPI = ScoreAPIs.None, Linux_ScoreAPI = ScoreAPIs.None,
 			Web_ScoreAPI = ScoreAPIs.None, Win8_ScoreAPI = ScoreAPIs.None, WP8_ScoreAPI = ScoreAPIs.None, BB10_ScoreAPI = ScoreAPIs.None, iOS_ScoreAPI = ScoreAPIs.None,
 			Android_ScoreAPI = ScoreAPIs.None;
+
+		/// <summary>
+		/// Set to your UI implementation
+		/// </summary>
+		public IScores_UI ReignScores_UI;
+
+		/// <summary>
+		/// Set to your servers url
+		/// </summary>
+		public string ReignScores_ServicesURL;
+
+		/// <summary>
+		/// Set to your servers game_api_key
+		/// </summary>
+		public string ReignScores_GameKey;
+
+		/// <summary>
+		/// Set to your servers user_api_key
+		/// </summary>
+		public string ReignScores_UserKey;
 	
-		// Reign Scores
-		/// <summary>
-		/// Set to true if you want the Reign UI to auto trigger on if the user is not authenticated. (NOTE: defaults to true)
-		/// </summary>
-		public bool ReignScores_AutoTriggerAuthenticateGUI = true;
+		//// Reign Scores
+		///// <summary>
+		///// Set to true if you want the Reign UI to auto trigger on if the user is not authenticated. (NOTE: defaults to true)
+		///// </summary>
+		//public bool ReignScores_AutoTriggerAuthenticateGUI = true;
 
-		/// <summary>
-		/// Login UI Title
-		/// </summary>
-		public string ReignScores_LoginTitle = "Login";
+		///// <summary>
+		///// Login UI Title
+		///// </summary>
+		//public string ReignScores_LoginTitle = "Login";
 		
-		/// <summary>
-		/// Create User UI Title
-		/// </summary>
-		public string ReignScores_CreateUserTitle = "Create Account";
+		///// <summary>
+		///// Create User UI Title
+		///// </summary>
+		//public string ReignScores_CreateUserTitle = "Create Account";
 
-		/// <summary>
-		/// Background UI texture. (Or you can set to NULL and use your own backgrounds)
-		/// </summary>
-		public Texture ReignScores_BackgroudTexture;
+		///// <summary>
+		///// Background UI texture. (Or you can set to NULL and use your own backgrounds)
+		///// </summary>
+		//public Texture ReignScores_BackgroudTexture;
 		
-		/// <summary>
-		/// Leaderboard background texture.
-		/// </summary>
-		public Texture ReignScores_TopScoreBoardTexture;
+		///// <summary>
+		///// Leaderboard background texture.
+		///// </summary>
+		//public Texture ReignScores_TopScoreBoardTexture;
 		
-		/// <summary>
-		/// Achievement background texture.
-		/// </summary>
-		public Texture ReignScores_AchievementBoardTexture;
+		///// <summary>
+		///// Achievement background texture.
+		///// </summary>
+		//public Texture ReignScores_AchievementBoardTexture;
 
-		/// <summary>
-		/// CloseBox texture
-		/// </summary>
-		public Texture ReignScores_TopScoreBoardButton_CloseNormal, ReignScores_TopScoreBoardButton_CloseHover;
+		///// <summary>
+		///// CloseBox texture
+		///// </summary>
+		//public Texture ReignScores_TopScoreBoardButton_CloseNormal, ReignScores_TopScoreBoardButton_CloseHover;
 
-		/// <summary>
-		/// CloseBox button texture
-		/// </summary>
-		public Texture ReignScores_AchievementBoardButton_CloseNormal, ReignScores_AchievementBoardButton_CloseHover;
+		///// <summary>
+		///// CloseBox button texture
+		///// </summary>
+		//public Texture ReignScores_AchievementBoardButton_CloseNormal, ReignScores_AchievementBoardButton_CloseHover;
 
-		/// <summary>
-		/// Navigation button texture
-		/// </summary>
-		public Texture ReignScores_TopScoreBoardButton_PrevNormal, ReignScores_TopScoreBoardButton_PrevHover, ReignScores_TopScoreBoardButton_NextNormal, ReignScores_TopScoreBoardButton_NextHover;
+		///// <summary>
+		///// Navigation button texture
+		///// </summary>
+		//public Texture ReignScores_TopScoreBoardButton_PrevNormal, ReignScores_TopScoreBoardButton_PrevHover, ReignScores_TopScoreBoardButton_NextNormal, ReignScores_TopScoreBoardButton_NextHover;
 		
-		/// <summary>
-		/// Navigation button texture
-		/// </summary>
-		public Texture ReignScores_AchievementBoardButton_PrevNormal, ReignScores_AchievementBoardButton_PrevHover, ReignScores_AchievementBoardButton_NextNormal, ReignScores_AchievementBoardButton_NextHover;
+		///// <summary>
+		///// Navigation button texture
+		///// </summary>
+		//public Texture ReignScores_AchievementBoardButton_PrevNormal, ReignScores_AchievementBoardButton_PrevHover, ReignScores_AchievementBoardButton_NextNormal, ReignScores_AchievementBoardButton_NextHover;
 		
-		/// <summary>
-		/// All usernames will fit in this rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
-		/// </summary>
-		public Rect ReignScores_TopScoreBoardFrame_Usernames;
+		///// <summary>
+		///// All usernames will fit in this rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
+		///// </summary>
+		//public Rect ReignScores_TopScoreBoardFrame_Usernames;
 		
-		/// <summary>
-		/// All score values will fit in this rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
-		/// </summary>
-		public Rect ReignScores_TopScoreBoardFrame_Scores;
+		///// <summary>
+		///// All score values will fit in this rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
+		///// </summary>
+		//public Rect ReignScores_TopScoreBoardFrame_Scores;
 		
-		/// <summary>
-		/// Button rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
-		/// </summary>
-		public Rect ReignScores_TopScoreBoardFrame_PrevButton, ReignScores_TopScoreBoardFrame_NextButton, ReignScores_TopScoreBoardFrame_CloseBox;
+		///// <summary>
+		///// Button rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
+		///// </summary>
+		//public Rect ReignScores_TopScoreBoardFrame_PrevButton, ReignScores_TopScoreBoardFrame_NextButton, ReignScores_TopScoreBoardFrame_CloseBox;
 
-		/// <summary>
-		/// All achievement names will fit in this rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
-		/// </summary>
-		public Rect ReignScores_AchievementBoardFrame_Names;
+		///// <summary>
+		///// All achievement names will fit in this rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
+		///// </summary>
+		//public Rect ReignScores_AchievementBoardFrame_Names;
 		
-		/// <summary>
-		/// All achievement descs will fit in this rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
-		/// </summary>
-		public Rect ReignScores_AchievementBoardFrame_Descs;
+		///// <summary>
+		///// All achievement descs will fit in this rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
+		///// </summary>
+		//public Rect ReignScores_AchievementBoardFrame_Descs;
 		
-		/// <summary>
-		/// Button rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
-		/// </summary>
-		public Rect ReignScores_AchievementBoardFrame_PrevButton, ReignScores_AchievementBoardFrame_NextButton, ReignScores_AchievementBoardFrame_CloseBox;
+		///// <summary>
+		///// Button rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
+		///// </summary>
+		//public Rect ReignScores_AchievementBoardFrame_PrevButton, ReignScores_AchievementBoardFrame_NextButton, ReignScores_AchievementBoardFrame_CloseBox;
 
-		/// <summary>
-		/// Board font size (Defaults to 12)
-		/// </summary>
-		public int ReignScores_TopScoreBoardFont_Size = 12, ReignScores_AchievementBoardFont_Size = 12;
+		///// <summary>
+		///// Board font size (Defaults to 12)
+		///// </summary>
+		//public int ReignScores_TopScoreBoardFont_Size = 12, ReignScores_AchievementBoardFont_Size = 12;
 
-		/// <summary>
-		/// Board font color (Defaults to white)
-		/// </summary>
-		public Color ReignScores_TopScoreBoardFont_Color = Color.white, ReignScores_AchievementBoardFont_Color = Color.white;
+		///// <summary>
+		///// Board font color (Defaults to white)
+		///// </summary>
+		//public Color ReignScores_TopScoreBoardFont_Color = Color.white, ReignScores_AchievementBoardFont_Color = Color.white;
 
-		/// <summary>
-		/// Amount to show on board (Defaults to 10)
-		/// </summary>
-		public int ReignScores_TopScoresToListPerPage = 10, ReignScores_AchievementsToListPerPage = 10;
+		///// <summary>
+		///// Amount to show on board (Defaults to 10)
+		///// </summary>
+		//public int ReignScores_TopScoresToListPerPage = 10, ReignScores_AchievementsToListPerPage = 10;
 
-		/// <summary>
-		/// Set to true to visual see where your board rects are placed.
-		/// </summary>
-		public bool ReignScores_EnableTestRects;
+		///// <summary>
+		///// Set to true to visual see where your board rects are placed.
+		///// </summary>
+		//public bool ReignScores_EnableTestRects;
 
-		/// <summary>
-		/// Set to your UI audio source
-		/// </summary>
-		public AudioSource ReignScores_AudioSource;
+		///// <summary>
+		///// Set to your UI audio source
+		///// </summary>
+		//public AudioSource ReignScores_AudioSource;
 
-		/// <summary>
-		/// Button click sound
-		/// </summary>
-		public AudioClip ReignScores_ButtonClick;
+		///// <summary>
+		///// Button click sound
+		///// </summary>
+		//public AudioClip ReignScores_ButtonClick;
 
 		/// <summary>
 		/// This callback fires when a score needs to be formated (Such as converting an int to TimeSpan)
@@ -466,11 +495,6 @@ namespace Reign.Plugin
 	/// </summary>
 	public interface IScorePlugin
 	{
-		/// <summary>
-		/// Use to check if a GUI system is in use
-		/// </summary>
-		bool PerformingGUIOperation {get;}
-
 		/// <summary>
 		/// Use to check if the user is authenticated
 		/// </summary>
