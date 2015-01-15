@@ -124,11 +124,6 @@ namespace Reign.Plugin
 			throw new Exception("Failed to find GooglePlay LeaderboardID for: " + id);
 		}
 
-		public void OnGUI ()
-		{
-			// do nothing...
-		}
-
 		public void Update ()
 		{
 			// check if init done

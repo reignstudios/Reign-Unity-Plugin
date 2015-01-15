@@ -203,11 +203,6 @@ namespace Reign.Plugin
 			}
 		}
 
-		public void OnGUI ()
-		{
-			// do nothing...
-		}
-
 		public void Update ()
 		{
 			// authenticate

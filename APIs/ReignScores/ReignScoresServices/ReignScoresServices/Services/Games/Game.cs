@@ -59,7 +59,7 @@ namespace ReignScores.Services.Games
 			}
 		}
 
-		public static string RequestScores(string apiKey, string leaderboardID, string limit)
+		public static string RequestScores(string apiKey, string leaderboardID, string offset, string range, string sortOrder)
 		{
 			string response = ResponseTool.CheckAPIKey(apiKey, gameAPIKey);
 			if (response != null) return response;
@@ -73,13 +73,14 @@ namespace ReignScores.Services.Games
 					webResponse.Scores = new List<WebResponse_Score>();
 
 					// get all leaderboard usersIDs
-					command.CommandText = string.Format("SELECT UserID, Score FROM Scores WHERE LeaderboardID = '{0}'", leaderboardID);// TODO add limit
+					command.CommandText = string.Format("SELECT ID, UserID, Score FROM Scores WHERE LeaderboardID = '{0}' ORDER BY Score {3} OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY", leaderboardID, offset, range, sortOrder == "Ascending" ? "ASC" : "DESC");
 					using (var reader = command.ExecuteReader())
 					{
 						while (reader.Read())
 						{
 							webResponse.Scores.Add(new WebResponse_Score()
 							{
+								ID = reader["ID"].ToString(),
 								UserID = reader["UserID"].ToString(),
 								Score = int.Parse(reader["Score"].ToString())
 							});

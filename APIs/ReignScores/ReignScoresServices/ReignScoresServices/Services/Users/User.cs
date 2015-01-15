@@ -57,7 +57,7 @@ namespace ReignScores.Services.Users
 				using (var command = conn.CreateCommand())
 				{
 					// check if score already exists
-					command.CommandText = string.Format("SELECT Score FROM Scores WHERE ID = '{0}' and LeaderboardID = '{1}'", userID, leaderboardID);
+					command.CommandText = string.Format("SELECT ID, Score FROM Scores WHERE UserID = '{0}' and LeaderboardID = '{1}'", userID, leaderboardID);
 					string id = null;
 					int currentScore = 0;
 					using (var reader = command.ExecuteReader())
@@ -72,7 +72,7 @@ namespace ReignScores.Services.Users
 					if (id == null)
 					{
 						// create score
-						string values = string.Format("(NEWID(), '{0}', '{1}', '{2}', '{3}')", userID, leaderboardID, DateTime.UtcNow, score);
+						string values = string.Format("(NEWID(), '{0}', '{1}', {2}, '{3}')", userID, leaderboardID, score, DateTime.UtcNow);
 						command.CommandText = "INSERT INTO Scores (ID, UserID, LeaderboardID, Score, Date) VALUES " + values;
 						if (command.ExecuteNonQuery() == 1)
 						{
@@ -196,7 +196,7 @@ namespace ReignScores.Services.Users
 				conn.Open();
 				using (var command = conn.CreateCommand())
 				{
-					command.CommandText = string.Format("SELECT AchievementID, PercentComplete FROM Achievements WHERE UserID = '{0}'", userID);
+					command.CommandText = string.Format("SELECT ID, AchievementID, PercentComplete FROM Achievements WHERE UserID = '{0}'", userID);
 					using (var reader = command.ExecuteReader())
 					{
 						var webResponse = new WebResponse(ResponseTypes.Succeeded);
@@ -206,6 +206,7 @@ namespace ReignScores.Services.Users
 							var a = new WebResponse_Achievement()
 							{
 								ID = reader["AchievementID"].ToString(),
+								AchievementID = reader["AchievementID"].ToString(),
 								PercentComplete = int.Parse(reader["PercentComplete"].ToString())
 							};
 							webResponse.Achievements.Add(a);

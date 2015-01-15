@@ -66,7 +66,7 @@ namespace Reign.Plugin
 					WinRTPlugin.AdGrid.Children.Add(adView);
 
 					AdRequest request = new AdRequest();
-					request.ForceTesting = desc.Testing;
+					//request.ForceTesting = desc.Testing;// Looks like there is a bug in AdMob if this is enabled.
 					adView.LoadAd(request);
 
 					Debug.Log("Created Ad of AdUnitID: " + adView.AdUnitID);

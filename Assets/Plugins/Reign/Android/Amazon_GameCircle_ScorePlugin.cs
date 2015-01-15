@@ -131,11 +131,6 @@ namespace Reign.Plugin
 			throw new Exception("Failed to find GameCircle LeaderboardID for: " + id);
 		}
 
-		public void OnGUI ()
-		{
-			// do nothing...
-		}
-
 		public void Update ()
 		{
 			// get events

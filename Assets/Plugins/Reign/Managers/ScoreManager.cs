@@ -69,12 +69,7 @@ namespace Reign
 			ScoreManager.createdCallback = callback;
 			ReignServices.CheckStatus();
 			plugin = ScorePluginAPI.New(desc, createdCallbackAsyncStatic);
-			ReignServices.AddService(update, onGUI, null);
-		}
-
-		private static void onGUI()
-		{
-			plugin.OnGUI();
+			ReignServices.AddService(update, null, null);
 		}
 
 		private static void update()
@@ -426,14 +421,6 @@ namespace Reign.Plugin
 		public void ShowNativeScoresPage(string leaderboardID, ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
 		{
 			if (callback != null) callback(false, "Dumy Score Obj");
-		}
-
-		/// <summary>
-		/// Dumy method.
-		/// </summary>
-		public void OnGUI()
-		{
-			// do nothing...
 		}
 
 		/// <summary>

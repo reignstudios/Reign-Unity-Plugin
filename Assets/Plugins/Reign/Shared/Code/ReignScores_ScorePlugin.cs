@@ -18,6 +18,7 @@ namespace Reign.Plugin
 
 		public class WebResponse_Score
 		{
+			[XmlElement("ID")] public string ID;
 			[XmlElement("UserID")] public string UserID;
 			[XmlElement("Username")] public string Username;
 			[XmlElement("Score")] public int Score;
@@ -26,6 +27,7 @@ namespace Reign.Plugin
 		public class WebResponse_Achievement
 		{
 			[XmlElement("ID")] public string ID;
+			[XmlElement("AchievementID")] public string AchievementID;
 			[XmlElement("PercentComplete")] public float PercentComplete;
 		}
 
@@ -151,7 +153,7 @@ namespace Reign.Plugin
 				if (response.Type == XML.ResponseTypes.Error)
 				{
 					Debug.LogError("Failed: " + response.ErrorMessage);
-					callback(false, null);
+					callback(false, response);
 					yield break;
 				}
 
@@ -168,14 +170,8 @@ namespace Reign.Plugin
 
 	public class ReignScores_ScorePlugin : IScorePlugin
 	{
-		//private string reignScoresURL, userAPIKey, gameAPIKey;
 		private ReignScores_ServicesHelper helper;
 		private IScores_UI ui;
-
-		//public bool PerformingGUIOperation {get; private set;}
-		//private ReignScores_GuiModes guiMode = ReignScores_GuiModes.None;
-		//private AuthenticateCallbackMethod guiAuthenticateCallback;
-		//private MonoBehaviour guiServices;
 
 		public bool IsAuthenticated {get; private set;}
 		public string Username {get; private set;}
@@ -210,135 +206,13 @@ namespace Reign.Plugin
 			gameID = desc.Android_ReignScores_GameID;
 			#endif
 
-			//reignScoresURL = desc.ReignScores_ServicesURL;
-			//gameAPIKey = desc.ReignScores_GameKey;
-			//userAPIKey = desc.ReignScores_UserKey;
-
 			ui = desc.ReignScores_UI;
+			ui.Init(this);
 			helper = new ReignScores_ServicesHelper(desc);
 
 			if (callback != null) callback(true, null);
 		}
 
-		//private static byte[] getBytes(string str)
-		//{
-		//	byte[] bytes = new byte[str.Length * sizeof(char)];
-		//	System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-		//	return bytes;
-		//}
-
-		//private bool checkError(WWW www, out XML.WebResponse response, out string errorMessage)
-		//{
-		//	try
-		//	{
-		//		var xml = new XmlSerializer(typeof(XML.WebResponse));
-		//		using (var data = new MemoryStream(www.bytes))
-		//		{
-		//			response = (XML.WebResponse)xml.Deserialize(data);
-		//			if (response.Type == XML.ResponseTypes.Error)
-		//			{
-		//				errorMessage = response.ErrorMessage;
-		//				Debug.LogError("Reign Scores Error: " + response.ErrorMessage);
-		//				return true;
-		//			}
-		//			else
-		//			{
-		//				errorMessage = null;
-		//				return false;
-		//			}
-		//		}
-		//	}
-		//	catch (Exception e)
-		//	{
-		//		response = null;
-		//		errorMessage = e.Message;
-		//		return true;
-		//	}
-		//}
-
-		//private IEnumerator login(string username, string password, AuthenticateCallbackMethod callback)
-		//{
-		//	var form = new WWWForm();
-		//	form.AddField("api_key", userAPIKey);
-		//	form.AddField("game_id", gameID);
-		//	form.AddField("username", username);
-		//	form.AddField("password", password);
-		//	var www = new WWW(reignScoresURL+"Users/Login.cshtml", form);
-		//	yield return www;
-		//	string error;
-		//	if (!string.IsNullOrEmpty(www.error))
-		//	{
-		//		error = "ReignScores Login failed: " + www.error;
-		//		Debug.LogError(error);
-		//		IsAuthenticated = false;
-		//		if (callback != null) callback(false, error);
-		//		yield break;
-		//	}
-
-		//	XML.WebResponse response;
-		//	if (!checkError(www, out response, out error))
-		//	{
-		//		Username = username;
-		//		UserID = response.UserID;
-		//		IsAuthenticated = true;
-		//		PlayerPrefs.SetString("ReignScores_UserID", username);
-		//		PlayerPrefs.SetString("ReignScores_Pass", password);
-		//		Debug.Log("Authenticated as: " + username);
-		//		if (callback != null) callback(true, null);
-		//		yield break;
-		//	}
-
-		//	if (callback != null) callback(false, error);
-		//}
-
-		//private IEnumerator createUser(string username, string password, AuthenticateCallbackMethod callback)
-		//{
-		//	var form = new WWWForm();
-		//	form.AddField("api_key", gameAPIKey);
-		//	form.AddField("game_id", gameID);
-		//	form.AddField("username", username);
-		//	form.AddField("password", password);
-		//	var www = new WWW(reignScoresURL+"Games/CreateUser.cshtml", form);
-		//	yield return www;
-		//	string error;
-		//	if (!string.IsNullOrEmpty(www.error))
-		//	{
-		//		error = "ReignScores CreateUser failed: " + www.error;
-		//		Debug.LogError(error);
-		//		IsAuthenticated = false;
-		//		if (callback != null) callback(false, error);
-		//		yield break;
-		//	}
-
-		//	XML.WebResponse response;
-		//	if (!checkError(www, out response, out error))
-		//	{
-		//		Username = username;
-		//		UserID = response.UserID;
-		//		IsAuthenticated = true;
-		//		PlayerPrefs.SetString("ReignScores_UserID", username);
-		//		PlayerPrefs.SetString("ReignScores_Pass", password);
-		//		Debug.Log("ReignScores CreateUser success: " + username);
-		//		if (callback != null) callback(true, null);
-		//		yield break;
-		//	}
-
-		//	if (callback != null) callback(false, error);
-		//}
-
-		//private void authenticateCallbackMethod(bool succeeded, string errorMessage)
-		//{
-		//	if (succeeded)
-		//	{
-		//		if (guiAuthenticateCallback != null) guiAuthenticateCallback(true, errorMessage);
-		//	}
-		//	else if (desc.ReignScores_AutoTriggerAuthenticateGUI)
-		//	{
-		//		PerformingGUIOperation = true;
-		//		guiMode = ReignScores_GuiModes.Login;
-		//	}
-		//}
-		
 		public void Authenticate(AuthenticateCallbackMethod callback, MonoBehaviour services)
 		{
 			try
@@ -346,32 +220,14 @@ namespace Reign.Plugin
 				// check if player exists
 				if (PlayerPrefs.HasKey("ReignScores_Username"))
 				{
-					//PerformingGUIOperation = false;
-					//guiAuthenticateCallback = callback;
-					//guiServices = services;
-					//services.StartCoroutine(login(PlayerPrefs.GetString("ReignScores_UserID"), PlayerPrefs.GetString("ReignScores_Pass"), authenticateCallbackMethod));
+					ui.AutoLogin(callback);
 					string username = PlayerPrefs.GetString("ReignScores_Username");
 					string password = PlayerPrefs.GetString("ReignScores_Pass");
 					helper.InvokeServiceMethod(ReignScores_ServiceTypes.Users, "Login", loginCallback, services, "game_id="+gameID, "username="+username, "password="+password);
 				}
 				else
 				{
-					//if (desc.ReignScores_AutoTriggerAuthenticateGUI)
-					//{
-					//	PerformingGUIOperation = true;
-					//	guiAuthenticateCallback = callback;
-					//	guiServices = services;
-					//	//guiMode = ReignScores_GuiModes.Login;
-					//}
-					//else if (callback != null)
-					//{
-					//	PerformingGUIOperation = false;
-					//	guiAuthenticateCallback = null;
-					//	guiServices = null;
-					//	callback(false, "No user loggin info.");
-					//}
-
-					ui.RequestLogin();
+					ui.RequestLogin(callback);
 				}
 			}
 			catch (Exception e)
@@ -379,22 +235,14 @@ namespace Reign.Plugin
 				string error = "ReignScores Authenticate error: " + e.Message;
 				Debug.LogError(error);
 				IsAuthenticated = false;
-				//PerformingGUIOperation = false;
 				if (callback != null) callback(false, error);
 			}
-		}
-
-		private void loginCallback(bool succeeded, XML.WebResponse response)
-		{
-			IsAuthenticated = succeeded;
-			UserID = response.UserID;
-			Username = response.Username;
-			ui.LoginCallback(succeeded);
 		}
 
 		public void Logout()
 		{
 			IsAuthenticated = false;
+			UserID = "???";
 			Username = "???";
 			if (PlayerPrefs.HasKey("ReignScores_Username")) PlayerPrefs.DeleteKey("ReignScores_Username");
 			if (PlayerPrefs.HasKey("ReignScores_Pass")) PlayerPrefs.DeleteKey("ReignScores_Pass");
@@ -402,22 +250,50 @@ namespace Reign.Plugin
 
 		public void ManualLogin(string username, string password, AuthenticateCallbackMethod callback, MonoBehaviour services)
 		{
-			//services.StartCoroutine(login(userID, password, callback));
+			PlayerPrefs.SetString("ReignScores_Username", username);
+			PlayerPrefs.SetString("ReignScores_Pass", password);
 			helper.InvokeServiceMethod(ReignScores_ServiceTypes.Users, "Login", loginCallback, services, "game_id="+gameID, "username="+username, "password="+password);
+		}
+
+		private void loginCallback(bool succeeded, XML.WebResponse response)
+		{
+			IsAuthenticated = succeeded;
+			if (succeeded)
+			{
+				UserID = response.UserID;
+				Username = response.Username;
+			}
+			else
+			{
+				Debug.LogError(response != null ? response.ErrorMessage : "Unkown");
+				Logout();
+			}
+
+			ui.LoginCallback(succeeded, response != null ? response.ErrorMessage : "Unkown");
 		}
 
 		public void ManualCreateUser(string username, string password, AuthenticateCallbackMethod callback, MonoBehaviour services)
 		{
-			//services.StartCoroutine(createUser(userID, password, callback));
+			PlayerPrefs.SetString("ReignScores_Username", username);
+			PlayerPrefs.SetString("ReignScores_Pass", password);
 			helper.InvokeServiceMethod(ReignScores_ServiceTypes.Games, "CreateUser", createUserCallback, services, "game_id="+gameID, "username="+username, "password="+password);
 		}
 
 		private void createUserCallback(bool succeeded, XML.WebResponse response)
 		{
 			IsAuthenticated = succeeded;
-			UserID = response.UserID;
-			Username = response.Username;
-			ui.LoginCallback(succeeded);
+			if (succeeded)
+			{
+				UserID = response.UserID;
+				Username = response.Username;
+			}
+			else
+			{
+				Debug.LogError(response != null ? response.ErrorMessage : "Unkown");
+				Logout();
+			}
+
+			ui.LoginCallback(succeeded, response != null ? response.ErrorMessage : "Unkown");
 		}
 
 		private LeaderboardDesc findLeaderboard(string leaderboardID)
@@ -461,59 +337,8 @@ namespace Reign.Plugin
 
 			return achievementDesc;
 		}
-
-		//private IEnumerator async_ReportScore(int score, LeaderboardDesc leaderboardDesc, ReportScoreCallbackMethod callback)
-		//{
-		//	#if UNITY_EDITOR
-		//	var leaderboardID = leaderboardDesc.Editor_ReignScores_ID;
-		//	#elif UNITY_STANDALONE_WIN
-		//	var leaderboardID = leaderboardDesc.Win32_ReignScores_ID;
-		//	#elif UNITY_STANDALONE_OSX
-		//	var leaderboardID = leaderboardDesc.OSX_ReignScores_ID;
-		//	#elif UNITY_STANDALONE_LINUX
-		//	var leaderboardID = leaderboardDesc.Linux_ReignScores_ID;
-		//	#elif UNITY_WEBPLAYER
-		//	var leaderboardID = leaderboardDesc.Web_ReignScores_ID;
-		//	#elif UNITY_METRO
-		//	var leaderboardID = leaderboardDesc.Win8_ReignScores_ID;
-		//	#elif UNITY_WP8
-		//	var leaderboardID = leaderboardDesc.WP8_ReignScores_ID;
-		//	#elif UNITY_BLACKBERRY
-		//	var leaderboardID = leaderboardDesc.BB10_ReignScores_ID;
-		//	#elif UNITY_IPHONE
-		//	var leaderboardID = leaderboardDesc.iOS_ReignScores_ID;
-		//	#elif UNITY_ANDROID
-		//	var leaderboardID = leaderboardDesc.Android_ReignScores_ID;
-		//	#endif
-
-		//	// report score
-		//	var form = new WWWForm();
-		//	form.AddField("api_key", userAPIKey);
-		//	form.AddField("user_id", UserID);
-		//	form.AddField("leaderboard_id", leaderboardID.ToString());
-		//	form.AddField("score", score.ToString());
-		//	var www = new WWW(reignScoresURL+"Users/ReportScore.cshtml", form);
-		//	yield return www;
-		//	string error;
-		//	if (!string.IsNullOrEmpty(www.error))
-		//	{
-		//		error = "ReignScores ReportScore failed: " + www.error;
-		//		Debug.LogError(error);
-		//		if (callback != null) callback(false, error);
-		//		yield break;
-		//	}
-
-		//	XML.WebResponse response;
-		//	if (!checkError(www, out response, out error))
-		//	{
-		//		Debug.Log("ReignScores createScore success");
-		//		if (callback != null) callback(true, null);
-		//		yield break;
-		//	}
-
-		//	if (callback != null) callback(false, error);
-		//}
 	
+		private ReportScoreCallbackMethod ReportScore_callback;
 		public void ReportScore(string leaderboardID, int score, ReportScoreCallbackMethod callback, MonoBehaviour services)
 		{
 			// find leaderboard
@@ -524,67 +349,40 @@ namespace Reign.Plugin
 				return;
 			}
 
-			//services.StartCoroutine(async_ReportScore(score, leaderboardDesc, callback));
+			// get server id
+			#if UNITY_EDITOR
+			var serverLeaderboardID = leaderboardDesc.Editor_ReignScores_ID;
+			#elif UNITY_STANDALONE_WIN
+			var serverLeaderboardID = leaderboardDesc.Win32_ReignScores_ID;
+			#elif UNITY_STANDALONE_OSX
+			var serverLeaderboardID = leaderboardDesc.OSX_ReignScores_ID;
+			#elif UNITY_STANDALONE_LINUX
+			var serverLeaderboardID = leaderboardDesc.Linux_ReignScores_ID;
+			#elif UNITY_WEBPLAYER
+			var serverLeaderboardID = leaderboardDesc.Web_ReignScores_ID;
+			#elif UNITY_METRO
+			var serverLeaderboardID = leaderboardDesc.Win8_ReignScores_ID;
+			#elif UNITY_WP8
+			var serverLeaderboardID = leaderboardDesc.WP8_ReignScores_ID;
+			#elif UNITY_BLACKBERRY
+			var serverLeaderboardID = leaderboardDesc.BB10_ReignScores_ID;
+			#elif UNITY_IPHONE
+			var serverLeaderboardID = leaderboardDesc.iOS_ReignScores_ID;
+			#elif UNITY_ANDROID
+			var serverLeaderboardID = leaderboardDesc.Android_ReignScores_ID;
+			#endif
+
+			// submit score
+			ReportScore_callback = callback;
+			helper.InvokeServiceMethod(ReignScores_ServiceTypes.Users, "ReportScore", reportScoreCallback, services, "user_id="+UserID, "leaderboard_id="+serverLeaderboardID, "score="+score);
 		}
 
-		//private IEnumerator async_RequestScores(int offset, int range, LeaderboardDesc leaderboardDesc, RequestScoresCallbackMethod callback)
-		//{
-		//	#if UNITY_EDITOR
-		//	var leaderboardID = leaderboardDesc.Editor_ReignScores_ID;
-		//	#elif UNITY_STANDALONE_WIN
-		//	var leaderboardID = leaderboardDesc.Win32_ReignScores_ID;
-		//	#elif UNITY_STANDALONE_OSX
-		//	var leaderboardID = leaderboardDesc.OSX_ReignScores_ID;
-		//	#elif UNITY_STANDALONE_LINUX
-		//	var leaderboardID = leaderboardDesc.Linux_ReignScores_ID;
-		//	#elif UNITY_WEBPLAYER
-		//	var leaderboardID = leaderboardDesc.Web_ReignScores_ID;
-		//	#elif UNITY_METRO
-		//	var leaderboardID = leaderboardDesc.Win8_ReignScores_ID;
-		//	#elif UNITY_WP8
-		//	var leaderboardID = leaderboardDesc.WP8_ReignScores_ID;
-		//	#elif UNITY_BLACKBERRY
-		//	var leaderboardID = leaderboardDesc.BB10_ReignScores_ID;
-		//	#elif UNITY_IPHONE
-		//	var leaderboardID = leaderboardDesc.iOS_ReignScores_ID;
-		//	#elif UNITY_ANDROID
-		//	var leaderboardID = leaderboardDesc.Android_ReignScores_ID;
-		//	#endif
+		private void reportScoreCallback(bool succeeded, XML.WebResponse response)
+		{
+			if (ReportScore_callback != null) ReportScore_callback(succeeded, response != null ? response.ErrorMessage : "Unknown");
+		}
 
-		//	// report score
-		//	var form = new WWWForm();
-		//	form.AddField("api_key", gameAPIKey);
-		//	form.AddField("leaderboard_id", leaderboardID.ToString());
-		//	form.AddField("limit", string.Format("{0},{1}", offset, range));
-		//	var www = new WWW(reignScoresURL+"Games/RequestScores.cshtml", form);
-		//	yield return www;
-		//	string error;
-		//	if (!string.IsNullOrEmpty(www.error))
-		//	{
-		//		error = "ReignScores RequestScores failed: " + www.error;
-		//		Debug.LogError(error);
-		//		if (callback != null) callback(null, false, error);
-		//		yield break;
-		//	}
-
-		//	XML.WebResponse response;
-		//	if (!checkError(www, out response, out error))
-		//	{
-		//		int count = (response.Scores != null ? response.Scores.Count : 0);
-		//		var newScores = new LeaderboardScore[count];
-		//		for (int i = 0; i != count; ++i)
-		//		{
-		//			newScores[i] = new LeaderboardScore(response.Scores[i].Username, response.Scores[i].Score);
-		//		}
-
-		//		Debug.Log("ReignScores RequestScores success: " + count);
-		//		if (callback != null) callback(newScores, true, null);
-		//		yield break;
-		//	}
-
-		//	if (callback != null) callback(null, false, error);
-		//}
-		
+		private RequestScoresCallbackMethod RequestScores_callback;
 		public void RequestScores(string leaderboardID, int offset, int range, RequestScoresCallbackMethod callback, MonoBehaviour services)
 		{
 			// find leaderboard
@@ -595,64 +393,57 @@ namespace Reign.Plugin
 				return;
 			}
 
-			//services.StartCoroutine(async_RequestScores(offset, range, leaderboardDesc, callback));
+			// get server id
+			#if UNITY_EDITOR
+			var serverLeaderboardID = leaderboardDesc.Editor_ReignScores_ID;
+			#elif UNITY_STANDALONE_WIN
+			var serverLeaderboardID = leaderboardDesc.Win32_ReignScores_ID;
+			#elif UNITY_STANDALONE_OSX
+			var serverLeaderboardID = leaderboardDesc.OSX_ReignScores_ID;
+			#elif UNITY_STANDALONE_LINUX
+			var serverLeaderboardID = leaderboardDesc.Linux_ReignScores_ID;
+			#elif UNITY_WEBPLAYER
+			var serverLeaderboardID = leaderboardDesc.Web_ReignScores_ID;
+			#elif UNITY_METRO
+			var serverLeaderboardID = leaderboardDesc.Win8_ReignScores_ID;
+			#elif UNITY_WP8
+			var serverLeaderboardID = leaderboardDesc.WP8_ReignScores_ID;
+			#elif UNITY_BLACKBERRY
+			var serverLeaderboardID = leaderboardDesc.BB10_ReignScores_ID;
+			#elif UNITY_IPHONE
+			var serverLeaderboardID = leaderboardDesc.iOS_ReignScores_ID;
+			#elif UNITY_ANDROID
+			var serverLeaderboardID = leaderboardDesc.Android_ReignScores_ID;
+			#endif
+
+			// get scores
+			RequestScores_callback = callback;
+			helper.InvokeServiceMethod(ReignScores_ServiceTypes.Games, "RequestScores", requestScoresCallback, services, "user_id="+UserID, "leaderboard_id="+serverLeaderboardID, "offset="+offset, "range="+range, "sort_order="+leaderboardDesc.ReignScores_SortOrder);
 		}
 
-		//private IEnumerator async_ReportAchievement(AchievementDesc achievementDesc, float percentComplete, ReportAchievementCallbackMethod callback)
-		//{
-		//	#if UNITY_EDITOR
-		//	var achievementID = achievementDesc.Editor_ReignScores_ID;
-		//	#elif UNITY_STANDALONE_WIN
-		//	var achievementID = achievementDesc.Win32_ReignScores_ID;
-		//	#elif UNITY_STANDALONE_OSX
-		//	var achievementID = achievementDesc.OSX_ReignScores_ID;
-		//	#elif UNITY_STANDALONE_LINUX
-		//	var achievementID = achievementDesc.Linux_ReignScores_ID;
-		//	#elif UNITY_WEBPLAYER
-		//	var achievementID = achievementDesc.Web_ReignScores_ID;
-		//	#elif UNITY_METRO
-		//	var achievementID = achievementDesc.Win8_ReignScores_ID;
-		//	#elif UNITY_WP8
-		//	var achievementID = achievementDesc.WP8_ReignScores_ID;
-		//	#elif UNITY_BLACKBERRY
-		//	var achievementID = achievementDesc.BB10_ReignScores_ID;
-		//	#elif UNITY_IPHONE
-		//	var achievementID = achievementDesc.iOS_ReignScores_ID;
-		//	#elif UNITY_ANDROID
-		//	var achievementID = achievementDesc.Android_ReignScores_ID;
-		//	#endif
+		private void requestScoresCallback(bool succeeded, XML.WebResponse response)
+		{
+			if (succeeded)
+			{
+				var scores = new LeaderboardScore[response.Scores.Count];
+				for (int i = 0; i != response.Scores.Count; ++i)
+				{
+					var score = response.Scores[i];
+					scores[i] = new LeaderboardScore(score.Username, score.Score);
+				}
 
-		//	// report achievement
-		//	var form = new WWWForm();
-		//	form.AddField("api_key", userAPIKey);
-		//	form.AddField("user_id", UserID);
-		//	form.AddField("achievement_id", achievementID.ToString());
-		//	form.AddField("percent_complete", percentComplete.ToString());
-		//	var www = new WWW(reignScoresURL+"Users/ReportAchievement.cshtml", form);
-		//	yield return www;
-		//	string error;
-		//	if (!string.IsNullOrEmpty(www.error))
-		//	{
-		//		error = "ReignScores RequestAchievments failed: " + www.error;
-		//		Debug.LogError(error);
-		//		if (callback != null) callback(false, error);
-		//		yield break;
-		//	}
+				if (RequestScores_callback != null) RequestScores_callback(scores, true, null);
+			}
+			else
+			{
+				if (RequestScores_callback != null) RequestScores_callback(null, false, response != null ? response.ErrorMessage : "Unkown");
+			}
+		}
 
-		//	XML.WebResponse response;
-		//	if (!checkError(www, out response, out error))
-		//	{
-		//		Debug.Log("ReignScores RequestAchievments success");
-		//		if (callback != null) callback(true, null);
-		//		yield break;
-		//	}
-
-		//	if (callback != null) callback(false, error);
-		//}
-		
+		private ReportAchievementCallbackMethod ReportAchievement_callback;
 		public void ReportAchievement(string achievementID, float percentComplete, ReportAchievementCallbackMethod callback, MonoBehaviour services)
 		{
-			// find leaderboard
+			// find achievement
 			var achievementDesc = findAchievement(achievementID);
 			if (achievementDesc == null)
 			{
@@ -660,654 +451,146 @@ namespace Reign.Plugin
 				return;
 			}
 
-			//services.StartCoroutine(async_ReportAchievement(achievementDesc, percentComplete, callback));
+			#if UNITY_EDITOR
+			var serverAchievementID = achievementDesc.Editor_ReignScores_ID;
+			#elif UNITY_STANDALONE_WIN
+			var serverAchievementID = achievementDesc.Win32_ReignScores_ID;
+			#elif UNITY_STANDALONE_OSX
+			var serverAchievementID = achievementDesc.OSX_ReignScores_ID;
+			#elif UNITY_STANDALONE_LINUX
+			var serverAchievementID = achievementDesc.Linux_ReignScores_ID;
+			#elif UNITY_WEBPLAYER
+			var serverAchievementID = achievementDesc.Web_ReignScores_ID;
+			#elif UNITY_METRO
+			var serverAchievementID = achievementDesc.Win8_ReignScores_ID;
+			#elif UNITY_WP8
+			var serverAchievementID = achievementDesc.WP8_ReignScores_ID;
+			#elif UNITY_BLACKBERRY
+			var serverAchievementID = achievementDesc.BB10_ReignScores_ID;
+			#elif UNITY_IPHONE
+			var serverAchievementID = achievementDesc.iOS_ReignScores_ID;
+			#elif UNITY_ANDROID
+			var serverAchievementID = achievementDesc.Android_ReignScores_ID;
+			#endif
+
+			// submit achievement
+			ReportAchievement_callback = callback;
+			helper.InvokeServiceMethod(ReignScores_ServiceTypes.Users, "ReportAchievement", reportAchievementCallback, services, "user_id="+UserID, "achievement_id="+serverAchievementID, "percent_complete="+percentComplete);
 		}
 
-		//private IEnumerator async_RequestAchievements(RequestAchievementsCallbackMethod callback)
-		//{
-		//	var form = new WWWForm();
-		//	form.AddField("api_key", userAPIKey);
-		//	form.AddField("user_id", UserID);
-		//	var www = new WWW(reignScoresURL+"Users/RequestAchievements.cshtml", form);
-		//	yield return www;
-		//	string error;
-		//	if (!string.IsNullOrEmpty(www.error))
-		//	{
-		//		error = "ReignScores RequestAchievments failed: " + www.error;
-		//		Debug.LogError(error);
-		//		if (callback != null) callback(null, false, error);
-		//		yield break;
-		//	}
+		private void reportAchievementCallback(bool succeeded, XML.WebResponse response)
+		{
+			if (ReportAchievement_callback != null) ReportAchievement_callback(succeeded, response != null ? response.ErrorMessage : "Unknown");
+		}
 
-		//	XML.WebResponse response;
-		//	if (!checkError(www, out response, out error))
-		//	{
-		//		if (achievements == null) achievements = new Achievement[desc.AchievementDescs.Length];
-		//		for (int i = 0; i != achievements.Length; ++i)
-		//		{
-		//			var a = desc.AchievementDescs[i];
-		//			#if UNITY_EDITOR
-		//			var id = a.Editor_ReignScores_ID;
-		//			#elif UNITY_STANDALONE_WIN
-		//			var id = a.Win32_ReignScores_ID;
-		//			#elif UNITY_STANDALONE_OSX
-		//			var id = a.OXS_ReignScores_ID;
-		//			#elif UNITY_STANDALONE_LINUX
-		//			var id = a.Linux_ReignScores_ID;
-		//			#elif UNITY_WEBPLAYER
-		//			var id = a.Web_ReignScores_ID;
-		//			#elif UNITY_METRO
-		//			var id = a.Win8_ReignScores_ID;
-		//			#elif UNITY_WP8
-		//			var id = a.WP8_ReignScores_ID;
-		//			#elif UNITY_BLACKBERRY
-		//			var id = a.BB10_ReignScores_ID;
-		//			#elif UNITY_IPHONE
-		//			var id = a.iOS_ReignScores_ID;
-		//			#elif UNITY_ANDROID
-		//			var id = a.Android_ReignScores_ID;
-		//			#endif
-
-		//			// find achievement desc
-		//			XML.WebResponse_Achievement found = null;
-		//			foreach (var ach in response.Achievements)
-		//			{
-		//				if (id == new Guid(ach.ID))
-		//				{
-		//					found = ach;
-		//					break;
-		//				}
-		//			}
-
-		//			// check achievement object exists
-		//			if (achievements[i] == null)
-		//			{
-		//				string fileName = "Reign/Achievements/" + a.ID + "_achieved";
-		//				var achievedTexture = (Texture)Resources.Load(fileName);
-		//				if (achievedTexture == null)
-		//				{
-		//					error = "RequestAchievements Failed to load texture: " + fileName;
-		//					Debug.LogError(error);
-		//					if (callback != null) callback(null, false, error);
-		//					yield break;
-		//				}
-
-		//				fileName = "Reign/Achievements/" + a.ID + "_unachieved";
-		//				var unachievedTexture = (Texture)Resources.Load(fileName);
-		//				if (unachievedTexture == null)
-		//				{
-		//					error = "RequestAchievements Failed to load texture: " + fileName;
-		//					Debug.LogError(error);
-		//					if (callback != null) callback(null, false, error);
-		//					yield break;
-		//				}
-
-		//				// add achievement
-		//				achievements[i] = new Achievement(found.PercentComplete >= 100f, found.PercentComplete, a.ID, a.Name, a.Desc, achievedTexture, unachievedTexture);
-		//			}
-		//			else
-		//			{
-		//				achievements[i].IsAchieved = found.PercentComplete >= 100f;
-		//				achievements[i].PercentComplete = found.PercentComplete;
-		//			}
-		//		}
-		//		Debug.Log("ReignScores RequestAchievments success");
-		//		if (callback != null) callback(null, true, null);
-		//		yield break;
-		//	}
-
-		//	if (callback != null) callback(null, false, error);
-		//}
-		
+		private RequestAchievementsCallbackMethod RequestAchievements_callback;
 		public void RequestAchievements(RequestAchievementsCallbackMethod callback, MonoBehaviour services)
 		{
-			//services.StartCoroutine(async_RequestAchievements(callback));
+			RequestAchievements_callback = callback;
+			helper.InvokeServiceMethod(ReignScores_ServiceTypes.Users, "RequestAchievements", requestAchievementsCallback, services, "user_id="+UserID);
 		}
 
+		private void requestAchievementsCallback(bool succeeded, XML.WebResponse response)
+		{
+			if (succeeded)
+			{
+				if (achievements == null || achievements.Length != response.Achievements.Count) achievements = new Achievement[desc.AchievementDescs.Length];
+				for (int i = 0; i != desc.AchievementDescs.Length; ++i)
+				{
+					var achievementDesc = desc.AchievementDescs[i];
 
+					#if UNITY_EDITOR
+					var id = achievementDesc.Editor_ReignScores_ID;
+					#elif UNITY_STANDALONE_WIN
+					var id = achievementDesc.Win32_ReignScores_ID;
+					#elif UNITY_STANDALONE_OSX
+					var id = achievementDesc.OXS_ReignScores_ID;
+					#elif UNITY_STANDALONE_LINUX
+					var id = achievementDesc.Linux_ReignScores_ID;
+					#elif UNITY_WEBPLAYER
+					var id = achievementDesc.Web_ReignScores_ID;
+					#elif UNITY_METRO
+					var id = achievementDesc.Win8_ReignScores_ID;
+					#elif UNITY_WP8
+					var id = achievementDesc.WP8_ReignScores_ID;
+					#elif UNITY_BLACKBERRY
+					var id = achievementDesc.BB10_ReignScores_ID;
+					#elif UNITY_IPHONE
+					var id = achievementDesc.iOS_ReignScores_ID;
+					#elif UNITY_ANDROID
+					var id = achievementDesc.Android_ReignScores_ID;
+					#endif
+					
+					// find achievement
+					XML.WebResponse_Achievement found = null;
+					foreach (var a in response.Achievements)
+					{
+						if (id == new Guid(a.AchievementID))
+						{
+							found = a;
+							break;
+						}
+					}
 
+					if (achievements[i] == null)
+					{
+						// load textures
+						string fileName = "Reign/Achievements/" + achievementDesc.ID + "_achieved";
+						var achievedTexture = (Texture)Resources.Load(fileName);
+						if (achievedTexture == null)
+						{
+							string error = "RequestAchievements Failed to load texture: " + fileName;
+							Debug.LogError(error);
+							if (RequestAchievements_callback != null) RequestAchievements_callback(null, false, error);
+							return;
+						}
 
+						fileName = "Reign/Achievements/" + achievementDesc.ID + "_unachieved";
+						var unachievedTexture = (Texture)Resources.Load(fileName);
+						if (unachievedTexture == null)
+						{
+							string error = "RequestAchievements Failed to load texture: " + fileName;
+							Debug.LogError(error);
+							if (RequestAchievements_callback != null) RequestAchievements_callback(null, false, error);
+							return;
+						}
 
+						// add achievment object
+						if (found != null) achievements[i] = new Achievement(found.PercentComplete >= 100, found.PercentComplete, achievementDesc.ID, achievementDesc.Name, achievementDesc.Desc, achievedTexture, unachievedTexture);
+						else achievements[i] = new Achievement(false, 0, achievementDesc.ID, achievementDesc.Name, achievementDesc.Desc, achievedTexture, unachievedTexture);
+					}
+					else
+					{
+						// update achievment object
+						if (found != null)
+						{
+							achievements[i].IsAchieved = found.PercentComplete >= 100;
+							achievements[i].PercentComplete = found.PercentComplete;
+						}
+						else
+						{
+							achievements[i].IsAchieved = false;
+							achievements[i].PercentComplete = 0;
+						}
+					}
+				}
 
-
-
-
-
-
-
-
-		// =========================================================================================================
-		// =========================================================================================================
-		// =========================================================================================================
-		//private ShowNativeViewDoneCallbackMethod guiShowNativeViewDoneCallback;
-		//private LeaderboardScore[] guiScores;
-		//private void guiRequestScoresCallback(LeaderboardScore[] scores, bool succeeded, string errorMessage)
-		//{
-		//	if (succeeded)
-		//	{
-		//		guiScores = scores;
-		//		guiMode = ReignScores_GuiModes.ShowingScores;
-		//	}
-		//	else
-		//	{
-		//		PerformingGUIOperation = false;
-		//		guiMode = ReignScores_GuiModes.None;
-		//		if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(false, errorMessage);
-		//	}
-		//}
-
-		//private int guiScoreOffset;
-		//private string guiLeaderboardID;
-		//public void ShowNativeScoresPage(string leaderboardID, ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
-		//{
-		//	guiMode = ReignScores_GuiModes.LoadingScores;
-		//	PerformingGUIOperation = true;
-		//	guiShowNativeViewDoneCallback = callback;
-		//	guiLeaderboardID = leaderboardID;
-		//	guiScoreOffset = 0;
-		//	RequestScores(leaderboardID, guiScoreOffset, desc.ReignScores_TopScoresToListPerPage, guiRequestScoresCallback, services);
-		//}
-
-		//private Achievement[] guiAchievements;
-		//private void guiRequestAchievementsCallback(Achievement[] achievements, bool succeeded, string errorMessage)
-		//{
-		//	if (succeeded)
-		//	{
-		//		guiAchievements = achievements;
-		//		guiMode = ReignScores_GuiModes.ShowingAchievements;
-		//	}
-		//	else
-		//	{
-		//		PerformingGUIOperation = false;
-		//		guiMode = ReignScores_GuiModes.None;
-		//		if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(false, errorMessage);
-		//	}
-		//}
-
-		//private int guiAchievementOffset;
-		//public void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
-		//{
-		//	guiMode = ReignScores_GuiModes.LoadingAchievements;
-		//	PerformingGUIOperation = true;
-		//	guiAchievementOffset = 0;
-		//	guiShowNativeViewDoneCallback = callback;
-		//	RequestAchievements(guiRequestAchievementsCallback, services);
-		//}
-
-		//private static Vector2 fillView(float objectWidth, float objectHeight, float viewWidth, float viewHeight)
-		//{
-		//	Vector2 objectSize, viewSize;
-		//	objectSize.x = objectWidth;
-		//	objectSize.y = objectHeight;
-		//	viewSize.x = viewWidth;
-		//	viewSize.y = viewHeight;
-		//	return fillView(objectSize, viewSize);
-		//}
-	
-		//private static Vector2 fillView(Vector2 objectSize, Vector2 viewSize)
-		//{
-		//	float objectSlope = objectSize.y / objectSize.x;
-		//	float viewSlope = viewSize.y / viewSize.x;
-		
-		//	if (objectSlope <= viewSlope) return new Vector2(objectSize.x/objectSize.y, 1) * viewSize.y;
-		//	else return new Vector2(1, objectSize.y/objectSize.x) * viewSize.x;
-		//}
-
-		//private static Vector2 fitInView(float objectWidth, float objectHeight, float viewWidth, float viewHeight)
-		//{
-		//	Vector2 objectSize, viewSize;
-		//	objectSize.x = objectWidth;
-		//	objectSize.y = objectHeight;
-		//	viewSize.x = viewWidth;
-		//	viewSize.y = viewHeight;
-		//	return fitInView(objectSize, viewSize);
-		//}
-	
-		//private static Vector2 fitInView(Vector2 objectSize, Vector2 viewSize)
-		//{
-		//	float objectSlope = objectSize.y / objectSize.x;
-		//	float viewSlope = viewSize.y / viewSize.x;
-		
-		//	if (objectSlope >= viewSlope) return new Vector2(objectSize.x/objectSize.y, 1) * viewSize.y;
-		//	else return new Vector2(1, objectSize.y/objectSize.x) * viewSize.x;
-		//}
-
-		//private static Vector2 scaleToFitInView(float objectWidth, float objectHeight, float viewWidth, float viewHeight)
-		//{
-		//	Vector2 objectSize, viewSize;
-		//	objectSize.x = objectWidth;
-		//	objectSize.y = objectHeight;
-		//	viewSize.x = viewWidth;
-		//	viewSize.y = viewHeight;
-		//	return scaleToFitInView(objectSize, viewSize);
-		//}
-	
-		//private static Vector2 scaleToFitInView(Vector2 objectSize, Vector2 viewSize)
-		//{
-		//	var fitViewSize = fitInView(objectSize, viewSize);
-		//	objectSize.x /= fitViewSize.x;
-		//	objectSize.y /= fitViewSize.y;
-		//	return objectSize;
-		//}
-
-		//private string userAccount_Name = "", userAccount_Pass = "", userAccount_ConfPass = "", errorText;
-		//public void OnGUI()
-		//{
-		//	if (guiMode == ReignScores_GuiModes.None) return;
-
-		//	GUI.color = Color.white;
-		//	GUI.matrix = Matrix4x4.identity;
-		//	float scale = new Vector2(Screen.width, Screen.height).magnitude / new Vector2(1280, 720).magnitude;
-
-		//	// draw background
-		//	if (desc.ReignScores_BackgroudTexture != null)
-		//	{
-		//		var size = fillView(desc.ReignScores_BackgroudTexture.width, desc.ReignScores_BackgroudTexture.height, Screen.width, Screen.height);
-		//		float offsetX = -Mathf.Max((size.x-Screen.width)*.5f, 0f);
-		//		float offsetY = -Mathf.Max((size.y-Screen.height)*.5f, 0f);
-		//		GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), desc.ReignScores_BackgroudTexture);
-		//	}
-
-		//	float buttonWidth = 128 * scale;
-		//	float buttonHeight = 64 * scale;
-		//	float textWidth = 256 * scale;
-		//	float textHeight = 32 * scale;
-		//	float y = Screen.height / 2;
-		//	if (guiMode == ReignScores_GuiModes.Login)
-		//	{
-		//		// title
-		//		if (!string.IsNullOrEmpty(desc.ReignScores_LoginTitle))
-		//		{
-		//			var style = new GUIStyle();
-		//			style.fontSize = (int)(128 * scale);
-		//			style.alignment = TextAnchor.MiddleCenter;
-		//			style.normal.textColor = Color.white;
-		//			GUI.Label(new Rect(0, 0, Screen.width, Screen.height/4), desc.ReignScores_LoginTitle, style);
-		//		}
-
-		//		// labels
-		//		GUI.Label(new Rect((Screen.width/2) - textWidth - (10*scale), y, textWidth, textHeight), "Username");
-		//		GUI.Label(new Rect((Screen.width/2) + (10*scale), y, textWidth, textHeight), "Password");
-		//		y += textHeight;
-
-		//		// text fields
-		//		userAccount_Name = GUI.TextField(new Rect((Screen.width/2) - textWidth - (10*scale), y, textWidth, textHeight), userAccount_Name);
-		//		userAccount_Pass = GUI.PasswordField(new Rect((Screen.width/2) + (10*scale), y, textWidth, textHeight), userAccount_Pass, '*');
-		//		y += textHeight * 2;
-
-		//		// buttons
-		//		if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, buttonWidth, buttonHeight), "Cancel"))
-		//		{
-		//			errorText = null;
-		//			guiMode = ReignScores_GuiModes.None;
-		//			PerformingGUIOperation = false;
-		//			if (guiAuthenticateCallback != null) guiAuthenticateCallback(false, "Canceled");
-		//		}
-
-		//		if (GUI.Button(new Rect((Screen.width/2) + (10*scale), y, buttonWidth, buttonHeight), "Login"))
-		//		{
-		//			errorText = null;
-		//			bool validInfo = true;
-		//			if (string.IsNullOrEmpty(userAccount_Name))
-		//			{
-		//				validInfo = false;
-		//				errorText = "Invalid username.";
-		//				Debug.LogError(errorText);
-		//			}
-		//			else if (string.IsNullOrEmpty(userAccount_Pass))
-		//			{
-		//				validInfo = false;
-		//				errorText = "Invalid user password.";
-		//				Debug.LogError(errorText);
-		//			}
-
-		//			if (validInfo)
-		//			{
-		//				PerformingGUIOperation = true;
-		//				guiMode = ReignScores_GuiModes.LoggingIn;
-		//				//guiServices.StartCoroutine(login(userAccount_Name, userAccount_Pass, guiAuthenticateCallbackTEMP));
-		//			}
-		//		}
-
-		//		y += buttonHeight * 2;
-		//		if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, (buttonWidth*2)+(10*scale), buttonHeight), "Create New User"))
-		//		{
-		//			guiMode = ReignScores_GuiModes.CreateUser;
-		//			errorText = null;
-		//		}
-		//	}
-		//	else if (guiMode == ReignScores_GuiModes.CreateUser)
-		//	{
-		//		// title
-		//		if (!string.IsNullOrEmpty(desc.ReignScores_CreateUserTitle))
-		//		{
-		//			var style = new GUIStyle();
-		//			style.fontSize = (int)(128 * scale);
-		//			style.alignment = TextAnchor.MiddleCenter;
-		//			style.normal.textColor = Color.white;
-		//			GUI.Label(new Rect(0, 0, Screen.width, Screen.height/4), desc.ReignScores_CreateUserTitle, style);
-		//		}
-
-		//		// labels
-		//		float offsetX = ((10*scale) + textWidth) * -.5f;
-		//		GUI.Label(new Rect((Screen.width/2) - textWidth - (10*scale) + offsetX, y, textWidth, textHeight), "Username");
-		//		GUI.Label(new Rect((Screen.width/2) + (10*scale) + offsetX, y, textWidth, textHeight), "Password");
-		//		GUI.Label(new Rect((Screen.width/2) + (20*scale) + textWidth + offsetX, y, textWidth, textHeight), "Confirm Password");
-		//		y += textHeight;
-
-		//		// text fields
-		//		userAccount_Name = GUI.TextField(new Rect((Screen.width/2) - textWidth - (10*scale) + offsetX, y, textWidth, textHeight), userAccount_Name);
-		//		userAccount_Pass = GUI.PasswordField(new Rect((Screen.width/2) + (10*scale) + offsetX, y, textWidth, textHeight), userAccount_Pass, '*');
-		//		userAccount_ConfPass = GUI.PasswordField(new Rect((Screen.width/2) + (20*scale) + textWidth + offsetX, y, textWidth, textHeight), userAccount_ConfPass, '*');
-		//		y += textHeight * 2;
-
-		//		// buttons
-		//		if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, buttonWidth, buttonHeight), "Cancel"))
-		//		{
-		//			errorText = null;
-		//			guiMode = ReignScores_GuiModes.None;
-		//			PerformingGUIOperation = false;
-		//			if (guiAuthenticateCallback != null) guiAuthenticateCallback(false, "Canceled");
-		//		}
-
-		//		if (GUI.Button(new Rect((Screen.width/2) + (10*scale), y, buttonWidth, buttonHeight), "Create"))
-		//		{
-		//			errorText = null;
-		//			bool validInfo = true;
-		//			if (string.IsNullOrEmpty(userAccount_Name))
-		//			{
-		//				validInfo = false;
-		//				errorText = "Invalid username.";
-		//				Debug.LogError(errorText);
-		//			}
-		//			else if (string.IsNullOrEmpty(userAccount_Pass) || string.IsNullOrEmpty(userAccount_ConfPass))
-		//			{
-		//				validInfo = false;
-		//				errorText = "Invalid user password.";
-		//				Debug.LogError(errorText);
-		//			}
-		//			else if (userAccount_Pass != userAccount_ConfPass)
-		//			{
-		//				validInfo = false;
-		//				errorText = "Passwords dont match.";
-		//				Debug.LogError(errorText);
-		//			}
-		//			else if (userAccount_Pass.Length < 6)
-		//			{
-		//				validInfo = false;
-		//				errorText = "Passwords to short.";
-		//				Debug.LogError(errorText);
-		//			}
-
-		//			if (validInfo)
-		//			{
-		//				PerformingGUIOperation = true;
-		//				guiMode = ReignScores_GuiModes.CreatingUser;
-		//				//guiServices.StartCoroutine(createUser(userAccount_Name, userAccount_Pass, guiAuthenticateCallbackTEMP));
-		//			}
-		//		}
-
-		//		y += buttonHeight * 2;
-		//		if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, (buttonWidth*2)+(10*scale), buttonHeight), "Login Existing User"))
-		//		{
-		//			guiMode = ReignScores_GuiModes.Login;
-		//			errorText = null;
-		//		}
-		//	}
-		//	else if (guiMode == ReignScores_GuiModes.LoggingIn)
-		//	{
-		//		var style = new GUIStyle();
-		//		style.fontSize = (int)(128 * scale);
-		//		style.alignment = TextAnchor.MiddleCenter;
-		//		style.normal.textColor = Color.white;
-		//		GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "Logging In...", style);
-		//	}
-		//	else if (guiMode == ReignScores_GuiModes.ShowingScores)
-		//	{
-		//		if (desc.ReignScores_TopScoreBoardTexture != null)
-		//		{
-		//			// draw board
-		//			var size = fitInView(desc.ReignScores_TopScoreBoardTexture.width, desc.ReignScores_TopScoreBoardTexture.height, Screen.width, Screen.height);
-		//			float offsetX = (Screen.width*.5f)-(size.x*.5f);
-		//			float offsetY = (Screen.height*.5f)-(size.y*.5f);
-		//			GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), desc.ReignScores_TopScoreBoardTexture);
-
-		//			// get main scale value
-		//			var mainScale = scaleToFitInView(desc.ReignScores_TopScoreBoardTexture.width, desc.ReignScores_TopScoreBoardTexture.height, Screen.width, Screen.height);
-
-		//			// handle buttons
-		//			if (Input.GetKeyUp(KeyCode.Escape) || processButton(desc.ReignScores_TopScoreBoardFrame_CloseBox, desc.ReignScores_TopScoreBoardButton_CloseNormal, desc.ReignScores_TopScoreBoardButton_CloseHover, mainScale, offsetX, offsetY))
-		//			{
-		//				PerformingGUIOperation = false;
-		//				guiMode = ReignScores_GuiModes.None;
-		//				if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(true, null);
-		//			}
-
-		//			if (processButton(desc.ReignScores_TopScoreBoardFrame_PrevButton, desc.ReignScores_TopScoreBoardButton_PrevNormal, desc.ReignScores_TopScoreBoardButton_PrevHover, mainScale, offsetX, offsetY))
-		//			{
-		//				if (guiScoreOffset != 0)
-		//				{
-		//					guiScoreOffset -= desc.ReignScores_TopScoresToListPerPage;
-		//					if (guiScoreOffset < 0) guiScoreOffset = 0;
-		//					RequestScores(guiLeaderboardID, guiScoreOffset, desc.ReignScores_TopScoresToListPerPage, guiRequestScoresCallback, guiServices);
-		//				}
-		//			}
-
-		//			if (processButton(desc.ReignScores_TopScoreBoardFrame_NextButton, desc.ReignScores_TopScoreBoardButton_NextNormal, desc.ReignScores_TopScoreBoardButton_NextHover, mainScale, offsetX, offsetY))
-		//			{
-		//				if (guiScores.Length == desc.ReignScores_TopScoresToListPerPage)
-		//				{
-		//					guiScoreOffset += desc.ReignScores_TopScoresToListPerPage;
-		//					RequestScores(guiLeaderboardID, guiScoreOffset, desc.ReignScores_TopScoresToListPerPage, guiRequestScoresCallback, guiServices);
-		//				}
-		//			}
-
-		//			// draw names and scores
-		//			var usernameRect = calculateFrame(desc.ReignScores_TopScoreBoardFrame_Usernames, mainScale, offsetX, offsetY);
-		//			var scoreRect = calculateFrame(desc.ReignScores_TopScoreBoardFrame_Scores, mainScale, offsetX, offsetY);
-		//			if (desc.ReignScores_EnableTestRects)
-		//			{
-		//				GUI.Button(usernameRect, "TEST RECT");
-		//				GUI.Button(scoreRect, "TEST RECT");
-		//			}
-		//			var style = new GUIStyle();
-		//			style.fontSize = (int)(desc.ReignScores_TopScoreBoardFont_Size * scale);
-		//			style.alignment = TextAnchor.LowerLeft;
-		//			style.normal.textColor = desc.ReignScores_TopScoreBoardFont_Color;
-		//			int userI = 0, scoreI = 0;
-		//			foreach (var score in guiScores)
-		//			{
-		//				// username
-		//				float height = usernameRect.height / desc.ReignScores_TopScoresToListPerPage;
-		//				GUI.Label(new Rect(usernameRect.x, usernameRect.y + userI, usernameRect.width, height), score.UserName, style);
-		//				userI += (int)height;
-
-		//				// score
-		//				height = scoreRect.height / desc.ReignScores_TopScoresToListPerPage;
-		//				string scoreValue;
-		//				if (desc.ReignScores_ScoreFormatCallback != null) desc.ReignScores_ScoreFormatCallback(score.Score, out scoreValue);
-		//				else scoreValue = score.Score.ToString();
-		//				GUI.Label(new Rect(scoreRect.x, scoreRect.y + scoreI, scoreRect.width, height), scoreValue, style);
-		//				scoreI += (int)height;
-		//			}
-		//		}
-		//		else
-		//		{
-		//			errorText = "ReignScores_TopScoreBoardTexture MUST be set!";
-		//			Debug.LogError(errorText);
-		//		}
-		//	}
-		//	else if (guiMode == ReignScores_GuiModes.ShowingAchievements)
-		//	{
-		//		if (desc.ReignScores_AchievementBoardTexture != null)
-		//		{
-		//			// draw board
-		//			var size = fitInView(desc.ReignScores_AchievementBoardTexture.width, desc.ReignScores_AchievementBoardTexture.height, Screen.width, Screen.height);
-		//			float offsetX = (Screen.width*.5f)-(size.x*.5f);
-		//			float offsetY = (Screen.height*.5f)-(size.y*.5f);
-		//			GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), desc.ReignScores_AchievementBoardTexture);
-
-		//			// get main scale value
-		//			var mainScale = scaleToFitInView(desc.ReignScores_AchievementBoardTexture.width, desc.ReignScores_AchievementBoardTexture.height, Screen.width, Screen.height);
-
-		//			// handle buttons
-		//			if (Input.GetKeyUp(KeyCode.Escape) || processButton(desc.ReignScores_AchievementBoardFrame_CloseBox, desc.ReignScores_AchievementBoardButton_CloseNormal, desc.ReignScores_AchievementBoardButton_CloseHover, mainScale, offsetX, offsetY))
-		//			{
-		//				PerformingGUIOperation = false;
-		//				guiMode = ReignScores_GuiModes.None;
-		//				if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(true, null);
-		//			}
-
-		//			if (processButton(desc.ReignScores_AchievementBoardFrame_PrevButton, desc.ReignScores_AchievementBoardButton_PrevNormal, desc.ReignScores_AchievementBoardButton_PrevHover, mainScale, offsetX, offsetY))
-		//			{
-		//				if (guiAchievementOffset != 0)
-		//				{
-		//					guiAchievementOffset -= desc.ReignScores_AchievementsToListPerPage;
-		//					if (guiAchievementOffset < 0) guiAchievementOffset = 0;
-		//				}
-		//			}
-
-		//			if (processButton(desc.ReignScores_AchievementBoardFrame_NextButton, desc.ReignScores_AchievementBoardButton_NextNormal, desc.ReignScores_AchievementBoardButton_NextHover, mainScale, offsetX, offsetY))
-		//			{
-		//				if (guiAchievementOffset + desc.ReignScores_AchievementsToListPerPage < guiAchievements.Length)
-		//				{
-		//					guiAchievementOffset += desc.ReignScores_AchievementsToListPerPage;
-		//				}
-		//			}
-
-		//			// draw names and scores
-		//			var nameRect = calculateFrame(desc.ReignScores_AchievementBoardFrame_Names, mainScale, offsetX, offsetY);
-		//			var descRect = calculateFrame(desc.ReignScores_AchievementBoardFrame_Descs, mainScale, offsetX, offsetY);
-		//			if (desc.ReignScores_EnableTestRects)
-		//			{
-		//				GUI.Button(nameRect, "TEST RECT");
-		//				GUI.Button(descRect, "TEST RECT");
-		//			}
-		//			var style = new GUIStyle();
-		//			style.fontSize = (int)(desc.ReignScores_AchievementBoardFont_Size * scale);
-		//			style.alignment = TextAnchor.LowerLeft;
-		//			style.normal.textColor = desc.ReignScores_AchievementBoardFont_Color;
-		//			int nameI = 0, descI = 0;
-		//			for (int i = guiAchievementOffset; i < guiAchievementOffset+desc.ReignScores_AchievementsToListPerPage; ++i)
-		//			{
-		//				if (i == guiAchievements.Length) break;
-		//				var ach = guiAchievements[i];
-
-		//				// icon
-		//				float height = nameRect.height / desc.ReignScores_AchievementsToListPerPage;
-		//				float iconSize = height * .8f;
-		//				GUI.DrawTexture(new Rect(nameRect.x, nameRect.y + nameI + height - iconSize, iconSize, iconSize), ach.IsAchieved ? ach.AchievedImage : ach.UnachievedImage);
-
-		//				// name
-		//				GUI.Label(new Rect(height + nameRect.x, nameRect.y + nameI, nameRect.width, height), ach.Name, style);
-		//				nameI += (int)height;
-
-		//				// desc
-		//				height = descRect.height / desc.ReignScores_AchievementsToListPerPage;
-		//				GUI.Label(new Rect(descRect.x, descRect.y + descI, descRect.width, height), ach.Desc, style);
-		//				descI += (int)height;
-		//			}
-		//		}
-		//		else
-		//		{
-		//			errorText = "ReignScores_AchievementBoardTexture MUST be set!";
-		//			Debug.LogError(errorText);
-		//		}
-		//	}
-		//	else if (guiMode == ReignScores_GuiModes.CreatingUser)
-		//	{
-		//		var style = new GUIStyle();
-		//		style.fontSize = (int)(128 * scale);
-		//		style.alignment = TextAnchor.MiddleCenter;
-		//		style.normal.textColor = Color.white;
-		//		GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "Creating User...", style);
-		//	}
-		//	else if (guiMode == ReignScores_GuiModes.LoadingScores || guiMode == ReignScores_GuiModes.LoadingAchievements)
-		//	{
-		//		var style = new GUIStyle();
-		//		style.fontSize = (int)(128 * scale);
-		//		style.alignment = TextAnchor.MiddleCenter;
-		//		style.normal.textColor = Color.white;
-		//		GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "Loading...", style);
-		//	}
-
-		//	// error text
-		//	if (!string.IsNullOrEmpty(errorText))
-		//	{
-		//		var errorStyle = new GUIStyle();
-		//		errorStyle.fontSize = (int)(32 * scale);
-		//		errorStyle.alignment = TextAnchor.MiddleCenter;
-		//		errorStyle.normal.textColor = Color.red;
-		//		GUI.Label(new Rect(0, Screen.height-(Screen.height/8), Screen.width, Screen.height/8), errorText, errorStyle);
-		//	}
-		//}
-
-		//private Rect calculateFrame(Rect frame, Vector2 mainScale, float offsetX, float offsetY)
-		//{
-		//	var rect = frame;
-		//	rect.x = (rect.x / mainScale.x) + offsetX;
-		//	rect.y = (rect.y / mainScale.y) + offsetY;
-		//	rect.width /= mainScale.x;
-		//	rect.height /= mainScale.y;
-
-		//	return rect;
-		//}
-
-		//private bool processButton(Rect frame, Texture normal, Texture hover, Vector2 mainScale, float offsetX, float offsetY)
-		//{
-		//	var rect = calculateFrame(frame, mainScale, offsetX, offsetY);
-
-		//	bool pass;
-		//	var style = new GUIStyle();
-		//	if (normal != null) pass = GUI.Button(rect, normal, style);
-		//	else pass = GUI.Button(rect, "???");
-
-		//	if (hover != null)
-		//	{
-		//		var pos = Input.mousePosition;
-		//		pos.y = Screen.height - pos.y;
-		//		if (pos.x > rect.xMin && pos.x < rect.xMax && pos.y > rect.yMin && pos.y < rect.yMax) GUI.DrawTexture(rect, hover);
-		//	}
-
-		//	if (pass)
-		//	{
-		//		if (desc.ReignScores_AudioSource != null && desc.ReignScores_ButtonClick != null) desc.ReignScores_AudioSource.PlayOneShot(desc.ReignScores_ButtonClick);
-		//		return true;
-		//	}
-
-		//	return false;
-		//}
-
-		//private void guiAuthenticateCallbackTEMP(bool success, string errorMessage)
-		//{
-		//	if (success)
-		//	{
-		//		PerformingGUIOperation = false;
-		//		guiMode = ReignScores_GuiModes.None;
-		//		if (guiAuthenticateCallback != null) guiAuthenticateCallback(true, null);
-		//	}
-		//	else
-		//	{
-		//		Debug.LogError(errorMessage);
-		//		errorText = errorMessage;
-		//		if (guiMode == ReignScores_GuiModes.LoggingIn) guiMode = ReignScores_GuiModes.Login;
-		//		else if (guiMode == ReignScores_GuiModes.CreatingUser) guiMode = ReignScores_GuiModes.CreateUser;
-		//	}
-		//}
+				if (RequestAchievements_callback != null) RequestAchievements_callback(achievements, true, null);
+			}
+			else
+			{
+				if (RequestAchievements_callback != null) RequestAchievements_callback(null, false, response != null ? response.ErrorMessage : "Unkown");
+			}
+		}
 
 		public void ShowNativeScoresPage(string leaderboardID, ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
 		{
-			
+			ui.ShowNativeScoresPage(leaderboardID, callback);
 		}
 
 		public void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
 		{
-			
-		}
-
-		public void OnGUI()
-		{
-			
+			ui.ShowNativeAchievementsPage(callback);
 		}
 
 		public void Update()

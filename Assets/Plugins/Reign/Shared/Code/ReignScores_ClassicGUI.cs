@@ -3,7 +3,10 @@ using System.Collections;
 
 namespace Reign.Plugin
 {
-	enum ReignScores_GuiModes
+	/// <summary>
+	/// Internal use only!
+	/// </summary>
+	enum ReignScores_ClassicGuiModes
 	{
 		None,
 		Login,
@@ -21,130 +24,160 @@ namespace Reign.Plugin
 		/// <summary>
 		/// Login UI Title
 		/// </summary>
-		public string ReignScores_LoginTitle = "Login";
+		public string LoginTitle = "Login";
 		
 		/// <summary>
 		/// Create User UI Title
 		/// </summary>
-		public string ReignScores_CreateUserTitle = "Create Account";
+		public string CreateUserTitle = "Create Account";
 
 		/// <summary>
 		/// Background UI texture. (Or you can set to NULL and use your own backgrounds)
 		/// </summary>
-		public Texture ReignScores_BackgroudTexture;
+		public Texture BackgroudTexture;
 		
 		/// <summary>
 		/// Leaderboard background texture.
 		/// </summary>
-		public Texture ReignScores_TopScoreBoardTexture;
+		public Texture TopScoreBoardTexture;
 		
 		/// <summary>
 		/// Achievement background texture.
 		/// </summary>
-		public Texture ReignScores_AchievementBoardTexture;
+		public Texture AchievementBoardTexture;
 
 		/// <summary>
 		/// CloseBox texture
 		/// </summary>
-		public Texture ReignScores_TopScoreBoardButton_CloseNormal, ReignScores_TopScoreBoardButton_CloseHover;
+		public Texture TopScoreBoardButton_CloseNormal, TopScoreBoardButton_CloseHover;
 
 		/// <summary>
 		/// CloseBox button texture
 		/// </summary>
-		public Texture ReignScores_AchievementBoardButton_CloseNormal, ReignScores_AchievementBoardButton_CloseHover;
+		public Texture AchievementBoardButton_CloseNormal, AchievementBoardButton_CloseHover;
 
 		/// <summary>
 		/// Navigation button texture
 		/// </summary>
-		public Texture ReignScores_TopScoreBoardButton_PrevNormal, ReignScores_TopScoreBoardButton_PrevHover, ReignScores_TopScoreBoardButton_NextNormal, ReignScores_TopScoreBoardButton_NextHover;
+		public Texture TopScoreBoardButton_PrevNormal, TopScoreBoardButton_PrevHover, TopScoreBoardButton_NextNormal, TopScoreBoardButton_NextHover;
 		
 		/// <summary>
 		/// Navigation button texture
 		/// </summary>
-		public Texture ReignScores_AchievementBoardButton_PrevNormal, ReignScores_AchievementBoardButton_PrevHover, ReignScores_AchievementBoardButton_NextNormal, ReignScores_AchievementBoardButton_NextHover;
+		public Texture AchievementBoardButton_PrevNormal, AchievementBoardButton_PrevHover, AchievementBoardButton_NextNormal, AchievementBoardButton_NextHover;
 		
 		/// <summary>
 		/// All usernames will fit in this rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
 		/// </summary>
-		public Rect ReignScores_TopScoreBoardFrame_Usernames;
+		public Rect TopScoreBoardFrame_Usernames = new Rect(225, 250, 340, 560);
 		
 		/// <summary>
 		/// All score values will fit in this rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
 		/// </summary>
-		public Rect ReignScores_TopScoreBoardFrame_Scores;
+		public Rect TopScoreBoardFrame_Scores = new Rect(585, 250, 240, 560);
 		
 		/// <summary>
 		/// Button rect. (Auto scales to fit in ReignScores_TopScoreBoardTexture)
 		/// </summary>
-		public Rect ReignScores_TopScoreBoardFrame_PrevButton, ReignScores_TopScoreBoardFrame_NextButton, ReignScores_TopScoreBoardFrame_CloseBox;
+		public Rect TopScoreBoardFrame_PrevButton = new Rect(150, 750, 256, 256),
+			TopScoreBoardFrame_NextButton = new Rect(650, 750, 256, 256),
+			TopScoreBoardFrame_CloseBox = new Rect(750, 50, 128, 128);
 
 		/// <summary>
 		/// All achievement names will fit in this rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
 		/// </summary>
-		public Rect ReignScores_AchievementBoardFrame_Names;
+		public Rect AchievementBoardFrame_Names = new Rect(225, 250, 270, 560);
 		
 		/// <summary>
 		/// All achievement descs will fit in this rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
 		/// </summary>
-		public Rect ReignScores_AchievementBoardFrame_Descs;
+		public Rect AchievementBoardFrame_Descs = new Rect(520, 250, 300, 560);
 		
 		/// <summary>
 		/// Button rect. (Auto scales to fit in ReignScores_AchievementBoardTexture)
 		/// </summary>
-		public Rect ReignScores_AchievementBoardFrame_PrevButton, ReignScores_AchievementBoardFrame_NextButton, ReignScores_AchievementBoardFrame_CloseBox;
+		public Rect AchievementBoardFrame_PrevButton = new Rect(150, 750, 256, 256),
+			AchievementBoardFrame_NextButton = new Rect(650, 750, 256, 256),
+			AchievementBoardFrame_CloseBox = new Rect(750, 50, 128, 128);
 
 		/// <summary>
 		/// Board font size (Defaults to 12)
 		/// </summary>
-		public int ReignScores_TopScoreBoardFont_Size = 12, ReignScores_AchievementBoardFont_Size = 12;
+		public int TopScoreBoardFont_Size = 12, AchievementBoardFont_Size = 12;
 
 		/// <summary>
 		/// Board font color (Defaults to white)
 		/// </summary>
-		public Color ReignScores_TopScoreBoardFont_Color = Color.white, ReignScores_AchievementBoardFont_Color = Color.white;
+		public Color TopScoreBoardFont_Color = Color.white, AchievementBoardFont_Color = Color.white;
 
 		/// <summary>
 		/// Amount to show on board (Defaults to 10)
 		/// </summary>
-		public int ReignScores_TopScoresToListPerPage = 10, ReignScores_AchievementsToListPerPage = 10;
+		public int TopScoresToListPerPage = 10, AchievementsToListPerPage = 10;
 
 		/// <summary>
 		/// Set to true to visual see where your board rects are placed.
 		/// </summary>
-		public bool ReignScores_EnableTestRects;
+		public bool EnableTestRects;
 
 		/// <summary>
 		/// Set to your UI audio source
 		/// </summary>
-		public AudioSource ReignScores_AudioSource;
+		public AudioSource AudioSource;
 
 		/// <summary>
 		/// Button click sound
 		/// </summary>
-		public AudioClip ReignScores_ButtonClick;
+		public AudioClip ButtonClick;
 
-		public void RequestLogin()
+		// =========================================================================================================
+		// IScores_UI interface methods
+		// =========================================================================================================
+		public event ScoreFormatCallbackMethod ScoreFormatCallback;
+		private Plugin.IScorePlugin plugin;
+		private AuthenticateCallbackMethod authenticateCallback;
+
+		public void Init(Plugin.IScorePlugin plugin)
 		{
-			
+			this.plugin = plugin;
 		}
 
-		public void LoginCallback(bool succeeded)
+		public void RequestLogin(AuthenticateCallbackMethod callback)
 		{
-			
+			if (guiMode == ReignScores_ClassicGuiModes.None)
+			{
+				guiMode = ReignScores_ClassicGuiModes.Login;
+				authenticateCallback = callback;
+			}
 		}
 
+		public void AutoLogin(AuthenticateCallbackMethod callback)
+		{
+			guiMode = ReignScores_ClassicGuiModes.None;
+			authenticateCallback = callback;
+		}
 
-
-
-
-
-		private ReignScores_GuiModes guiMode = ReignScores_GuiModes.None;
-		private AuthenticateCallbackMethod guiAuthenticateCallback;
-		private MonoBehaviour guiServices;
+		public void LoginCallback(bool succeeded, string errorMessage)
+		{
+			if (succeeded)
+			{
+				errorText = "";
+				guiMode = ReignScores_ClassicGuiModes.None;
+				if (authenticateCallback != null) authenticateCallback(true, null);
+			}
+			else
+			{
+				errorText = errorMessage != null ? errorMessage : "???";
+				if (guiMode == ReignScores_ClassicGuiModes.LoggingIn) guiMode = ReignScores_ClassicGuiModes.Login;
+				else if (guiMode == ReignScores_ClassicGuiModes.CreatingUser) guiMode = ReignScores_ClassicGuiModes.CreateUser;
+			}
+		}
 
 		// =========================================================================================================
+		// OnGUI Interaction
 		// =========================================================================================================
-		// =========================================================================================================
+		private ReignScores_ClassicGuiModes guiMode = ReignScores_ClassicGuiModes.None;
+
 		private ShowNativeViewDoneCallbackMethod guiShowNativeViewDoneCallback;
 		private LeaderboardScore[] guiScores;
 		private void guiRequestScoresCallback(LeaderboardScore[] scores, bool succeeded, string errorMessage)
@@ -152,27 +185,25 @@ namespace Reign.Plugin
 			if (succeeded)
 			{
 				guiScores = scores;
-				guiMode = ReignScores_GuiModes.ShowingScores;
+				guiMode = ReignScores_ClassicGuiModes.ShowingScores;
 			}
 			else
 			{
-				PerformingGUIOperation = false;
-				guiMode = ReignScores_GuiModes.None;
+				guiMode = ReignScores_ClassicGuiModes.None;
 				if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(false, errorMessage);
 			}
 		}
 
 		private int guiScoreOffset;
 		private string guiLeaderboardID;
-		//public void ShowNativeScoresPage(string leaderboardID, ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
-		//{
-		//	guiMode = ReignScores_GuiModes.LoadingScores;
-		//	PerformingGUIOperation = true;
-		//	guiShowNativeViewDoneCallback = callback;
-		//	guiLeaderboardID = leaderboardID;
-		//	guiScoreOffset = 0;
-		//	RequestScores(leaderboardID, guiScoreOffset, ReignScores_TopScoresToListPerPage, guiRequestScoresCallback, services);
-		//}
+		public void ShowNativeScoresPage(string leaderboardID, ShowNativeViewDoneCallbackMethod callback)
+		{
+			guiMode = ReignScores_ClassicGuiModes.LoadingScores;
+			guiShowNativeViewDoneCallback = callback;
+			guiLeaderboardID = leaderboardID;
+			guiScoreOffset = 0;
+			plugin.RequestScores(leaderboardID, guiScoreOffset, TopScoresToListPerPage, guiRequestScoresCallback, this);
+		}
 
 		private Achievement[] guiAchievements;
 		private void guiRequestAchievementsCallback(Achievement[] achievements, bool succeeded, string errorMessage)
@@ -180,42 +211,40 @@ namespace Reign.Plugin
 			if (succeeded)
 			{
 				guiAchievements = achievements;
-				guiMode = ReignScores_GuiModes.ShowingAchievements;
+				guiMode = ReignScores_ClassicGuiModes.ShowingAchievements;
 			}
 			else
 			{
-				PerformingGUIOperation = false;
-				guiMode = ReignScores_GuiModes.None;
+				guiMode = ReignScores_ClassicGuiModes.None;
 				if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(false, errorMessage);
 			}
 		}
 
 		private int guiAchievementOffset;
-		//public void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
-		//{
-		//	guiMode = ReignScores_GuiModes.LoadingAchievements;
-		//	PerformingGUIOperation = true;
-		//	guiAchievementOffset = 0;
-		//	guiShowNativeViewDoneCallback = callback;
-		//	RequestAchievements(guiRequestAchievementsCallback, services);
-		//}
+		public void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback)
+		{
+			guiMode = ReignScores_ClassicGuiModes.LoadingAchievements;
+			guiAchievementOffset = 0;
+			guiShowNativeViewDoneCallback = callback;
+			plugin.RequestAchievements(guiRequestAchievementsCallback, this);
+		}
 
 		private string userAccount_Name = "", userAccount_Pass = "", userAccount_ConfPass = "", errorText;
 		void OnGUI()
 		{
-			if (guiMode == ReignScores_GuiModes.None) return;
+			if (guiMode == ReignScores_ClassicGuiModes.None) return;
 
 			GUI.color = Color.white;
 			GUI.matrix = Matrix4x4.identity;
 			float scale = new Vector2(Screen.width, Screen.height).magnitude / new Vector2(1280, 720).magnitude;
 
 			// draw background
-			if (ReignScores_BackgroudTexture != null)
+			if (BackgroudTexture != null)
 			{
-				var size = MathUtilities.FillView(ReignScores_BackgroudTexture.width, ReignScores_BackgroudTexture.height, Screen.width, Screen.height);
+				var size = MathUtilities.FillView(BackgroudTexture.width, BackgroudTexture.height, Screen.width, Screen.height);
 				float offsetX = -Mathf.Max((size.x-Screen.width)*.5f, 0f);
 				float offsetY = -Mathf.Max((size.y-Screen.height)*.5f, 0f);
-				GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), ReignScores_BackgroudTexture);
+				GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), BackgroudTexture);
 			}
 
 			float buttonWidth = 128 * scale;
@@ -223,16 +252,20 @@ namespace Reign.Plugin
 			float textWidth = 256 * scale;
 			float textHeight = 32 * scale;
 			float y = Screen.height / 2;
-			if (guiMode == ReignScores_GuiModes.Login)
+
+			// ======================================
+			// Login Mode
+			// ======================================
+			if (guiMode == ReignScores_ClassicGuiModes.Login)
 			{
 				// title
-				if (!string.IsNullOrEmpty(ReignScores_LoginTitle))
+				if (!string.IsNullOrEmpty(LoginTitle))
 				{
 					var style = new GUIStyle();
 					style.fontSize = (int)(128 * scale);
 					style.alignment = TextAnchor.MiddleCenter;
 					style.normal.textColor = Color.white;
-					GUI.Label(new Rect(0, 0, Screen.width, Screen.height/4), ReignScores_LoginTitle, style);
+					GUI.Label(new Rect(0, 0, Screen.width, Screen.height/4), LoginTitle, style);
 				}
 
 				// labels
@@ -249,9 +282,8 @@ namespace Reign.Plugin
 				if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, buttonWidth, buttonHeight), "Cancel"))
 				{
 					errorText = null;
-					guiMode = ReignScores_GuiModes.None;
-					PerformingGUIOperation = false;
-					if (guiAuthenticateCallback != null) guiAuthenticateCallback(false, "Canceled");
+					guiMode = ReignScores_ClassicGuiModes.None;
+					if (authenticateCallback != null) authenticateCallback(false, "Canceled");
 				}
 
 				if (GUI.Button(new Rect((Screen.width/2) + (10*scale), y, buttonWidth, buttonHeight), "Login"))
@@ -273,29 +305,31 @@ namespace Reign.Plugin
 
 					if (validInfo)
 					{
-						PerformingGUIOperation = true;
-						guiMode = ReignScores_GuiModes.LoggingIn;
-						//guiServices.StartCoroutine(login(userAccount_Name, userAccount_Pass, guiAuthenticateCallbackTEMP));
+						guiMode = ReignScores_ClassicGuiModes.LoggingIn;
+						plugin.ManualLogin(userAccount_Name, userAccount_Pass, null, this);
 					}
 				}
 
 				y += buttonHeight * 2;
 				if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, (buttonWidth*2)+(10*scale), buttonHeight), "Create New User"))
 				{
-					guiMode = ReignScores_GuiModes.CreateUser;
+					guiMode = ReignScores_ClassicGuiModes.CreateUser;
 					errorText = null;
 				}
 			}
-			else if (guiMode == ReignScores_GuiModes.CreateUser)
+			// ======================================
+			// CreateUser Mode
+			// ======================================
+			else if (guiMode == ReignScores_ClassicGuiModes.CreateUser)
 			{
 				// title
-				if (!string.IsNullOrEmpty(ReignScores_CreateUserTitle))
+				if (!string.IsNullOrEmpty(CreateUserTitle))
 				{
 					var style = new GUIStyle();
 					style.fontSize = (int)(128 * scale);
 					style.alignment = TextAnchor.MiddleCenter;
 					style.normal.textColor = Color.white;
-					GUI.Label(new Rect(0, 0, Screen.width, Screen.height/4), ReignScores_CreateUserTitle, style);
+					GUI.Label(new Rect(0, 0, Screen.width, Screen.height/4), CreateUserTitle, style);
 				}
 
 				// labels
@@ -315,9 +349,8 @@ namespace Reign.Plugin
 				if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, buttonWidth, buttonHeight), "Cancel"))
 				{
 					errorText = null;
-					guiMode = ReignScores_GuiModes.None;
-					PerformingGUIOperation = false;
-					if (guiAuthenticateCallback != null) guiAuthenticateCallback(false, "Canceled");
+					guiMode = ReignScores_ClassicGuiModes.None;
+					if (authenticateCallback != null) authenticateCallback(false, "Canceled");
 				}
 
 				if (GUI.Button(new Rect((Screen.width/2) + (10*scale), y, buttonWidth, buttonHeight), "Create"))
@@ -351,20 +384,22 @@ namespace Reign.Plugin
 
 					if (validInfo)
 					{
-						PerformingGUIOperation = true;
-						guiMode = ReignScores_GuiModes.CreatingUser;
-						//guiServices.StartCoroutine(createUser(userAccount_Name, userAccount_Pass, guiAuthenticateCallbackTEMP));
+						guiMode = ReignScores_ClassicGuiModes.CreatingUser;
+						plugin.ManualCreateUser(userAccount_Name, userAccount_Pass, null, this);
 					}
 				}
 
 				y += buttonHeight * 2;
 				if (GUI.Button(new Rect((Screen.width/2) - buttonWidth - (10*scale), y, (buttonWidth*2)+(10*scale), buttonHeight), "Login Existing User"))
 				{
-					guiMode = ReignScores_GuiModes.Login;
+					guiMode = ReignScores_ClassicGuiModes.Login;
 					errorText = null;
 				}
 			}
-			else if (guiMode == ReignScores_GuiModes.LoggingIn)
+			// ======================================
+			// LoggingIn Mode
+			// ======================================
+			else if (guiMode == ReignScores_ClassicGuiModes.LoggingIn)
 			{
 				var style = new GUIStyle();
 				style.fontSize = (int)(128 * scale);
@@ -372,70 +407,72 @@ namespace Reign.Plugin
 				style.normal.textColor = Color.white;
 				GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "Logging In...", style);
 			}
-			else if (guiMode == ReignScores_GuiModes.ShowingScores)
+			// ======================================
+			// Showing Scores Mode
+			// ======================================
+			else if (guiMode == ReignScores_ClassicGuiModes.ShowingScores)
 			{
-				if (ReignScores_TopScoreBoardTexture != null)
+				if (TopScoreBoardTexture != null)
 				{
 					// draw board
-					var size = MathUtilities.FitInView(ReignScores_TopScoreBoardTexture.width, ReignScores_TopScoreBoardTexture.height, Screen.width, Screen.height);
+					var size = MathUtilities.FitInView(TopScoreBoardTexture.width, TopScoreBoardTexture.height, Screen.width, Screen.height);
 					float offsetX = (Screen.width*.5f)-(size.x*.5f);
 					float offsetY = (Screen.height*.5f)-(size.y*.5f);
-					GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), ReignScores_TopScoreBoardTexture);
+					GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), TopScoreBoardTexture);
 
 					// get main scale value
-					var mainScale = MathUtilities.ScaleToFitInView(ReignScores_TopScoreBoardTexture.width, ReignScores_TopScoreBoardTexture.height, Screen.width, Screen.height);
+					var mainScale = MathUtilities.ScaleToFitInView(TopScoreBoardTexture.width, TopScoreBoardTexture.height, Screen.width, Screen.height);
 
 					// handle buttons
-					if (Input.GetKeyUp(KeyCode.Escape) || processButton(ReignScores_TopScoreBoardFrame_CloseBox, ReignScores_TopScoreBoardButton_CloseNormal, ReignScores_TopScoreBoardButton_CloseHover, mainScale, offsetX, offsetY))
+					if (Input.GetKeyUp(KeyCode.Escape) || processButton(TopScoreBoardFrame_CloseBox, TopScoreBoardButton_CloseNormal, TopScoreBoardButton_CloseHover, mainScale, offsetX, offsetY))
 					{
-						PerformingGUIOperation = false;
-						guiMode = ReignScores_GuiModes.None;
+						guiMode = ReignScores_ClassicGuiModes.None;
 						if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(true, null);
 					}
 
-					if (processButton(ReignScores_TopScoreBoardFrame_PrevButton, ReignScores_TopScoreBoardButton_PrevNormal, ReignScores_TopScoreBoardButton_PrevHover, mainScale, offsetX, offsetY))
+					if (processButton(TopScoreBoardFrame_PrevButton, TopScoreBoardButton_PrevNormal, TopScoreBoardButton_PrevHover, mainScale, offsetX, offsetY))
 					{
 						if (guiScoreOffset != 0)
 						{
-							guiScoreOffset -= ReignScores_TopScoresToListPerPage;
+							guiScoreOffset -= TopScoresToListPerPage;
 							if (guiScoreOffset < 0) guiScoreOffset = 0;
-							RequestScores(guiLeaderboardID, guiScoreOffset, ReignScores_TopScoresToListPerPage, guiRequestScoresCallback, guiServices);
+							plugin.RequestScores(guiLeaderboardID, guiScoreOffset, TopScoresToListPerPage, guiRequestScoresCallback, this);
 						}
 					}
 
-					if (processButton(ReignScores_TopScoreBoardFrame_NextButton, ReignScores_TopScoreBoardButton_NextNormal, ReignScores_TopScoreBoardButton_NextHover, mainScale, offsetX, offsetY))
+					if (processButton(TopScoreBoardFrame_NextButton, TopScoreBoardButton_NextNormal, TopScoreBoardButton_NextHover, mainScale, offsetX, offsetY))
 					{
-						if (guiScores.Length == ReignScores_TopScoresToListPerPage)
+						if (guiScores.Length == TopScoresToListPerPage)
 						{
-							guiScoreOffset += ReignScores_TopScoresToListPerPage;
-							RequestScores(guiLeaderboardID, guiScoreOffset, ReignScores_TopScoresToListPerPage, guiRequestScoresCallback, guiServices);
+							guiScoreOffset += TopScoresToListPerPage;
+							plugin.RequestScores(guiLeaderboardID, guiScoreOffset, TopScoresToListPerPage, guiRequestScoresCallback, this);
 						}
 					}
 
 					// draw names and scores
-					var usernameRect = calculateFrame(ReignScores_TopScoreBoardFrame_Usernames, mainScale, offsetX, offsetY);
-					var scoreRect = calculateFrame(ReignScores_TopScoreBoardFrame_Scores, mainScale, offsetX, offsetY);
-					if (ReignScores_EnableTestRects)
+					var usernameRect = calculateFrame(TopScoreBoardFrame_Usernames, mainScale, offsetX, offsetY);
+					var scoreRect = calculateFrame(TopScoreBoardFrame_Scores, mainScale, offsetX, offsetY);
+					if (EnableTestRects)
 					{
 						GUI.Button(usernameRect, "TEST RECT");
 						GUI.Button(scoreRect, "TEST RECT");
 					}
 					var style = new GUIStyle();
-					style.fontSize = (int)(ReignScores_TopScoreBoardFont_Size * scale);
+					style.fontSize = (int)(TopScoreBoardFont_Size * scale);
 					style.alignment = TextAnchor.LowerLeft;
-					style.normal.textColor = ReignScores_TopScoreBoardFont_Color;
+					style.normal.textColor = TopScoreBoardFont_Color;
 					int userI = 0, scoreI = 0;
 					foreach (var score in guiScores)
 					{
 						// username
-						float height = usernameRect.height / ReignScores_TopScoresToListPerPage;
+						float height = usernameRect.height / TopScoresToListPerPage;
 						GUI.Label(new Rect(usernameRect.x, usernameRect.y + userI, usernameRect.width, height), score.UserName, style);
 						userI += (int)height;
 
 						// score
-						height = scoreRect.height / ReignScores_TopScoresToListPerPage;
+						height = scoreRect.height / TopScoresToListPerPage;
 						string scoreValue;
-						if (ReignScores_ScoreFormatCallback != null) ReignScores_ScoreFormatCallback(score.Score, out scoreValue);
+						if (ScoreFormatCallback != null) ScoreFormatCallback(score.Score, out scoreValue);
 						else scoreValue = score.Score.ToString();
 						GUI.Label(new Rect(scoreRect.x, scoreRect.y + scoreI, scoreRect.width, height), scoreValue, style);
 						scoreI += (int)height;
@@ -443,68 +480,70 @@ namespace Reign.Plugin
 				}
 				else
 				{
-					errorText = "ReignScores_TopScoreBoardTexture MUST be set!";
+					errorText = "ReignScores TopScoreBoardTexture MUST be set!";
 					Debug.LogError(errorText);
 				}
 			}
-			else if (guiMode == ReignScores_GuiModes.ShowingAchievements)
+			// ======================================
+			// Showing Achievements Mode
+			// ======================================
+			else if (guiMode == ReignScores_ClassicGuiModes.ShowingAchievements)
 			{
-				if (ReignScores_AchievementBoardTexture != null)
+				if (AchievementBoardTexture != null)
 				{
 					// draw board
-					var size = MathUtilities.FitInView(ReignScores_AchievementBoardTexture.width, ReignScores_AchievementBoardTexture.height, Screen.width, Screen.height);
+					var size = MathUtilities.FitInView(AchievementBoardTexture.width, AchievementBoardTexture.height, Screen.width, Screen.height);
 					float offsetX = (Screen.width*.5f)-(size.x*.5f);
 					float offsetY = (Screen.height*.5f)-(size.y*.5f);
-					GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), ReignScores_AchievementBoardTexture);
+					GUI.DrawTexture(new Rect(offsetX, offsetY, size.x, size.y), AchievementBoardTexture);
 
 					// get main scale value
-					var mainScale = MathUtilities.ScaleToFitInView(ReignScores_AchievementBoardTexture.width, ReignScores_AchievementBoardTexture.height, Screen.width, Screen.height);
+					var mainScale = MathUtilities.ScaleToFitInView(AchievementBoardTexture.width, AchievementBoardTexture.height, Screen.width, Screen.height);
 
 					// handle buttons
-					if (Input.GetKeyUp(KeyCode.Escape) || processButton(ReignScores_AchievementBoardFrame_CloseBox, ReignScores_AchievementBoardButton_CloseNormal, ReignScores_AchievementBoardButton_CloseHover, mainScale, offsetX, offsetY))
+					if (Input.GetKeyUp(KeyCode.Escape) || processButton(AchievementBoardFrame_CloseBox, AchievementBoardButton_CloseNormal, AchievementBoardButton_CloseHover, mainScale, offsetX, offsetY))
 					{
-						PerformingGUIOperation = false;
-						guiMode = ReignScores_GuiModes.None;
+						guiMode = ReignScores_ClassicGuiModes.None;
 						if (guiShowNativeViewDoneCallback != null) guiShowNativeViewDoneCallback(true, null);
 					}
 
-					if (processButton(ReignScores_AchievementBoardFrame_PrevButton, ReignScores_AchievementBoardButton_PrevNormal, ReignScores_AchievementBoardButton_PrevHover, mainScale, offsetX, offsetY))
+					if (processButton(AchievementBoardFrame_PrevButton, AchievementBoardButton_PrevNormal, AchievementBoardButton_PrevHover, mainScale, offsetX, offsetY))
 					{
 						if (guiAchievementOffset != 0)
 						{
-							guiAchievementOffset -= ReignScores_AchievementsToListPerPage;
+							guiAchievementOffset -= AchievementsToListPerPage;
 							if (guiAchievementOffset < 0) guiAchievementOffset = 0;
 						}
 					}
 
-					if (processButton(ReignScores_AchievementBoardFrame_NextButton, ReignScores_AchievementBoardButton_NextNormal, ReignScores_AchievementBoardButton_NextHover, mainScale, offsetX, offsetY))
+					if (processButton(AchievementBoardFrame_NextButton, AchievementBoardButton_NextNormal, AchievementBoardButton_NextHover, mainScale, offsetX, offsetY))
 					{
-						if (guiAchievementOffset + ReignScores_AchievementsToListPerPage < guiAchievements.Length)
+						if (guiAchievementOffset + AchievementsToListPerPage < guiAchievements.Length)
 						{
-							guiAchievementOffset += ReignScores_AchievementsToListPerPage;
+							guiAchievementOffset += AchievementsToListPerPage;
 						}
 					}
 
 					// draw names and scores
-					var nameRect = calculateFrame(ReignScores_AchievementBoardFrame_Names, mainScale, offsetX, offsetY);
-					var descRect = calculateFrame(ReignScores_AchievementBoardFrame_Descs, mainScale, offsetX, offsetY);
-					if (ReignScores_EnableTestRects)
+					var nameRect = calculateFrame(AchievementBoardFrame_Names, mainScale, offsetX, offsetY);
+					var descRect = calculateFrame(AchievementBoardFrame_Descs, mainScale, offsetX, offsetY);
+					if (EnableTestRects)
 					{
 						GUI.Button(nameRect, "TEST RECT");
 						GUI.Button(descRect, "TEST RECT");
 					}
 					var style = new GUIStyle();
-					style.fontSize = (int)(ReignScores_AchievementBoardFont_Size * scale);
+					style.fontSize = (int)(AchievementBoardFont_Size * scale);
 					style.alignment = TextAnchor.LowerLeft;
-					style.normal.textColor = ReignScores_AchievementBoardFont_Color;
+					style.normal.textColor = AchievementBoardFont_Color;
 					int nameI = 0, descI = 0;
-					for (int i = guiAchievementOffset; i < guiAchievementOffset+ReignScores_AchievementsToListPerPage; ++i)
+					for (int i = guiAchievementOffset; i < guiAchievementOffset+AchievementsToListPerPage; ++i)
 					{
 						if (i == guiAchievements.Length) break;
 						var ach = guiAchievements[i];
 
 						// icon
-						float height = nameRect.height / ReignScores_AchievementsToListPerPage;
+						float height = nameRect.height / AchievementsToListPerPage;
 						float iconSize = height * .8f;
 						GUI.DrawTexture(new Rect(nameRect.x, nameRect.y + nameI + height - iconSize, iconSize, iconSize), ach.IsAchieved ? ach.AchievedImage : ach.UnachievedImage);
 
@@ -513,18 +552,21 @@ namespace Reign.Plugin
 						nameI += (int)height;
 
 						// desc
-						height = descRect.height / ReignScores_AchievementsToListPerPage;
+						height = descRect.height / AchievementsToListPerPage;
 						GUI.Label(new Rect(descRect.x, descRect.y + descI, descRect.width, height), ach.Desc, style);
 						descI += (int)height;
 					}
 				}
 				else
 				{
-					errorText = "ReignScores_AchievementBoardTexture MUST be set!";
+					errorText = "ReignScores AchievementBoardTexture MUST be set!";
 					Debug.LogError(errorText);
 				}
 			}
-			else if (guiMode == ReignScores_GuiModes.CreatingUser)
+			// ======================================
+			// CreatingUser Mode
+			// ======================================
+			else if (guiMode == ReignScores_ClassicGuiModes.CreatingUser)
 			{
 				var style = new GUIStyle();
 				style.fontSize = (int)(128 * scale);
@@ -532,7 +574,10 @@ namespace Reign.Plugin
 				style.normal.textColor = Color.white;
 				GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "Creating User...", style);
 			}
-			else if (guiMode == ReignScores_GuiModes.LoadingScores || guiMode == ReignScores_GuiModes.LoadingAchievements)
+			// ======================================
+			// Loading Mode
+			// ======================================
+			else if (guiMode == ReignScores_ClassicGuiModes.LoadingScores || guiMode == ReignScores_ClassicGuiModes.LoadingAchievements)
 			{
 				var style = new GUIStyle();
 				style.fontSize = (int)(128 * scale);
@@ -581,28 +626,11 @@ namespace Reign.Plugin
 
 			if (pass)
 			{
-				if (ReignScores_AudioSource != null && ReignScores_ButtonClick != null) ReignScores_AudioSource.PlayOneShot(ReignScores_ButtonClick);
+				if (AudioSource != null && ButtonClick != null) AudioSource.PlayOneShot(ButtonClick);
 				return true;
 			}
 
 			return false;
-		}
-
-		private void guiAuthenticateCallbackTEMP(bool success, string errorMessage)
-		{
-			if (success)
-			{
-				PerformingGUIOperation = false;
-				guiMode = ReignScores_GuiModes.None;
-				if (guiAuthenticateCallback != null) guiAuthenticateCallback(true, null);
-			}
-			else
-			{
-				Debug.LogError(errorMessage);
-				errorText = errorMessage;
-				if (guiMode == ReignScores_GuiModes.LoggingIn) guiMode = ReignScores_GuiModes.Login;
-				else if (guiMode == ReignScores_GuiModes.CreatingUser) guiMode = ReignScores_GuiModes.CreateUser;
-			}
 		}
 	}
 }

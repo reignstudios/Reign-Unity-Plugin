@@ -19,6 +19,12 @@ namespace Reign.EditorTools
 {
 	public static class Tools
 	{
+		[MenuItem("Edit/Reign/Tools/Print New Guid")]
+		static void PrintNewGuid()
+		{
+			Debug.Log(Guid.NewGuid());
+		}
+
 		[MenuItem("Edit/Reign/Tools/Merge Folders")]
 		static void MergeFolders()
 		{
