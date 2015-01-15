@@ -70,7 +70,7 @@ public class AdsDemo : MonoBehaviour
 		//desc.WP8_MicrosoftAdvertising_UseBuiltInRefresh = false;
 		//desc.WP8_MicrosoftAdvertising_RefreshRate = 120;
 			
-		desc.WP8_AdMob_UnitID = "";// NOTE: You can use legacy (PublisherID) too, You MUST have this even for Testing!
+		desc.WP8_AdMob_UnitID = "";// NOTE: You MUST have this even for Testing!
 		desc.WP8_AdMob_AdGravity = AdGravity.BottomCenter;
 		desc.WP8_AdMob_AdSize = Reign.WP8_AdMob_AdSize.Banner;
 			
