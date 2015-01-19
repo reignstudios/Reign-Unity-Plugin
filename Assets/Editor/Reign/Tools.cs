@@ -110,8 +110,9 @@ namespace Reign.EditorTools
 		}
 		
 		[MenuItem("Edit/Reign/Disable Reign")]
-		private static void DisableReignForPlatform(BuildTargetGroup platform)
+		private static void DisableReignForPlatform()
 		{
+			var platform = EditorUserBuildSettings.selectedBuildTargetGroup;
 			string valueBlock = PlayerSettings.GetScriptingDefineSymbolsForGroup(platform);
 			if (string.IsNullOrEmpty(valueBlock))
 			{
@@ -130,11 +131,14 @@ namespace Reign.EditorTools
 				newValue += "DISABLE_REIGN";
 				PlayerSettings.SetScriptingDefineSymbolsForGroup(platform, newValue);
 			}
+
+			Debug.Log("DISABLE_REIGN added to your Player Settings");
 		}
 		
 		[MenuItem("Edit/Reign/Enable Reign")]
-		private static void EnableReignForPlatform(BuildTargetGroup platform)
+		private static void EnableReignForPlatform()
 		{
+			var platform = EditorUserBuildSettings.selectedBuildTargetGroup;
 			string valueBlock = PlayerSettings.GetScriptingDefineSymbolsForGroup(platform);
 			if (!string.IsNullOrEmpty(valueBlock))
 			{
@@ -148,6 +152,36 @@ namespace Reign.EditorTools
 				if (newValue.Length != 0 && newValue[newValue.Length-1] == ';') newValue = newValue.Substring(0, newValue.Length-1);
 				PlayerSettings.SetScriptingDefineSymbolsForGroup(platform, newValue);
 			}
+
+			Debug.Log("DISABLE_REIGN removed from your Player Settings");
+		}
+
+		[MenuItem("Edit/Reign/Clean (For troubleshooting only!)")]
+		static void Clean()
+		{
+			if (!EditorUtility.DisplayDialog("Warning!", "This will remove all Reign plugin files.", "OK", "Cancel")) return;
+
+			using (var stream = new FileStream(Application.dataPath+"/Editor/Reign/CleanSettings", FileMode.Open, FileAccess.Read, FileShare.None))
+			using (var reader = new StreamReader(stream))
+			{
+				string file = reader.ReadLine();
+				while (!string.IsNullOrEmpty(file))
+				{
+					file = Application.dataPath + file;
+					try
+					{
+						if (File.Exists(file)) File.Delete(file);
+					}
+					catch
+					{
+						Debug.LogError("Failed to delete file: " + file);
+					}
+
+					file = reader.ReadLine();
+				}
+			}
+
+			Debug.Log("Clean Done!");
 		}
 
 		static void addPostProjectCompilerDirectives(XDocument doc)

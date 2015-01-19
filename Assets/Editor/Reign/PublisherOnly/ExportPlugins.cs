@@ -11,15 +11,64 @@ using System.IO;
 
 public static class ExportPlugins
 {
+	private static void zipPath(string srcPath, string dstFile)
+	{
+		var start = new System.Diagnostics.ProcessStartInfo();
+		start.Arguments = srcPath + " " + dstFile;
+		start.FileName = Application.dataPath + "/Editor/Reign/PublisherOnly/ZipCompressor.exe";
+		start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+		using (var proc = System.Diagnostics.Process.Start(start))
+		{
+			proc.WaitForExit();
+
+			var exitCode = proc.ExitCode;
+			if (exitCode != 0) Debug.LogError("Exit Code: " + exitCode);
+		}
+	}
+
 	[MenuItem("Reign Dev/Prepare Release")]
 	static void PrepareRelease()
 	{
 		// reset review settings
 		using (var stream = new FileStream(Application.dataPath+"/Editor/Reign/ReviewSettings", FileMode.Create, FileAccess.Write, FileShare.None))
-		using (var reader = new StreamWriter(stream))
+		using (var writer = new StreamWriter(stream))
 		{
-			reader.Write("0");
+			writer.Write("0");
 		}
+
+		// generate clean files list
+		using (var stream = new FileStream(Application.dataPath+"/Editor/Reign/CleanSettings", FileMode.Create, FileAccess.Write, FileShare.None))
+		using (var writer = new StreamWriter(stream))
+		{
+			globalFilesAdded = false;
+			var files = getAllFiles(null, false);
+			foreach (var file in files)
+			{
+				string value = file.Remove(0, Application.dataPath.Length).Replace('\\', '/');
+				switch (value)
+				{
+					case "/Editor/Reign/Reign.EditorTools.dll":
+					case "/Plugins/Reign/VersionInfo/ReignVersionCheck":
+					case "/Plugins/Reign/VersionInfo/ReignVersionCheck_Windows":
+					case "/Plugins/Reign/VersionInfo/ReignVersionCheck_BB10":
+					case "/Plugins/Reign/VersionInfo/ReignVersionCheck_Android":
+					case "/Plugins/Reign/VersionInfo/ReignVersionCheck_iOS":
+						break;
+
+					default:
+						writer.WriteLine(value);
+						break;
+				}
+			}
+		}
+
+		// zip external source code
+		string rootPath = Application.dataPath.Replace("Assets", "");
+		zipPath("src=" + rootPath + @"\APIs\ReignScores", "dst=" + Application.dataPath + "/Editor/Reign/ReignScores.zip");
+		zipPath("src=" + rootPath + @"\Native\Reign.Android", "dst=" + Application.dataPath + "/Plugins/Android/Reign.Android.zip");
+
+		AssetDatabase.Refresh();
+		Debug.Log("Prepare Done!");
 	}
 
 	[MenuItem("Reign Dev/Add Version Number")]
@@ -27,7 +76,7 @@ public static class ExportPlugins
 	{
 		string path = Application.dataPath + "/Plugins/Reign/VersionInfo/";
 		addVersion(convertPathToPlatform(path+"ReignVersionCheck"));
-		addVersion(convertPathToPlatform(path+"ReignVersionCheck_Win8_WP8"));
+		addVersion(convertPathToPlatform(path+"ReignVersionCheck_Windows"));
 		addVersion(convertPathToPlatform(path+"ReignVersionCheck_BB10"));
 		addVersion(convertPathToPlatform(path+"ReignVersionCheck_iOS"));
 		addVersion(convertPathToPlatform(path+"ReignVersionCheck_Android"));
@@ -38,7 +87,7 @@ public static class ExportPlugins
 	{
 		string path = Application.dataPath + "/Plugins/Reign/VersionInfo/";
 		subVersion(convertPathToPlatform(path+"ReignVersionCheck"));
-		subVersion(convertPathToPlatform(path+"ReignVersionCheck_Win8_WP8"));
+		subVersion(convertPathToPlatform(path+"ReignVersionCheck_Windows"));
 		subVersion(convertPathToPlatform(path+"ReignVersionCheck_BB10"));
 		subVersion(convertPathToPlatform(path+"ReignVersionCheck_iOS"));
 		subVersion(convertPathToPlatform(path+"ReignVersionCheck_Android"));
@@ -154,23 +203,23 @@ public static class ExportPlugins
 	}
 
 	// WinRT
-	private static List<string> getWin8_WP8Files(List<string> files)
+	private static List<string> getWindowsFiles(List<string> files)
 	{
 		files = getGlobalFiles(files);
 
 		getFilesInPath(Application.dataPath + "/Plugins/WP8/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/WP8/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/WinRT/", files);
-		files.Add(Application.dataPath + "/Plugins/Reign/VersionInfo/ReignVersionCheck_Win8_WP8");
+		files.Add(Application.dataPath + "/Plugins/Reign/VersionInfo/ReignVersionCheck_Windows");
 
 		return files;
 	}
 
-	[MenuItem("Reign Dev/Create Unitypackage/Win8_WP8")]
-	static void ExportWin8WP8UnityPackages()
+	[MenuItem("Reign Dev/Create Unitypackage/Windows")]
+	static void ExportWindowsUnityPackages()
 	{
 		globalFilesAdded = false;
-		exportUnityPackages(getWin8_WP8Files(null), false, "Win8_WP8", null);
+		exportUnityPackages(getWindowsFiles(null), false, "Windows", null);
 	}
 
 	// BB10
@@ -241,25 +290,25 @@ public static class ExportPlugins
 	private static List<string> getAllFiles(List<string> currentFiles, bool disableUnityLegalConflicts)
 	{
 		var files = getGlobalFiles(currentFiles);
-		getWin8_WP8Files(files);
+		getWindowsFiles(files);
 		getBB10Files(files);
 		getIOSFiles(files);
 		getAndroidFiles(files, disableUnityLegalConflicts);
 		return files;
 	}
 
-	[MenuItem("Reign Dev/Create Unitypackage/Mobile")]
-	static void ExportMobileUnityPackages()
+	[MenuItem("Reign Dev/Create Unitypackage/Ultimate")]
+	static void ExportUltimateUnityPackages()
 	{
 		globalFilesAdded = false;
-		exportUnityPackages(getAllFiles(null, false), false, "Mobile", null);
+		exportUnityPackages(getAllFiles(null, false), false, "Ultimate", null);
 	}
 
-	[MenuItem("Reign Dev/Create Unitypackage/Mobile-DisableUnityLegalConflicts")]
-	static void ExportMobileUnityPackages_DisableUnityLegalConflicts()
+	[MenuItem("Reign Dev/Create Unitypackage/Ultimate-DisableUnityLegalConflicts")]
+	static void ExportUltimateUnityPackages_DisableUnityLegalConflicts()
 	{
 		globalFilesAdded = false;
-		exportUnityPackages(getAllFiles(null, true), true, "Mobile", null);
+		exportUnityPackages(getAllFiles(null, true), true, "Ultimate", null);
 	}
 
 	// All individual packages
@@ -271,7 +320,7 @@ public static class ExportPlugins
 		folder += "/";
 
 		globalFilesAdded = false;
-		exportUnityPackages(getWin8_WP8Files(null), false, "Win8_WP8", folder);
+		exportUnityPackages(getWindowsFiles(null), false, "Windows", folder);
 
 		globalFilesAdded = false;
 		exportUnityPackages(getBB10Files(null), false, "BB10", folder);
@@ -283,7 +332,7 @@ public static class ExportPlugins
 		exportUnityPackages(getAndroidFiles(null, false), false, "Android", folder);
 
 		globalFilesAdded = false;
-		exportUnityPackages(getAllFiles(null, false), false, "Mobile", folder);
+		exportUnityPackages(getAllFiles(null, false), false, "Ultimate", folder);
 	}
 
 	[MenuItem("Reign Dev/Create Unitypackage/All Individual Packages - DisableUnityLegalConflicts")]
@@ -294,7 +343,7 @@ public static class ExportPlugins
 		folder += "/";
 
 		globalFilesAdded = false;
-		exportUnityPackages(getWin8_WP8Files(null), true, "Win8_WP8", folder);
+		exportUnityPackages(getWindowsFiles(null), true, "Windows", folder);
 
 		globalFilesAdded = false;
 		exportUnityPackages(getBB10Files(null), true, "BB10", folder);
@@ -306,6 +355,6 @@ public static class ExportPlugins
 		exportUnityPackages(getAndroidFiles(null, true), true, "Android", folder);
 
 		globalFilesAdded = false;
-		exportUnityPackages(getAllFiles(null, true), true, "Mobile", folder);
+		exportUnityPackages(getAllFiles(null, true), true, "Ultimate", folder);
 	}
 }
