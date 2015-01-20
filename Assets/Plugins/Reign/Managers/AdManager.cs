@@ -322,15 +322,15 @@ namespace Reign.Plugin
 			else if (desc.Editor_AdAPI == AdAPIs.EditorTestAd) return new AdPlugin(desc, callback);
 			else if (desc.Editor_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback, ReignServices.Singleton);
 			else throw new Exception("Unsuported Editor_AdAPI: " + desc.Editor_AdAPI);
-			#elif UNITY_METRO
-			if (desc.Win8_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
-			else if (desc.Win8_AdAPI == AdAPIs.MicrosoftAdvertising) return new MicrosoftAdvertising_AdPlugin_WinRT(desc, callback);
-			else throw new Exception("Unsuported Win8_AdAPI: " + desc.Win8_AdAPI);
 			#elif UNITY_WP8
 			if (desc.WP8_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
 			else if (desc.WP8_AdAPI == AdAPIs.MicrosoftAdvertising) return new MicrosoftAdvertising_AdPlugin_WinRT(desc, callback);
 			else if (desc.WP8_AdAPI == AdAPIs.AdMob) return new AdMob_AdPlugin_WP8(desc, callback);
 			else throw new Exception("Unsuported WP8_AdAPI: " + desc.WP8_AdAPI);
+			#elif UNITY_WINRT
+			if (desc.Win8_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
+			else if (desc.Win8_AdAPI == AdAPIs.MicrosoftAdvertising) return new MicrosoftAdvertising_AdPlugin_WinRT(desc, callback);
+			else throw new Exception("Unsuported Win8_AdAPI: " + desc.Win8_AdAPI);
 			#elif UNITY_BB10
 			if (desc.BB10_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
 			else if (desc.BB10_AdAPI == AdAPIs.BlackBerryAdvertising) return new BlackBerryAdvertising_AdPlugin_BB10(desc, callback);

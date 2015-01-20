@@ -20,7 +20,9 @@ namespace Reign
 			ReignServices.CheckStatus();
 			
 			#if !DISABLE_REIGN
-			#if UNITY_WINRT && !UNITY_EDITOR
+			#if UNITY_EDITOR
+			plugin = new EmailPlugin();
+			#elif UNITY_WINRT
 			plugin = new EmailPlugin_WinRT();
 			#elif UNITY_ANDROID
 			plugin = new EmailPlugin_Android();

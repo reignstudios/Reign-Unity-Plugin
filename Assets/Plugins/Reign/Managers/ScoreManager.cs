@@ -454,7 +454,7 @@ namespace Reign.Plugin
 			if (desc.WP8_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
 			else if (desc.WP8_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported WP8_ScoreAPI: " + desc.WP8_ScoreAPI);
-			#elif UNITY_METRO
+			#elif UNITY_WINRT
 			if (desc.Win8_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
 			else if (desc.Win8_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported Win8_ScoreAPI: " + desc.Win8_ScoreAPI);

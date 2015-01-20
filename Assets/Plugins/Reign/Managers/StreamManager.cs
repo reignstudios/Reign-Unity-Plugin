@@ -74,7 +74,9 @@ namespace Reign
 			ques = new List<StreamManagerQue>();
 
 			#if !DISABLE_REIGN
-			#if UNITY_WINRT && !UNITY_EDITOR
+			#if UNITY_EDITOR
+			plugin = new StreamPlugin();
+			#elif UNITY_WINRT
 			plugin = new StreamPlugin_WinRT();
 			#elif UNITY_ANDROID
 			plugin = new StreamPlugin_Android();

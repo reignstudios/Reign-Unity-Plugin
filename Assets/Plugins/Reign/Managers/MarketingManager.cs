@@ -24,7 +24,9 @@ namespace Reign
 			ReignServices.CheckStatus();
 			
 			#if !DISABLE_REIGN
-			#if UNITY_WINRT && !UNITY_EDITOR
+			#if UNITY_EDITOR
+			plugin = new MarketingPlugin();
+			#elif UNITY_WINRT
 			plugin = new MarketingPlugin_WinRT();
 			#elif UNITY_ANDROID
 			plugin = new MarketingPlugin_Android();
