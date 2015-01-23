@@ -45,8 +45,13 @@ public class InterstitialAdDemo : MonoBehaviour
 		desc.iOS_AdMob_UnitID = "";// NOTE: Must set event for testing
 			
 		// Android
+		#if AMAZON
+		desc.Android_AdAPI = InterstitialAdAPIs.Amazon;
+		#else
 		desc.Android_AdAPI = InterstitialAdAPIs.AdMob;
+		#endif
 		desc.Android_AdMob_UnitID = "";// NOTE: Must set event for testing
+		desc.Android_Amazon_ApplicationKey = "";// NOTE: Must set event for testing
 
 		// create ad
 		ad = InterstitialAdManager.CreateAd(desc, createdCallback);

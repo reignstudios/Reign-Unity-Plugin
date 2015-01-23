@@ -96,9 +96,9 @@ public class AdsDemo : MonoBehaviour
 			
 		// Android settings
 		#if AMAZON
-		desc.Android_AdAPI = AdAPIs.AmazonAds;// Choose between AdMob or AmazonAds
+		desc.Android_AdAPI = AdAPIs.Amazon;// Choose between AdMob or Amazon
 		#else
-		desc.Android_AdAPI = AdAPIs.AdMob;// Choose between AdMob or AmazonAds
+		desc.Android_AdAPI = AdAPIs.AdMob;// Choose between AdMob or Amazon
 		#endif
 			
 		desc.Android_AdMob_UnitID = "";// NOTE: You MUST have this even for Testing!

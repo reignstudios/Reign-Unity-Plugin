@@ -346,7 +346,7 @@ namespace Reign.Plugin
 			if (desc.Android_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
 			else if (desc.Android_AdAPI == AdAPIs.AdMob) return new AdMob_AdPlugin_Android(desc, callback);
 			else if (desc.Android_AdAPI == AdAPIs.DFP) return new DFP_AdPlugin_Android(desc, callback);
-			else if (desc.Android_AdAPI == AdAPIs.AmazonAds) return new Amazon_AdPlugin_Android(desc, callback);
+			else if (desc.Android_AdAPI == AdAPIs.Amazon) return new Amazon_AdPlugin_Android(desc, callback);
 			else throw new Exception("Unsuported Android_AdAPI: " + desc.Android_AdAPI);
 			#else
 			return new Dumy_AdPlugin(desc, callback);

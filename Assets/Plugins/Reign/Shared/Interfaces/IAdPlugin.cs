@@ -365,7 +365,7 @@ namespace Reign
 		/// <summary>
 		/// Amazon Ads
 		/// </summary>
-		AmazonAds
+		Amazon
 	}
 
 	/// <summary>

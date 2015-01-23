@@ -302,6 +302,7 @@ namespace Reign.Plugin
 			if (desc.Android_AdAPI == InterstitialAdAPIs.None) return new Dumy_InterstitialAdPlugin(desc, callback);
 			else if (desc.Android_AdAPI == InterstitialAdAPIs.AdMob) return new AdMob_InterstitialAdPlugin_Android(desc, callback);
 			else if (desc.Android_AdAPI == InterstitialAdAPIs.DFP) return new DFP_InterstitialAdPlugin_Android(desc, callback);
+			else if (desc.Android_AdAPI == InterstitialAdAPIs.Amazon) return new Amazon_InterstitialAdPlugin_Android(desc, callback);
 			else throw new Exception("Unsuported Android_AdAPI: " + desc.Android_AdAPI);
 			#else
 			return new Dumy_InterstitialAdPlugin(desc, callback);
