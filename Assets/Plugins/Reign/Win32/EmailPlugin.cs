@@ -1,11 +1,11 @@
-﻿#if UNITY_EDITOR
+﻿#if UNITY_STANDALONE_WIN
 using System;
 using System.Diagnostics;
 using System.Text;
 
 namespace Reign.Plugin
 {
-	public class EmailPlugin : IEmailPlugin
+	public class EmailPlugin_Win32 : IEmailPlugin
 	{
 		public void Send(string to, string subject, string body)
 		{

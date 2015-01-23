@@ -49,7 +49,7 @@ namespace Reign
 			pluginAPI = desc.iOS_InAppPurchaseAPI;
 			#elif UNITY_ANDROID
 			pluginAPI = desc.Android_InAppPurchaseAPI;
-			#elif UNITY_BB10
+			#elif UNITY_BLACKBERRY
 			pluginAPI = desc.BB10_InAppPurchaseAPI;
 			#else
 			pluginAPI = InAppPurchaseAPIs.None;
@@ -539,7 +539,7 @@ namespace Reign.Plugin
 			if (desc.Win8_InAppPurchaseAPI == InAppPurchaseAPIs.None) return new Dumy_InAppPurchasePlugin(desc, callback);
 			else if (desc.Win8_InAppPurchaseAPI == InAppPurchaseAPIs.MicrosoftStore) return new MicrosoftStore_InAppPurchasePlugin_WinRT(desc, callback);
 			else throw new Exception("Unsuported Win8_InAppPurchaseAPI: " + desc.Win8_InAppPurchaseAPI);
-			#elif UNITY_BB10
+			#elif UNITY_BLACKBERRY
 			if (desc.BB10_InAppPurchaseAPI == InAppPurchaseAPIs.None) return new Dumy_InAppPurchasePlugin(desc, callback);
 			else if (desc.BB10_InAppPurchaseAPI == InAppPurchaseAPIs.BlackBerryWorld) return new InAppPurchasePlugin_BB10(desc, callback);
 			else throw new Exception("Unsuported BB10_InAppPurchaseAPI: " + desc.BB10_InAppPurchaseAPI);

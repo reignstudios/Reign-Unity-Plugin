@@ -5,7 +5,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Text.RegularExpressions;
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
 using System.Security.Cryptography;
 #endif
 
@@ -55,7 +55,6 @@ namespace Reign.Plugin
 		public MM_AdPlugin(AdDesc desc, AdCreatedCallbackMethod createdCallback, MonoBehaviour service)
 		{
 			this.service = service;
-			guiOverride = desc.BB10_AdGUIOverrideEnabled;
 
 			try
 			{
@@ -69,11 +68,55 @@ namespace Reign.Plugin
 				refreshRate = desc.Editor_MillennialMediaAdvertising_RefreshRate;
 				adScale = desc.Editor_GuiAdScale;
 				apid = desc.Editor_MillennialMediaAdvertising_APID;
+				guiOverride = desc.Editor_AdGUIOverrideEnabled;
 				#elif UNITY_BLACKBERRY
 				adGravity = desc.BB10_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.BB10_MillennialMediaAdvertising_RefreshRate;
 				adScale = desc.BB10_GuiAdScale;
 				apid = desc.BB10_MillennialMediaAdvertising_APID;
+				guiOverride = desc.BB10_AdGUIOverrideEnabled;
+				#elif UNITY_WP8
+				adGravity = desc.WP8_MillennialMediaAdvertising_AdGravity;
+				refreshRate = desc.WP8_MillennialMediaAdvertising_RefreshRate;
+				adScale = desc.WP8_GuiAdScale;
+				apid = desc.WP8_MillennialMediaAdvertising_APID;
+				guiOverride = desc.WP8_AdGUIOverrideEnabled;
+				#elif UNITY_WINRT
+				adGravity = desc.Win8_MillennialMediaAdvertising_AdGravity;
+				refreshRate = desc.Win8_MillennialMediaAdvertising_RefreshRate;
+				adScale = desc.Win8_GuiAdScale;
+				apid = desc.Win8_MillennialMediaAdvertising_APID;
+				guiOverride = desc.Win8_AdGUIOverrideEnabled;
+				#elif UNITY_IOS
+				adGravity = desc.iOS_MillennialMediaAdvertising_AdGravity;
+				refreshRate = desc.iOS_MillennialMediaAdvertising_RefreshRate;
+				adScale = desc.iOS_GuiAdScale;
+				apid = desc.iOS_MillennialMediaAdvertising_APID;
+				guiOverride = desc.iOS_AdGUIOverrideEnabled;
+				#elif UNITY_ANDROID
+				adGravity = desc.Android_MillennialMediaAdvertising_AdGravity;
+				refreshRate = desc.Android_MillennialMediaAdvertising_RefreshRate;
+				adScale = desc.Android_GuiAdScale;
+				apid = desc.Android_MillennialMediaAdvertising_APID;
+				guiOverride = desc.Android_AdGUIOverrideEnabled;
+				#elif UNITY_STANDALONE_WIN
+				adGravity = desc.Win32_MillennialMediaAdvertising_AdGravity;
+				refreshRate = desc.Win32_MillennialMediaAdvertising_RefreshRate;
+				adScale = desc.Win32_GuiAdScale;
+				apid = desc.Win32_MillennialMediaAdvertising_APID;
+				guiOverride = desc.Win32_AdGUIOverrideEnabled;
+				#elif UNITY_STANDALONE_OSX
+				adGravity = desc.OSX_MillennialMediaAdvertising_AdGravity;
+				refreshRate = desc.OSX_MillennialMediaAdvertising_RefreshRate;
+				adScale = desc.OSX_GuiAdScale;
+				apid = desc.OSX_MillennialMediaAdvertising_APID;
+				guiOverride = desc.OSX_AdGUIOverrideEnabled;
+				#elif UNITY_STANDALONE_LINUX
+				adGravity = desc.Linux_MillennialMediaAdvertising_AdGravity;
+				refreshRate = desc.Linux_MillennialMediaAdvertising_RefreshRate;
+				adScale = desc.Linux_GuiAdScale;
+				apid = desc.Linux_MillennialMediaAdvertising_APID;
+				guiOverride = desc.Linux_AdGUIOverrideEnabled;
 				#endif
 
 				// create or get device ID
@@ -83,10 +126,10 @@ namespace Reign.Plugin
 				}
 				else
 				{
-					#if UNITY_EDITOR
+					#if UNITY_EDITOR || UNITY_STANDALONE
 					var hash = new SHA1CryptoServiceProvider().ComputeHash(Guid.NewGuid().ToByteArray());
 					deviceID = BitConverter.ToString(hash).ToLower();
-					#elif UNITY_BLACKBERRY
+					#else
 					deviceID = Guid.NewGuid().ToString().Replace("-", "0").ToLower() + "0000";
 					#endif
 

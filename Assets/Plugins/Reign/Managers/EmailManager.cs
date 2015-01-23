@@ -30,6 +30,8 @@ namespace Reign
 			plugin = new EmailPlugin_iOS();
 			#elif UNITY_BLACKBERRY
 			plugin = new EmailPlugin_BB10();
+			#elif UNITY_STANDALONE_WIN
+			plugin = new EmailPlugin_Win32();
 			#else
 			plugin = new EmailPlugin();
 			#endif

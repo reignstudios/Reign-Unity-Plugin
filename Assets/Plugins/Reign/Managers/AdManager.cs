@@ -326,12 +326,14 @@ namespace Reign.Plugin
 			if (desc.WP8_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
 			else if (desc.WP8_AdAPI == AdAPIs.MicrosoftAdvertising) return new MicrosoftAdvertising_AdPlugin_WinRT(desc, callback);
 			else if (desc.WP8_AdAPI == AdAPIs.AdMob) return new AdMob_AdPlugin_WP8(desc, callback);
+			else if (desc.WP8_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);
 			else throw new Exception("Unsuported WP8_AdAPI: " + desc.WP8_AdAPI);
 			#elif UNITY_WINRT
 			if (desc.Win8_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
 			else if (desc.Win8_AdAPI == AdAPIs.MicrosoftAdvertising) return new MicrosoftAdvertising_AdPlugin_WinRT(desc, callback);
+			else if (desc.Win8_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);
 			else throw new Exception("Unsuported Win8_AdAPI: " + desc.Win8_AdAPI);
-			#elif UNITY_BB10
+			#elif UNITY_BLACKBERRY
 			if (desc.BB10_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
 			else if (desc.BB10_AdAPI == AdAPIs.BlackBerryAdvertising) return new BlackBerryAdvertising_AdPlugin_BB10(desc, callback);
 			else if (desc.BB10_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback, ReignServices.Singleton);
@@ -341,13 +343,27 @@ namespace Reign.Plugin
 			else if (desc.iOS_AdAPI == AdAPIs.iAd) return new iAd_AdPlugin_iOS(desc, callback);
 			else if (desc.iOS_AdAPI == AdAPIs.AdMob) return new AdMob_AdPlugin_iOS(desc, callback);
 			else if (desc.iOS_AdAPI == AdAPIs.DFP) return new DFP_AdPlugin_iOS(desc, callback);
+			else if (desc.iOS_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);
 			else throw new Exception("Unsuported iOS_AdAPI: " + desc.iOS_AdAPI);
 			#elif UNITY_ANDROID
 			if (desc.Android_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
 			else if (desc.Android_AdAPI == AdAPIs.AdMob) return new AdMob_AdPlugin_Android(desc, callback);
 			else if (desc.Android_AdAPI == AdAPIs.DFP) return new DFP_AdPlugin_Android(desc, callback);
 			else if (desc.Android_AdAPI == AdAPIs.Amazon) return new Amazon_AdPlugin_Android(desc, callback);
+			else if (desc.Android_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);
 			else throw new Exception("Unsuported Android_AdAPI: " + desc.Android_AdAPI);
+			#elif UNITY_STANDALONE_WIN
+			if (desc.Win32_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
+			else if (desc.Win32_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);
+			else throw new Exception("Unsuported Win32_AdAPI: " + desc.Win32_AdAPI);
+			#elif UNITY_STANDALONE_OSX
+			if (desc.OSX_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
+			else if (desc.OSX_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);
+			else throw new Exception("Unsuported OSX_AdAPI: " + desc.OSX_AdAPI);
+			#elif UNITY_STANDALONE_LINUX
+			if (desc.Linux_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
+			else if (desc.Linux_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);
+			else throw new Exception("Unsuported Linux_AdAPI: " + desc.Linux_AdAPI);
 			#else
 			return new Dumy_AdPlugin(desc, callback);
 			#endif
