@@ -767,6 +767,7 @@
 /Plugins/Reign/Android/AmazonAds_AdPlugin.cs
 /Plugins/Reign/Android/Amazon_GameCircle_ScorePlugin.cs
 /Plugins/Reign/Android/Amazon_InAppPurchasePlugin.cs
+/Plugins/Reign/Android/Amazon_InterstitialAdPlugin.cs
 /Plugins/Reign/Android/DFP_AdPlugin.cs
 /Plugins/Reign/Android/DFP_InterstitialAdPlugin.cs
 /Plugins/Reign/Android/EmailPlugin.cs
