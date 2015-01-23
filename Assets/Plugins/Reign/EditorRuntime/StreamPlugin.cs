@@ -12,35 +12,36 @@ namespace Reign.Plugin
 {
 	public class StreamPlugin : StreamPluginBase
 	{
+		private static string generateFilterValue(string[] fileTypes)
+		{
+			string filterValue = "File Types;";
+			foreach (var type in fileTypes)
+			{
+				filterValue += "*" + type;
+				if (type != fileTypes[fileTypes.Length - 1]) filterValue += ";";
+			}
+
+			return filterValue;
+		}
+
 		public override void SaveFileDialog(Stream stream, FolderLocations folderLocation, string[] fileTypes, StreamSavedCallbackMethod streamSavedCallback)
 		{
-			string fileName = EditorUtility.SaveFilePanel("Save file", "", "FileName", "png");
-			if (!string.IsNullOrEmpty(fileName))
-			{
-				var data = new byte[stream.Length];
-				stream.Position = 0;
-				stream.Read(data, 0, data.Length);
-				using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
-				{
-					file.Write(data, 0, data.Length);
-				}
+			if (streamSavedCallback == null) return;
 
-				if (streamSavedCallback != null) streamSavedCallback(true);
-			}
-			else
-			{
-				if (streamSavedCallback != null) streamSavedCallback(false);
-			}
+			var data = new byte[stream.Length];
+			stream.Position = 0;
+			stream.Read(data, 0, data.Length);
+			SaveFileDialog(data, folderLocation, fileTypes, streamSavedCallback);
 		}
 
 		public override void SaveFileDialog(byte[] data, FolderLocations folderLocation, string[] fileTypes, StreamSavedCallbackMethod streamSavedCallback)
 		{
-			string fileName = EditorUtility.SaveFilePanel("Save file", "", "FileName", "png");
+			string fileName = EditorUtility.SaveFilePanel("Save file", "", "FileName", generateFilterValue(fileTypes));
 			if (!string.IsNullOrEmpty(fileName))
 			{
-				using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+				using (var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
 				{
-					file.Write(data, 0, data.Length);
+					stream.Write(data, 0, data.Length);
 				}
 
 				if (streamSavedCallback != null) streamSavedCallback(true);
@@ -54,27 +55,39 @@ namespace Reign.Plugin
 		public override void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
 		{
 			if (streamLoadedCallback == null) return;
-			string fileName = EditorUtility.OpenFilePanel("Load file", "", "png");
-			if (!string.IsNullOrEmpty(fileName))
+			string filename = EditorUtility.OpenFilePanel("Load file", "", generateFilterValue(fileTypes));
+			if (!string.IsNullOrEmpty(filename))
 			{
-				if (maxWidth == 0 || maxHeight == 0)
+				if (maxWidth == 0 || maxHeight == 0 || folderLocation != FolderLocations.Pictures)
 				{
-					streamLoadedCallback(new FileStream(fileName, FileMode.Open, FileAccess.Read), true);
+					streamLoadedCallback(new FileStream(filename, FileMode.Open, FileAccess.Read), true);
 				}
 				else
 				{
 					var newStream = new MemoryStream();
 					try
 					{
-						using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+						using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read))
 						{
-							var decoder = new PngDecoder();
+							ImageTools.IO.IImageDecoder decoder = null;
+							switch (Path.GetExtension(filename).ToLower())
+							{
+								case ".jpg": decoder = new ImageTools.IO.Jpeg.JpegDecoder(); break;
+								case ".jpeg": decoder = new ImageTools.IO.Jpeg.JpegDecoder(); break;
+								case ".png": decoder = new ImageTools.IO.Png.PngDecoder(); break;
+								default:
+									Debug.LogError("Unsuported file ext type: " + Path.GetExtension(filename));
+									streamLoadedCallback(null, false);
+									return;
+							}
 							var image = new ExtendedImage();
 							decoder.Decode(image, stream);
-							var newImage = ExtendedImage.Resize(image, 32, 32, new NearestNeighborResizer());
+							var newSize = Reign.MathUtilities.FitInViewIfLarger(image.PixelWidth, image.PixelHeight, maxWidth, maxHeight);
+							var newImage = ExtendedImage.Resize(image, (int)newSize.x, (int)newSize.y, new NearestNeighborResizer());
 
 							var encoder = new PngEncoder();
 							encoder.Encode(newImage, newStream);
+							newStream.Position = 0;
 						}
 					}
 					catch (Exception e)

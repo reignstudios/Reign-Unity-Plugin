@@ -252,7 +252,7 @@ namespace Reign.Plugin
 										{
 											if (maxWidth != 0 && maxHeight != 0)
 											{
-												ImageTools.IO.IImageDecoder decoder  = null;
+												ImageTools.IO.IImageDecoder decoder = null;
 												switch (Path.GetExtension(fileName).ToLower())
 												{
 													case ".jpg": decoder = new ImageTools.IO.Jpeg.JpegDecoder(); break;
