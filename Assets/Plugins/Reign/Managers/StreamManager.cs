@@ -84,6 +84,8 @@ namespace Reign
 			plugin = new StreamPlugin_iOS();
 			#elif UNITY_BLACKBERRY
 			plugin = new StreamPlugin_BB10();
+			#elif UNITY_STANDALONE_WIN
+			plugin = new StreamPlugin_Win32();
 			#else
 			plugin = new StreamPlugin();
 			#endif
