@@ -63,6 +63,15 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		leaderboard.Android_GooglePlay_ID = "";// Set to your GooglePlay leaderboard ID (Not Name)
 		leaderboard.Android_GameCircle_ID = "";// Set to your GameCircle leaderboard ID (Not Name)
 
+		// Win32
+		leaderboard.Win32_ReignScores_ID = leaderboardID;// Any unique value
+
+		// OSX
+		leaderboard.OSX_ReignScores_ID = leaderboardID;// Any unique value
+
+		// Linux
+		leaderboard.Linux_ReignScores_ID = leaderboardID;// Any unique value
+
 
 		// Achievements ---------------------------
 		var achievements = new AchievementDesc[5];
@@ -104,6 +113,15 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		achievement.Android_GooglePlay_ID = "";// Set to your GooglePlay achievement ID (Not Name)
 		achievement.Android_GameCircle_ID = "";// Set to your GameCircle achievement ID (Not Name)
 
+		// Win32
+		achievement.Win32_ReignScores_ID = achievementID;// Any unique value
+
+		// OSX
+		achievement.OSX_ReignScores_ID = achievementID;// Any unique value
+
+		// Linux
+		achievement.Linux_ReignScores_ID = achievementID;// Any unique value
+
 		// Add other achievements...
 		for (int i = 1; i != achievements.Length; ++i)
 		{
@@ -120,6 +138,9 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 			achievement.BB10_ReignScores_ID = achievementID;
 			achievement.iOS_ReignScores_ID = achievementID;
 			achievement.Android_ReignScores_ID = achievementID;
+			achievement.Win32_ReignScores_ID = achievementID;
+			achievement.OSX_ReignScores_ID = achievementID;
+			achievement.Linux_ReignScores_ID = achievementID;
 		}
 
 		// Desc ---------------------------
@@ -162,6 +183,18 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		desc.Android_ScoreAPI = ScoreAPIs.ReignScores;
 		#endif
 		desc.Android_ReignScores_GameID = reignScores_gameID;
+
+		// Win32
+		desc.Win32_ScoreAPI = ScoreAPIs.ReignScores;
+		desc.Win32_ReignScores_GameID = reignScores_gameID;
+
+		// OSX
+		desc.OSX_ScoreAPI = ScoreAPIs.ReignScores;
+		desc.OSX_ReignScores_GameID = reignScores_gameID;
+
+		// Linux
+		desc.Linux_ScoreAPI = ScoreAPIs.ReignScores;
+		desc.Linux_ReignScores_GameID = reignScores_gameID;
 
 		// init
 		ScoreManager.Init(desc, createdCallback);

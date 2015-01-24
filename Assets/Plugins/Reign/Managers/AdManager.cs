@@ -328,7 +328,7 @@ namespace Reign.Plugin
 			else if (desc.WP8_AdAPI == AdAPIs.AdMob) return new AdMob_AdPlugin_WP8(desc, callback);
 			else if (desc.WP8_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);
 			else throw new Exception("Unsuported WP8_AdAPI: " + desc.WP8_AdAPI);
-			#elif UNITY_WINRT
+			#elif UNITY_METRO
 			if (desc.Win8_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
 			else if (desc.Win8_AdAPI == AdAPIs.MicrosoftAdvertising) return new MicrosoftAdvertising_AdPlugin_WinRT(desc, callback);
 			else if (desc.Win8_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);

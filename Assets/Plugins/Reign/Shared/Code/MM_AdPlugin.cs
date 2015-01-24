@@ -81,7 +81,7 @@ namespace Reign.Plugin
 				adScale = desc.WP8_GuiAdScale;
 				apid = desc.WP8_MillennialMediaAdvertising_APID;
 				guiOverride = desc.WP8_AdGUIOverrideEnabled;
-				#elif UNITY_WINRT
+				#elif UNITY_METRO
 				adGravity = desc.Win8_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.Win8_MillennialMediaAdvertising_RefreshRate;
 				adScale = desc.Win8_GuiAdScale;

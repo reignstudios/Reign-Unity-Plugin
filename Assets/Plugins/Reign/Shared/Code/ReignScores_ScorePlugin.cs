@@ -194,10 +194,10 @@ namespace Reign.Plugin
 			gameID = desc.Linux_ReignScores_GameID;
 			#elif UNITY_WEBPLAYER
 			gameID = desc.Web_ReignScores_GameID;
-			#elif UNITY_METRO
-			gameID = desc.Win8_ReignScores_GameID;
 			#elif UNITY_WP8
 			gameID = desc.WP8_ReignScores_GameID;
+			#elif UNITY_METRO
+			gameID = desc.Win8_ReignScores_GameID;
 			#elif UNITY_BLACKBERRY
 			gameID = desc.BB10_ReignScores_GameID;
 			#elif UNITY_IPHONE
@@ -360,10 +360,10 @@ namespace Reign.Plugin
 			var serverLeaderboardID = leaderboardDesc.Linux_ReignScores_ID;
 			#elif UNITY_WEBPLAYER
 			var serverLeaderboardID = leaderboardDesc.Web_ReignScores_ID;
-			#elif UNITY_METRO
-			var serverLeaderboardID = leaderboardDesc.Win8_ReignScores_ID;
 			#elif UNITY_WP8
 			var serverLeaderboardID = leaderboardDesc.WP8_ReignScores_ID;
+			#elif UNITY_METRO
+			var serverLeaderboardID = leaderboardDesc.Win8_ReignScores_ID;
 			#elif UNITY_BLACKBERRY
 			var serverLeaderboardID = leaderboardDesc.BB10_ReignScores_ID;
 			#elif UNITY_IPHONE
@@ -404,10 +404,10 @@ namespace Reign.Plugin
 			var serverLeaderboardID = leaderboardDesc.Linux_ReignScores_ID;
 			#elif UNITY_WEBPLAYER
 			var serverLeaderboardID = leaderboardDesc.Web_ReignScores_ID;
-			#elif UNITY_METRO
-			var serverLeaderboardID = leaderboardDesc.Win8_ReignScores_ID;
 			#elif UNITY_WP8
 			var serverLeaderboardID = leaderboardDesc.WP8_ReignScores_ID;
+			#elif UNITY_METRO
+			var serverLeaderboardID = leaderboardDesc.Win8_ReignScores_ID;
 			#elif UNITY_BLACKBERRY
 			var serverLeaderboardID = leaderboardDesc.BB10_ReignScores_ID;
 			#elif UNITY_IPHONE
@@ -461,10 +461,10 @@ namespace Reign.Plugin
 			var serverAchievementID = achievementDesc.Linux_ReignScores_ID;
 			#elif UNITY_WEBPLAYER
 			var serverAchievementID = achievementDesc.Web_ReignScores_ID;
-			#elif UNITY_METRO
-			var serverAchievementID = achievementDesc.Win8_ReignScores_ID;
 			#elif UNITY_WP8
 			var serverAchievementID = achievementDesc.WP8_ReignScores_ID;
+			#elif UNITY_METRO
+			var serverAchievementID = achievementDesc.Win8_ReignScores_ID;
 			#elif UNITY_BLACKBERRY
 			var serverAchievementID = achievementDesc.BB10_ReignScores_ID;
 			#elif UNITY_IPHONE
@@ -509,10 +509,10 @@ namespace Reign.Plugin
 					var id = achievementDesc.Linux_ReignScores_ID;
 					#elif UNITY_WEBPLAYER
 					var id = achievementDesc.Web_ReignScores_ID;
-					#elif UNITY_METRO
-					var id = achievementDesc.Win8_ReignScores_ID;
 					#elif UNITY_WP8
 					var id = achievementDesc.WP8_ReignScores_ID;
+					#elif UNITY_METRO
+					var id = achievementDesc.Win8_ReignScores_ID;
 					#elif UNITY_BLACKBERRY
 					var id = achievementDesc.BB10_ReignScores_ID;
 					#elif UNITY_IPHONE

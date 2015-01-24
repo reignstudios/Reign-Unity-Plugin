@@ -454,7 +454,7 @@ namespace Reign.Plugin
 			if (desc.WP8_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
 			else if (desc.WP8_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported WP8_ScoreAPI: " + desc.WP8_ScoreAPI);
-			#elif UNITY_WINRT
+			#elif UNITY_METRO
 			if (desc.Win8_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
 			else if (desc.Win8_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported Win8_ScoreAPI: " + desc.Win8_ScoreAPI);
@@ -473,6 +473,18 @@ namespace Reign.Plugin
 			if (desc.BB10_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
 			else if (desc.BB10_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
 			else throw new Exception("Unsuported BB10_ScoreAPI: " + desc.BB10_ScoreAPI);
+			#elif UNITY_STANDALONE_WIN
+			if (desc.Win32_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
+			else if (desc.Win32_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
+			else throw new Exception("Unsuported Win32_ScoreAPI: " + desc.Win32_ScoreAPI);
+			#elif UNITY_STANDALONE_OSX
+			if (desc.OSX_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
+			else if (desc.OSX_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
+			else throw new Exception("Unsuported OSX_ScoreAPI: " + desc.OSX_ScoreAPI);
+			#elif UNITY_STANDALONE_LINUX
+			if (desc.Linux_ScoreAPI == ScoreAPIs.None) return new Dumy_ScorePluginPlugin(desc, callback);
+			else if (desc.Linux_ScoreAPI == ScoreAPIs.ReignScores) return new ReignScores_ScorePlugin(desc, callback);
+			else throw new Exception("Unsuported Linux_ScoreAPI: " + desc.Linux_ScoreAPI);
 			#else
 			return new Dumy_ScorePluginPlugin(desc, callback);
 			#endif
