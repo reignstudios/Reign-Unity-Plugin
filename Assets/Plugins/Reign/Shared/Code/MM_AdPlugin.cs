@@ -82,11 +82,11 @@ namespace Reign.Plugin
 				apid = desc.WP8_MillennialMediaAdvertising_APID;
 				guiOverride = desc.WP8_AdGUIOverrideEnabled;
 				#elif UNITY_METRO
-				adGravity = desc.Win8_MillennialMediaAdvertising_AdGravity;
-				refreshRate = desc.Win8_MillennialMediaAdvertising_RefreshRate;
-				adScale = desc.Win8_GuiAdScale;
-				apid = desc.Win8_MillennialMediaAdvertising_APID;
-				guiOverride = desc.Win8_AdGUIOverrideEnabled;
+				adGravity = desc.WinRT_MillennialMediaAdvertising_AdGravity;
+				refreshRate = desc.WinRT_MillennialMediaAdvertising_RefreshRate;
+				adScale = desc.WinRT_GuiAdScale;
+				apid = desc.WinRT_MillennialMediaAdvertising_APID;
+				guiOverride = desc.WinRT_AdGUIOverrideEnabled;
 				#elif UNITY_IOS
 				adGravity = desc.iOS_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.iOS_MillennialMediaAdvertising_RefreshRate;

@@ -76,7 +76,7 @@ namespace Reign
 		/// </summary>
 		public InterstitialAdEventCallbackMethod EventCallback;
 
-		// Win8
+		// WinRT
 		// TODO...
 
 		// WP8

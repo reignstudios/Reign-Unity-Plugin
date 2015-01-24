@@ -107,11 +107,11 @@ namespace Reign.Plugin
 					adControl.IsEngagedChanged += adControl_IsEngagedChanged;
 					adControl.AdRefreshed += adControl_AdRefreshed;
 					#else
-					adControl.IsAutoRefreshEnabled = desc.Win8_MicrosoftAdvertising_UseBuiltInRefresh;
-					if (!desc.Win8_MicrosoftAdvertising_UseBuiltInRefresh)
+					adControl.IsAutoRefreshEnabled = desc.WinRT_MicrosoftAdvertising_UseBuiltInRefresh;
+					if (!desc.WinRT_MicrosoftAdvertising_UseBuiltInRefresh)
 					{
 						manualRefreshTimer = new DispatcherTimer();
-						manualRefreshTimer.Interval = TimeSpan.FromSeconds(desc.Win8_MicrosoftAdvertising_RefreshRate);
+						manualRefreshTimer.Interval = TimeSpan.FromSeconds(desc.WinRT_MicrosoftAdvertising_RefreshRate);
 						manualRefreshTimer.Tick += timer_Tick;
 						manualRefreshTimer.Start();
 					}
@@ -122,41 +122,41 @@ namespace Reign.Plugin
 					adControl.ErrorOccurred += adControl_ErrorOccurred;
 					
 					#if UNITY_METRO
-					adControl.ApplicationId = desc.Testing ? "d25517cb-12d4-4699-8bdc-52040c712cab" : desc.Win8_MicrosoftAdvertising_ApplicationID;
-					adControl.AdUnitId = desc.Win8_MicrosoftAdvertising_UnitID;
+					adControl.ApplicationId = desc.Testing ? "d25517cb-12d4-4699-8bdc-52040c712cab" : desc.WinRT_MicrosoftAdvertising_ApplicationID;
+					adControl.AdUnitId = desc.WinRT_MicrosoftAdvertising_UnitID;
 					#else
 					adControl.ApplicationId = desc.Testing ? "test_client" : desc.WP8_MicrosoftAdvertising_ApplicationID;
 					adControl.AdUnitId = desc.WP8_MicrosoftAdvertising_UnitID;
 					#endif
 			
 					#if UNITY_METRO
-					switch (desc.Win8_MicrosoftAdvertising_AdSize)
+					switch (desc.WinRT_MicrosoftAdvertising_AdSize)
 					{
-						case Win8_MicrosoftAdvertising_AdSize.Tall_160x600:
+						case WinRT_MicrosoftAdvertising_AdSize.Tall_160x600:
 							adControl.Width = 160;
 							adControl.Height = 600;
 							if (desc.Testing) adControl.AdUnitId = "10043134";
 							break;
 
-						case Win8_MicrosoftAdvertising_AdSize.Tall_300x600:
+						case WinRT_MicrosoftAdvertising_AdSize.Tall_300x600:
 							adControl.Width = 300;
 							adControl.Height = 600;
 							if (desc.Testing) adControl.AdUnitId = "10043030";
 							break;
 
-						case Win8_MicrosoftAdvertising_AdSize.Wide_300x250:
+						case WinRT_MicrosoftAdvertising_AdSize.Wide_300x250:
 							adControl.Width = 300;
 							adControl.Height = 250;
 							if (desc.Testing) adControl.AdUnitId = "10043008";
 							break;
 
-						case Win8_MicrosoftAdvertising_AdSize.Wide_728x90:
+						case WinRT_MicrosoftAdvertising_AdSize.Wide_728x90:
 							adControl.Width = 728;
 							adControl.Height = 90;
 							if (desc.Testing) adControl.AdUnitId = "10042998";
 							break;
 
-						case Win8_MicrosoftAdvertising_AdSize.Sqaure_250x250:
+						case WinRT_MicrosoftAdvertising_AdSize.Sqaure_250x250:
 							adControl.Width = 250;
 							adControl.Height = 250;
 							if (desc.Testing) adControl.AdUnitId = "10043105";
@@ -200,7 +200,7 @@ namespace Reign.Plugin
 					#endif
 
 					#if UNITY_METRO
-					setGravity(desc.Win8_MicrosoftAdvertising_AdGravity);
+					setGravity(desc.WinRT_MicrosoftAdvertising_AdGravity);
 					#else
 					setGravity(desc.WP8_MicrosoftAdvertising_AdGravity);
 					#endif

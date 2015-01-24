@@ -165,7 +165,7 @@ namespace Reign.Plugin
 			#if WINDOWS_PHONE
 			InAppIDs = desc.WP8_MicrosoftStore_InAppIDs;
 			#else
-			InAppIDs = desc.Win8_MicrosoftStore_InAppIDs;
+			InAppIDs = desc.WinRT_MicrosoftStore_InAppIDs;
 			#endif
 
 			if (desc.Testing)
@@ -230,21 +230,21 @@ namespace Reign.Plugin
 			{
 				// create xml obj
 				var currentApp = new InAppTestObjects.CurrentApp();
-				currentApp.ListingInformation.Products = new InAppTestObjects.ListingInformation_Product[desc.Win8_MicrosoftStore_InAppIDs.Length];
-				currentApp.LicenseInformation.Products = new InAppTestObjects.LicenseInformation_Product[desc.Win8_MicrosoftStore_InAppIDs.Length];
+				currentApp.ListingInformation.Products = new InAppTestObjects.ListingInformation_Product[desc.WinRT_MicrosoftStore_InAppIDs.Length];
+				currentApp.LicenseInformation.Products = new InAppTestObjects.LicenseInformation_Product[desc.WinRT_MicrosoftStore_InAppIDs.Length];
 				for (int i = 0; i != currentApp.ListingInformation.Products.Length; ++i)
 				{
 					var listingProduct = new InAppTestObjects.ListingInformation_Product();
-					listingProduct.ProductId = desc.Win8_MicrosoftStore_InAppIDs[i].ID;
-					listingProduct.ProductType = desc.Win8_MicrosoftStore_InAppIDs[i].Type == InAppPurchaseTypes.NonConsumable ? null : "Consumable";
-					listingProduct.MarketData.Name = desc.Win8_MicrosoftStore_InAppIDs[i].ID;
+					listingProduct.ProductId = desc.WinRT_MicrosoftStore_InAppIDs[i].ID;
+					listingProduct.ProductType = desc.WinRT_MicrosoftStore_InAppIDs[i].Type == InAppPurchaseTypes.NonConsumable ? null : "Consumable";
+					listingProduct.MarketData.Name = desc.WinRT_MicrosoftStore_InAppIDs[i].ID;
 					listingProduct.MarketData.Description = null;
-					listingProduct.MarketData.Price = desc.Win8_MicrosoftStore_InAppIDs[i].Price.ToString();
-					listingProduct.MarketData.CurrencySymbol = desc.Win8_MicrosoftStore_InAppIDs[i].CurrencySymbol;
+					listingProduct.MarketData.Price = desc.WinRT_MicrosoftStore_InAppIDs[i].Price.ToString();
+					listingProduct.MarketData.CurrencySymbol = desc.WinRT_MicrosoftStore_InAppIDs[i].CurrencySymbol;
 					currentApp.ListingInformation.Products[i] = listingProduct;
 
 					var licenseProduct = new InAppTestObjects.LicenseInformation_Product();
-					licenseProduct.ProductId = desc.Win8_MicrosoftStore_InAppIDs[i].ID;
+					licenseProduct.ProductId = desc.WinRT_MicrosoftStore_InAppIDs[i].ID;
 					currentApp.LicenseInformation.Products[i] = licenseProduct;
 				}
 

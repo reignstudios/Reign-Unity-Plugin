@@ -69,7 +69,7 @@ public class StreamsDemo : MonoBehaviour
 		// Local data files
 		if (!saveDataFileStatus && !loadDataFileStatus && GUI.Button(new Rect(0, (64*scale)+offset, 128, 64*scale), "Save Data file"))
 		{
-			// NOTE: Only supported on Win8
+			// NOTE: Only supported on WinRT
 			saveDataFileStatusText = "Saving Data...";
 			saveDataFileStatus = true;
 			var data = new byte[1] {(byte)UnityEngine.Random.Range(0, 255)};

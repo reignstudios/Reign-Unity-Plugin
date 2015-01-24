@@ -52,14 +52,14 @@ public class AdsDemo : MonoBehaviour
 		desc.Editor_GuiAdScale = 1;
 		//desc.Editor_MillennialMediaAdvertising_RefreshRate = 120,
 
-		// Win8 settings
-		desc.Win8_AdAPI = AdAPIs.MicrosoftAdvertising;
-		desc.Win8_MicrosoftAdvertising_ApplicationID = "";
-		desc.Win8_MicrosoftAdvertising_UnitID = "";
-		desc.Win8_MicrosoftAdvertising_AdGravity = AdGravity.BottomCenter;
-		desc.Win8_MicrosoftAdvertising_AdSize = Win8_MicrosoftAdvertising_AdSize.Wide_728x90;
-		//desc.Win8_MicrosoftAdvertising_UseBuiltInRefresh = false;
-		//desc.Win8_MicrosoftAdvertising_RefreshRate = 120;
+		// WinRT settings
+		desc.WinRT_AdAPI = AdAPIs.MicrosoftAdvertising;
+		desc.WinRT_MicrosoftAdvertising_ApplicationID = "";
+		desc.WinRT_MicrosoftAdvertising_UnitID = "";
+		desc.WinRT_MicrosoftAdvertising_AdGravity = AdGravity.BottomCenter;
+		desc.WinRT_MicrosoftAdvertising_AdSize = WinRT_MicrosoftAdvertising_AdSize.Wide_728x90;
+		//desc.WinRT_MicrosoftAdvertising_UseBuiltInRefresh = false;
+		//desc.WinRT_MicrosoftAdvertising_RefreshRate = 120;
 			
 		// WP8 settings
 		desc.WP8_AdAPI = AdAPIs.MicrosoftAdvertising;

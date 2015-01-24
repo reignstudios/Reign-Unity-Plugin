@@ -83,7 +83,7 @@ namespace Reign
 		/// <summary>
 		/// ReignScores ID (Unique value)
 		/// </summary>
-		public Guid Win8_ReignScores_ID, WP8_ReignScores_ID, BB10_ReignScores_ID, iOS_ReignScores_ID, Android_ReignScores_ID;
+		public Guid WinRT_ReignScores_ID, WP8_ReignScores_ID, BB10_ReignScores_ID, iOS_ReignScores_ID, Android_ReignScores_ID;
 
 		/// <summary>
 		/// GooglePlay ID (NOTE: Not name)
@@ -140,7 +140,7 @@ namespace Reign
 		/// <summary>
 		/// ID value (Unique value)
 		/// </summary>
-		public Guid Win8_ReignScores_ID, WP8_ReignScores_ID, BB10_ReignScores_ID, iOS_ReignScores_ID, Android_ReignScores_ID;
+		public Guid WinRT_ReignScores_ID, WP8_ReignScores_ID, BB10_ReignScores_ID, iOS_ReignScores_ID, Android_ReignScores_ID;
 
 		/// <summary>
 		/// GooglePlay ID (NOTE: Not name)
@@ -214,7 +214,7 @@ namespace Reign
 		/// Score API type
 		/// </summary>
 		public ScoreAPIs Editor_ScoreAPI = ScoreAPIs.None, Win32_ScoreAPI = ScoreAPIs.None, OSX_ScoreAPI = ScoreAPIs.None, Linux_ScoreAPI = ScoreAPIs.None,
-			Web_ScoreAPI = ScoreAPIs.None, Win8_ScoreAPI = ScoreAPIs.None, WP8_ScoreAPI = ScoreAPIs.None, BB10_ScoreAPI = ScoreAPIs.None, iOS_ScoreAPI = ScoreAPIs.None,
+			Web_ScoreAPI = ScoreAPIs.None, WinRT_ScoreAPI = ScoreAPIs.None, WP8_ScoreAPI = ScoreAPIs.None, BB10_ScoreAPI = ScoreAPIs.None, iOS_ScoreAPI = ScoreAPIs.None,
 			Android_ScoreAPI = ScoreAPIs.None;
 
 		/// <summary>
@@ -275,7 +275,7 @@ namespace Reign
 		/// <summary>
 		/// ReignScores Game ID
 		/// </summary>
-		public string Win8_ReignScores_GameID;
+		public string WinRT_ReignScores_GameID;
 		
 		/// <summary>
 		/// ReignScores Game ID

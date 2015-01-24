@@ -5,7 +5,7 @@ namespace Reign
 	/// <summary>
 	/// Ad Size types
 	/// </summary>
-	public enum Win8_MicrosoftAdvertising_AdSize
+	public enum WinRT_MicrosoftAdvertising_AdSize
 	{
 		/// <summary>
 		/// Tall_160x600
@@ -448,62 +448,62 @@ namespace Reign
 		/// </summary>
 		public bool Editor_AdGUIOverrideEnabled = false;
 
-		// Win8
+		// WinRT
 		/// <summary>
 		/// Ad API type.
 		/// </summary>
-		public AdAPIs Win8_AdAPI = AdAPIs.None;
+		public AdAPIs WinRT_AdAPI = AdAPIs.None;
 
 		/// <summary>
 		/// Microsoft Advertising ApplicationID
 		/// </summary>
-		public string Win8_MicrosoftAdvertising_ApplicationID;
+		public string WinRT_MicrosoftAdvertising_ApplicationID;
 		
 		/// <summary>
 		/// Microsoft Advertising UnitID
 		/// </summary>
-		public string Win8_MicrosoftAdvertising_UnitID;
+		public string WinRT_MicrosoftAdvertising_UnitID;
 
 		/// <summary>
 		/// Ad size type
 		/// </summary>
-		public Win8_MicrosoftAdvertising_AdSize Win8_MicrosoftAdvertising_AdSize = Win8_MicrosoftAdvertising_AdSize.Sqaure_250x250;
+		public WinRT_MicrosoftAdvertising_AdSize WinRT_MicrosoftAdvertising_AdSize = WinRT_MicrosoftAdvertising_AdSize.Sqaure_250x250;
 
 		/// <summary>
 		/// Set to true to use native Ads refresh method (Defaults to true)
 		/// </summary>
-		public bool Win8_MicrosoftAdvertising_UseBuiltInRefresh = true;
+		public bool WinRT_MicrosoftAdvertising_UseBuiltInRefresh = true;
 
 		/// <summary>
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
 		/// NOTE: WP8_MicrosoftAdvertising_UseBuiltInRefresh must be set to false to use this field
 		/// </summary>
-		public int Win8_MicrosoftAdvertising_RefreshRate = 120;
+		public int WinRT_MicrosoftAdvertising_RefreshRate = 120;
 
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity Win8_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, Win8_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
+		public AdGravity WinRT_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WinRT_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set to your APID
 		/// </summary>
-		public string Win8_MillennialMediaAdvertising_APID;
+		public string WinRT_MillennialMediaAdvertising_APID;
 
 		/// <summary>
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
 		/// </summary>
-		public int Win8_MillennialMediaAdvertising_RefreshRate = 120;
+		public int WinRT_MillennialMediaAdvertising_RefreshRate = 120;
 
 		/// <summary>
 		/// Set to scale Unity GUI based Ads.
 		/// </summary>
-		public float Win8_GuiAdScale = 1;
+		public float WinRT_GuiAdScale = 1;
 
 		/// <summary>
 		/// Set true to enable GUIOverride draw calls
 		/// </summary>
-		public bool Win8_AdGUIOverrideEnabled = false;
+		public bool WinRT_AdGUIOverrideEnabled = false;
 
 		// WP8
 		/// <summary>

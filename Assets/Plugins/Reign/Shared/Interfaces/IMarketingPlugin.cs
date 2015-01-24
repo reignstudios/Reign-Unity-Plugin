@@ -31,7 +31,7 @@ namespace Reign
 		/// <summary>
 		/// This is the "Package family name" that can be found in your "Package.appxmanifest".
 		/// </summary>
-		public string Win8_PackageFamilyName;
+		public string WinRT_PackageFamilyName;
 
 		/// <summary>
 		/// Pass in your AppID "xxxxxxxxx"

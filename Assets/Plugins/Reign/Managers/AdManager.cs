@@ -329,10 +329,10 @@ namespace Reign.Plugin
 			else if (desc.WP8_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);
 			else throw new Exception("Unsuported WP8_AdAPI: " + desc.WP8_AdAPI);
 			#elif UNITY_METRO
-			if (desc.Win8_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
-			else if (desc.Win8_AdAPI == AdAPIs.MicrosoftAdvertising) return new MicrosoftAdvertising_AdPlugin_WinRT(desc, callback);
-			else if (desc.Win8_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);
-			else throw new Exception("Unsuported Win8_AdAPI: " + desc.Win8_AdAPI);
+			if (desc.WinRT_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
+			else if (desc.WinRT_AdAPI == AdAPIs.MicrosoftAdvertising) return new MicrosoftAdvertising_AdPlugin_WinRT(desc, callback);
+			else if (desc.WinRT_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback);
+			else throw new Exception("Unsuported WinRT_AdAPI: " + desc.WinRT_AdAPI);
 			#elif UNITY_BLACKBERRY
 			if (desc.BB10_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
 			else if (desc.BB10_AdAPI == AdAPIs.BlackBerryAdvertising) return new BlackBerryAdvertising_AdPlugin_BB10(desc, callback);

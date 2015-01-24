@@ -22,7 +22,7 @@ namespace Reign.Plugin
 			var task = new MarketplaceDetailTask();
 			task.Show();
 			#else
-			async_OpenStore(desc.Win8_PackageFamilyName);
+			async_OpenStore(desc.WinRT_PackageFamilyName);
 			#endif
 		}
 
@@ -39,7 +39,7 @@ namespace Reign.Plugin
 			var task = new MarketplaceReviewTask();
 			task.Show();
 			#else
-			async_OpenStoreForReview(desc.Win8_PackageFamilyName);
+			async_OpenStoreForReview(desc.WinRT_PackageFamilyName);
 			#endif
 		}
     }

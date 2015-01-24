@@ -45,8 +45,8 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		// Editor
 		leaderboard.Editor_ReignScores_ID = leaderboardID;// Any unique value
 
-		// Win8
-		leaderboard.Win8_ReignScores_ID = leaderboardID;// Any unique value
+		// WinRT
+		leaderboard.WinRT_ReignScores_ID = leaderboardID;// Any unique value
 
 		// WP8
 		leaderboard.WP8_ReignScores_ID = leaderboardID;// Any unique value
@@ -95,8 +95,8 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		// Editor
 		achievement.Editor_ReignScores_ID = achievementID;// Any unique value
 
-		// Win8
-		achievement.Win8_ReignScores_ID = achievementID;// Any unique value
+		// WinRT
+		achievement.WinRT_ReignScores_ID = achievementID;// Any unique value
 
 		// WP8
 		achievement.WP8_ReignScores_ID = achievementID;// Any unique value
@@ -133,7 +133,7 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 			achievementID = System.Guid.Empty;
 			achievement.Editor_ReignScores_ID = achievementID;
-			achievement.Win8_ReignScores_ID = achievementID;
+			achievement.WinRT_ReignScores_ID = achievementID;
 			achievement.WP8_ReignScores_ID = achievementID;
 			achievement.BB10_ReignScores_ID = achievementID;
 			achievement.iOS_ReignScores_ID = achievementID;
@@ -158,9 +158,9 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 		desc.Editor_ScoreAPI = ScoreAPIs.ReignScores;
 		desc.Editor_ReignScores_GameID = reignScores_gameID;
 
-		// Win8
-		desc.Win8_ScoreAPI = ScoreAPIs.ReignScores;
-		desc.Win8_ReignScores_GameID = reignScores_gameID;
+		// WinRT
+		desc.WinRT_ScoreAPI = ScoreAPIs.ReignScores;
+		desc.WinRT_ReignScores_GameID = reignScores_gameID;
 
 		// WP8
 		desc.WP8_ScoreAPI = ScoreAPIs.ReignScores;

@@ -32,7 +32,7 @@ public class MarketingDemo : MonoBehaviour
 		{
 			var desc = new MarketingDesc();
 			desc.Editor_URL = "http://reign-studios.net/";// Editor: Any full URL
-			desc.Win8_PackageFamilyName = "41631Reign-Studios.CosmicPong_2wv2wvs0mpzqp";// Win8: This is the "Package family name" that can be found in your "Package.appxmanifest".
+			desc.WinRT_PackageFamilyName = "41631Reign-Studios.CosmicPong_2wv2wvs0mpzqp";// WinRT: This is the "Package family name" that can be found in your "Package.appxmanifest".
 			// WP8: Do nothing...
 			desc.iOS_AppID = "547246359";// iOS: Pass in your AppID "xxxxxxxxx"
 			desc.BB10_AppID = "49146902";// BB10: You pass in your AppID "xxxxxxxx".

@@ -126,7 +126,7 @@ namespace Reign
 		
 		/// <summary>
 		/// Set to true to test trial mode.
-		/// NOTE: Only applies to Win8 or WP8.
+		/// NOTE: Only applies to WinRT or WP8.
 		/// </summary>
 		public bool TestTrialMode;
 
@@ -136,16 +136,16 @@ namespace Reign
 		/// </summary>
 		public InAppPurchaseID[] Editor_InAppIDs;
 
-		// Win8
+		// WinRT
 		/// <summary>
 		/// IAP API type
 		/// </summary>
-		public InAppPurchaseAPIs Win8_InAppPurchaseAPI = InAppPurchaseAPIs.None;
+		public InAppPurchaseAPIs WinRT_InAppPurchaseAPI = InAppPurchaseAPIs.None;
 
 		/// <summary>
 		/// IAP IDs
 		/// </summary>
-		public InAppPurchaseID[] Win8_MicrosoftStore_InAppIDs;
+		public InAppPurchaseID[] WinRT_MicrosoftStore_InAppIDs;
 
 		// WP8
 		/// <summary>
