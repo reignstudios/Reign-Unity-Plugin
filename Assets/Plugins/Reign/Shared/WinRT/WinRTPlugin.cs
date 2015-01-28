@@ -21,6 +21,7 @@ using Windows.ApplicationModel.Activation;
 #if WINDOWS_PHONE
 using System.Windows.Controls;
 using System.Windows.Threading;
+using System.Windows;
 #endif
 
 namespace Reign
@@ -96,6 +97,14 @@ namespace Reign
 			WinRTPlugin.Dispatcher = dispatcher;
 			WinRTPlugin.AdGrid = adGrid;
 			initMethodPointers();
+		}
+
+		public static void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
+		{
+			if (e.ExceptionObject.StackTrace.IndexOf("Google") >= 0)
+			{
+				e.Handled = true; // Ignore google admob control exceptions
+			}
 		}
 		#endif
 
@@ -212,7 +221,7 @@ namespace System.Text.Reign
 			get
 			{
 				if (EncodingASCII.Singleton == null) EncodingASCII.Singleton = new EncodingASCII();
-				return EncodingASCII.Singleton;
+				return (EncodingASCII)EncodingASCII.Singleton;
 			}
 		}
 
@@ -221,7 +230,7 @@ namespace System.Text.Reign
 			get
 			{
 				if (EncodingUTF8.Singleton == null) EncodingUTF8.Singleton = new EncodingUTF8();
-				return EncodingUTF8.Singleton;
+				return (EncodingUTF8)EncodingUTF8.Singleton;
 			}
 		}
 
@@ -233,8 +242,6 @@ namespace System.Text.Reign
 
 	public class EncodingASCII : Encoding
 	{
-		public static EncodingASCII Singleton;
-
 		public new delegate string GetStringCallbackMathod(byte[] bytes, int index, int count);
 		public new GetStringCallbackMathod GetString;
 
@@ -249,8 +256,6 @@ namespace System.Text.Reign
 
 	public class EncodingUTF8 : Encoding
 	{
-		public static EncodingUTF8 Singleton;
-
 		public new delegate string GetStringCallbackMathod(byte[] bytes, int index, int count);
 		public new GetStringCallbackMathod GetString;
 

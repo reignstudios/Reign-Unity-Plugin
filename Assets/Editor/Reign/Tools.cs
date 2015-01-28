@@ -305,7 +305,7 @@ namespace Reign.EditorTools
 			{
 				var productName = PlayerSettings.productName.Replace(" ", "").Replace("_", "");
 				
-				if (EditorUserBuildSettings.metroSDK == MetroSDK.UniversalSDK81)
+				if (EditorUserBuildSettings.metroSDK == MetroSDK.UniversalSDK81 && EditorUserBuildSettings.activeBuildTarget != BuildTarget.WP8Player)
 				{
 					var projPath = string.Format("{0}/{1}/{1}.Shared/{1}.Shared.projItems", pathToBuiltProject, productName);
 					Debug.Log("Modifing Proj: " + projPath);

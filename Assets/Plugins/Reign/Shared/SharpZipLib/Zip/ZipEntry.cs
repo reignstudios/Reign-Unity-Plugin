@@ -917,7 +917,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 		/// <summary>
 		/// AES unsupported prior to .NET 2.0
 		/// </summary>
-		internal int AESKeySize;
+		internal int AESKeySize = 0;
 #endif
 
 		/// <summary>

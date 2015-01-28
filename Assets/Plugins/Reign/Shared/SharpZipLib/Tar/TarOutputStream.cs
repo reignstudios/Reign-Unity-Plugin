@@ -402,11 +402,10 @@ namespace ICSharpCode.SharpZipLib.Tar
 			}
 
 			if ( (currBytes + count) > currSize ) {
-				string errorText = string.Format("request to write '{0}' bytes exceeds size in header of '{1}' bytes",
-					count, this.currSize);
 #if NETCF_1_0 || UNITY_WINRT
 				throw new ArgumentOutOfRangeException("count");
 #else
+				string errorText = string.Format("request to write '{0}' bytes exceeds size in header of '{1}' bytes", count, this.currSize);
 				throw new ArgumentOutOfRangeException("count", errorText);
 #endif				
 			}
