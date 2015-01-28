@@ -3161,7 +3161,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 				// total number of disks 4 bytes 
 				ReadLEUint(); // startDisk64 is not currently used
 				ulong offset64 = ReadLEUlong();
-				uint totalDisks = ReadLEUint();
+				ReadLEUint();//totalDisks
 
 				baseStream_.Position = (long)offset64;
 				long sig64 = ReadLEUint();
@@ -3171,11 +3171,11 @@ namespace ICSharpCode.SharpZipLib.Zip
 				}
 
 				// NOTE: Record size = SizeOfFixedFields + SizeOfVariableData - 12.
-				ulong recordSize = ReadLEUlong();
-				int versionMadeBy = ReadLEUshort();
-				int versionToExtract = ReadLEUshort();
-				uint thisDisk = ReadLEUint();
-				uint centralDirDisk = ReadLEUint();
+				ReadLEUlong();//recordSize
+				ReadLEUshort();//versionMadeBy
+				ReadLEUshort();//versionToExtract
+				ReadLEUint();//thisDisk
+				ReadLEUint();//centralDirDisk
 				entriesForThisDisk = ReadLEUlong();
 				entriesForWholeCentralDir = ReadLEUlong();
 				centralDirSize = ReadLEUlong();
@@ -3218,8 +3218,8 @@ namespace ICSharpCode.SharpZipLib.Zip
 				int extraLen           = ReadLEUshort();
 				int commentLen         = ReadLEUshort();
 				
-				int diskStartNo        = ReadLEUshort();  // Not currently used
-				int internalAttributes = ReadLEUshort();  // Not currently used
+				ReadLEUshort();//diskStartNo  // Not currently used
+				ReadLEUshort();//internalAttributes  // Not currently used
 
 				uint externalAttributes = ReadLEUint();
 				long offset             = ReadLEUint();
@@ -3382,7 +3382,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 		
 		#region Instance Fields
 		bool       isDisposed_;
-		string     name_;
+		string     name_ = null;
 		string     comment_;
 		string     rawPassword_;
 		Stream     baseStream_;
@@ -4016,7 +4016,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 		/// <param name="fileName">The name of the file to obtain data from.</param>
 		public StaticDiskDataSource(string fileName)
 		{
-			fileName_ = fileName;
+			//fileName_ = fileName;
 		}
 
 		#region IDataSource Members
@@ -4032,7 +4032,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 
 		#endregion
 		#region Instance Fields
-		string fileName_;
+		//string fileName_;
 		#endregion
 	}
 
@@ -4206,7 +4206,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 				throw new ZipException("Cant handle non file archives");
 			}
 
-			fileName_ = file.Name;
+			//fileName_ = file.Name;
 		}
 
 		/// <summary>
@@ -4382,8 +4382,8 @@ namespace ICSharpCode.SharpZipLib.Zip
 		#endregion
 
 		#region Instance Fields
-		Stream temporaryStream_;
-		string fileName_;
+		Stream temporaryStream_ = null;
+		//string fileName_;
 		string temporaryName_;
 		#endregion
 	}

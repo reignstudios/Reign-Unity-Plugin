@@ -60,7 +60,7 @@ namespace ImageTools
 
         #region Fields
 
-        private readonly object _lockObject = new object();
+        //private readonly object _lockObject = new object();
 
         #endregion
 

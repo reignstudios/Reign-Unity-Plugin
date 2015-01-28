@@ -311,8 +311,8 @@ namespace FluxJpeg.Core.Decoder
 
             int blockIdx = 0;
 
-            int w = raster[0].GetLength(0),
-                h = raster[0].GetLength(1);
+			int w = raster[0].GetLength(0);
+                //h = raster[0].GetLength(1);
 
             // Keep looping through all of the blocks until there are no more.
             while (blockIdx < scanDecoded.Count)
@@ -473,7 +473,7 @@ namespace FluxJpeg.Core.Decoder
 
         public void DecodeDCFirst(JPEGBinaryReader stream, float[] dest)
         {
-            float[] datablock = new float[64];
+            //float[] datablock = new float[64];
             int s = DCTable.Decode(stream);
             int r = stream.ReadBits(s);
             s = HuffmanTable.Extend(r, s);

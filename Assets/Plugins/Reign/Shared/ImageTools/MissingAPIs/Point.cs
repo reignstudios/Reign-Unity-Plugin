@@ -13,6 +13,16 @@ namespace System.Windows.Reign
 	{
 		private double x, y;
 
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			return base.Equals(obj);
+		}
+
 		//
 		// Summary:
 		//     Initializes a System.Windows.Point structure that contains the specified

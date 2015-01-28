@@ -299,7 +299,7 @@ namespace ICSharpCode.SharpZipLib.Core
 		/// <param name="filter">The <see cref="PathFilter">file filter</see> to apply when scanning.</param>
 		public FileSystemScanner(string filter)
 		{
-			fileFilter_ = new PathFilter(filter);
+			//fileFilter_ = new PathFilter(filter);
 		}
 		
 		/// <summary>
@@ -309,8 +309,8 @@ namespace ICSharpCode.SharpZipLib.Core
 		/// <param name="directoryFilter">The <see cref="PathFilter"> directory filter</see> to apply.</param>
 		public FileSystemScanner(string fileFilter, string directoryFilter)
 		{
-			fileFilter_ = new PathFilter(fileFilter);
-			directoryFilter_ = new PathFilter(directoryFilter);
+			//fileFilter_ = new PathFilter(fileFilter);
+			//directoryFilter_ = new PathFilter(directoryFilter);
 		}
 		
 		/// <summary>
@@ -319,7 +319,7 @@ namespace ICSharpCode.SharpZipLib.Core
 		/// <param name="fileFilter">The file <see cref="IScanFilter">filter</see> to apply.</param>
 		public FileSystemScanner(IScanFilter fileFilter)
 		{
-			fileFilter_ = fileFilter;
+			//fileFilter_ = fileFilter;
 		}
 		
 		/// <summary>
@@ -329,8 +329,8 @@ namespace ICSharpCode.SharpZipLib.Core
 		/// <param name="directoryFilter">The directory <see cref="IScanFilter">filter</see>  to apply.</param>
 		public FileSystemScanner(IScanFilter fileFilter, IScanFilter directoryFilter)
 		{
-			fileFilter_ = fileFilter;
-			directoryFilter_ = directoryFilter;
+			//fileFilter_ = fileFilter;
+			//directoryFilter_ = directoryFilter;
 		}
 		#endregion
 
@@ -373,7 +373,7 @@ namespace ICSharpCode.SharpZipLib.Core
             if ( result ) {
 				ScanFailureEventArgs args = new ScanFailureEventArgs(directory, e);
 				handler(this, args);
-				alive_ = args.ContinueRunning;
+				//alive_ = args.ContinueRunning;
 			}
             return result;
 		}
@@ -392,7 +392,7 @@ namespace ICSharpCode.SharpZipLib.Core
 			if ( result ){
 				ScanFailureEventArgs args = new ScanFailureEventArgs(file, e);
 				FileFailure(this, args);
-				alive_ = args.ContinueRunning;
+				//alive_ = args.ContinueRunning;
 			}
             return result;
 		}
@@ -408,7 +408,7 @@ namespace ICSharpCode.SharpZipLib.Core
 			if ( handler!= null ) {
 				ScanEventArgs args = new ScanEventArgs(file);
 				handler(this, args);
-				alive_ = args.ContinueRunning;
+				//alive_ = args.ContinueRunning;
 			}
 		}
 
@@ -424,7 +424,7 @@ namespace ICSharpCode.SharpZipLib.Core
 			{
 				ScanEventArgs args = new ScanEventArgs(file);
 				handler(this, args);
-				alive_ = args.ContinueRunning;
+				//alive_ = args.ContinueRunning;
 			}
 		}
 
@@ -440,7 +440,7 @@ namespace ICSharpCode.SharpZipLib.Core
 			if ( handler != null ) {
 				DirectoryEventArgs args = new DirectoryEventArgs(directory, hasMatchingFiles);
 				handler(this, args);
-				alive_ = args.ContinueRunning;
+				//alive_ = args.ContinueRunning;
 			}
 		}
 
@@ -519,15 +519,15 @@ namespace ICSharpCode.SharpZipLib.Core
 		/// <summary>
 		/// The file filter currently in use.
 		/// </summary>
-		IScanFilter fileFilter_;
+		//IScanFilter fileFilter_;
 		/// <summary>
 		/// The directory filter currently in use.
 		/// </summary>
-		IScanFilter directoryFilter_;
+		//IScanFilter directoryFilter_;
 		/// <summary>
 		/// Flag indicating if scanning should continue running.
 		/// </summary>
-		bool alive_;
+		//bool alive_;
 		#endregion
 	}
 }

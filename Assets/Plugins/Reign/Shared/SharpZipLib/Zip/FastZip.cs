@@ -552,7 +552,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 			}
 
 			if( events_!=null ) {
-				continueRunning_=events_.OnCompletedFile(name);
+				//continueRunning_=events_.OnCompletedFile(name);
 			}
 		}
 
@@ -703,11 +703,11 @@ namespace ICSharpCode.SharpZipLib.Zip
 		#endregion
 		
 		#region Instance Fields
-		bool continueRunning_;
+		//bool continueRunning_;
 		byte[] buffer_;
-		ZipOutputStream outputStream_;
+		ZipOutputStream outputStream_ = null;
 		ZipFile zipFile_;
-		string sourceDirectory_;
+		string sourceDirectory_ = null;
 		NameFilter fileFilter_;
 		NameFilter directoryFilter_;
 		Overwrite overwrite_;

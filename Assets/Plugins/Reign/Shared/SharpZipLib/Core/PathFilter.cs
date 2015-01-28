@@ -52,7 +52,7 @@ namespace ICSharpCode.SharpZipLib.Core
 		/// <param name="filter">The <see cref="NameFilter">filter</see> expression to apply.</param>
 		public PathFilter(string filter)
 		{
-			nameFilter_ = new NameFilter(filter);
+			//nameFilter_ = new NameFilter(filter);
 		}
 		#endregion
 
@@ -77,7 +77,7 @@ namespace ICSharpCode.SharpZipLib.Core
 		#endregion
 
 		#region Instance Fields
-		NameFilter nameFilter_;
+		//NameFilter nameFilter_;
 		#endregion
 	}
 

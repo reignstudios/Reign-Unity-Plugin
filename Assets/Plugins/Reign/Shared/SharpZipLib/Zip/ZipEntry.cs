@@ -1003,8 +1003,8 @@ namespace ICSharpCode.SharpZipLib.Zip
 					if ( ntfsTag == 1 ) {
 						if ( ntfsLength >= 24 ) {
 							long lastModification = extraData.ReadLong();
-							long lastAccess = extraData.ReadLong();
-							long createTime = extraData.ReadLong();
+							extraData.ReadLong();//lastAccess
+							extraData.ReadLong();//createTime
 
 							DateTime = System.DateTime.FromFileTime(lastModification);
 						}
@@ -1049,11 +1049,11 @@ namespace ICSharpCode.SharpZipLib.Zip
 				int length = extraData.ValueLength;			// Data size currently 7
 				if (length < 7)
 					throw new ZipException("AES Extra Data Length " + length + " invalid.");
-				int ver = extraData.ReadShort();			// Version number (1=AE-1 2=AE-2)
-				int vendorId = extraData.ReadShort();		// 2-character vendor ID 0x4541 = "AE"
+				extraData.ReadShort();//ver			// Version number (1=AE-1 2=AE-2)
+				extraData.ReadShort();// vendorId		// 2-character vendor ID 0x4541 = "AE"
 				int encrStrength = extraData.ReadByte();	// encryption strength 1 = 128 2 = 192 3 = 256
 				int actualCompress = extraData.ReadShort(); // The actual compression method used to compress the file
-				_aesVer = ver;
+				//_aesVer = ver;
 				_aesEncryptionStrength = encrStrength;
 				method = (CompressionMethod)actualCompress;
 			} else
@@ -1246,7 +1246,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 		bool forceZip64_;
 		byte cryptoCheckValue_;
 #if !NET_1_1 && !NETCF_2_0 && !UNITY_WINRT
-		int _aesVer;							// Version number (2 = AE-2 ?). Assigned but not used.
+		//int _aesVer;							// Version number (2 = AE-2 ?). Assigned but not used.
 		int _aesEncryptionStrength;				// Encryption strength 1 = 128 2 = 192 3 = 256
 #endif
 		#endregion

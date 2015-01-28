@@ -12,6 +12,16 @@ namespace System.Windows.Reign
 	{
 		private Point point1, point2;
 
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			return base.Equals(obj);
+		}
+
 		//
 		// Summary:
 		//     Initializes a System.Windows.Rect structure that is exactly large enough

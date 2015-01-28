@@ -45,7 +45,7 @@ namespace FluxJpeg.Core
         public static byte JPEG_DC_TABLE = 0;
         public static byte JPEG_AC_TABLE = 1;
 
-        private short lastk = 0;
+        //private short lastk = 0;
 
         internal HuffmanTable(JpegHuffmanTable table)
         {
@@ -90,7 +90,7 @@ namespace FluxJpeg.Core
                     index++;
                 }
             }
-            lastk = index;
+            //lastk = index;
         }
 
         /// <summary>See Figure C.2</summary>

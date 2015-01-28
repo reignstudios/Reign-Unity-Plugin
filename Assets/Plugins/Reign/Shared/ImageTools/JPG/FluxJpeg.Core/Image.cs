@@ -46,8 +46,8 @@ namespace FluxJpeg.Core
             // Colorspace is already correct
             if (_cm.ColorSpace == cs) return this;
 
-            byte[] ycbcr = new byte[3];
-            byte[] rgb = new byte[3];
+            //byte[] ycbcr = new byte[3];
+            //byte[] rgb = new byte[3];
 
             if (_cm.ColorSpace == ColorSpace.RGB && cs == ColorSpace.YCbCr)
             {

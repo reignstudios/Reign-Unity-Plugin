@@ -12,6 +12,16 @@ namespace System.Windows.Reign
 	{
 		private double width, height;
 
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			return base.Equals(obj);
+		}
+
 		//
 		// Summary:
 		//     Initializes a new instance of the System.Windows.Size structure and assigns

@@ -12,6 +12,16 @@ namespace System.Windows.Media.Reign
 	{
 		private byte r, g, b, a;
 
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			return base.Equals(obj);
+		}
+
 		// Summary:
 		//     Tests whether two System.Windows.Media.Color structures are not identical.
 		//

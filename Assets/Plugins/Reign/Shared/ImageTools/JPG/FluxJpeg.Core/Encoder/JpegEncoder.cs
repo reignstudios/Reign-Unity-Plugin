@@ -37,8 +37,8 @@ namespace FluxJpeg.Core.Encoder
         private const int Al = 0;
 
         private static readonly int[] CompID = { 1, 2, 3 };
-        private static readonly int[] HsampFactor = { 1, 1, 1 };
-        private static readonly int[] VsampFactor = { 1, 1, 1 };
+        //private static readonly int[] HsampFactor = { 1, 1, 1 };
+        //private static readonly int[] VsampFactor = { 1, 1, 1 };
         private static readonly int[] QtableNumber = { 0, 1, 1 };
         private static readonly int[] DCtableNumber = { 0, 1, 1 };
         private static readonly int[] ACtableNumber = { 0, 1, 1 };
@@ -268,7 +268,7 @@ namespace FluxJpeg.Core.Encoder
 
             int[] lastDCvalue = new int[_input.Image.ComponentCount];
 
-            int Width = 0, Height = 0;
+            //int Width = 0, Height = 0;
             int MinBlockWidth, MinBlockHeight;
 
             // This initial setting of MinBlockWidth and MinBlockHeight is done to
@@ -294,8 +294,8 @@ namespace FluxJpeg.Core.Encoder
                     ypos = r * 8;
                     for (comp = 0; comp < _input.Image.ComponentCount; comp++)
                     {
-                        Width = _input.BlockWidth[comp];
-                        Height = _input.BlockHeight[comp];
+                       // Width = _input.BlockWidth[comp];
+                        //Height = _input.BlockHeight[comp];
 
                         inputArray = _input.Image.Raster[comp];
 

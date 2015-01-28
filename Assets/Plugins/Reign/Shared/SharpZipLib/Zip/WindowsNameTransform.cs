@@ -260,13 +260,13 @@ namespace ICSharpCode.SharpZipLib.Zip
 		const int MaxPath = 260;
 		
 		#region Instance Fields
-		string _baseDirectory;
+		string _baseDirectory = null;
 		bool _trimIncomingPaths;
 		char _replacementChar = '_';
 		#endregion
 		
 		#region Class Fields
-		static readonly char[] InvalidEntryChars;
+		static readonly char[] InvalidEntryChars = null;
 		#endregion
 	}
 }

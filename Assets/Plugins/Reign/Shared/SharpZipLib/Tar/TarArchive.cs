@@ -231,7 +231,7 @@ namespace ICSharpCode.SharpZipLib.Tar
 				throw new ObjectDisposedException("TarArchive");
 			}
 			
-			keepOldFiles = keepExistingFiles;
+			//keepOldFiles = keepExistingFiles;
 		}
 		
 		/// <summary>
@@ -862,7 +862,7 @@ namespace ICSharpCode.SharpZipLib.Tar
 		}		
 		
 		#region Instance Fields
-		bool keepOldFiles;
+		//bool keepOldFiles;
 		bool asciiTranslate;
 		
 		int    userId;

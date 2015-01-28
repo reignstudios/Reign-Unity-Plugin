@@ -47,8 +47,8 @@ namespace FluxJpeg.Core.Decoder
         byte Xthumbnail, Ythumbnail;
         byte[] thumbnail;
         Image image;
-        int width;
-        int height;
+        //int width;
+        //int height;
 
         bool progressive = false;
 
@@ -390,7 +390,7 @@ namespace FluxJpeg.Core.Decoder
                         // likely a YCrCb model, this is a fairly complex process.
 
                         // Read in the scan length.
-                        ushort scanLen = jpegReader.ReadShort();
+                        //ushort scanLen = jpegReader.ReadShort();
                         // Number of components in the scan.
                         byte numberOfComponents = jpegReader.ReadByte();
                         byte[] componentSelector = new byte[numberOfComponents];
@@ -519,8 +519,8 @@ namespace FluxJpeg.Core.Decoder
                             image.DensityX = conv(XDensity);
                             image.DensityY = conv(YDensity);
 
-                            height = frame.Height;
-                            width = frame.Width;
+                            //height = frame.Height;
+                            //width = frame.Width;
                         }
                         else
                         {
