@@ -3,9 +3,11 @@ using UnityEngine;
 using System.Collections;
 using UnityEditor;
 using System.IO;
+using ImageTools.IO.Jpeg;
 using ImageTools.IO.Png;
 using ImageTools.Filtering;
 using ImageTools;
+using ImageTools.IO;
 using System;
 
 namespace Reign.Plugin
@@ -69,12 +71,12 @@ namespace Reign.Plugin
 					{
 						using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read))
 						{
-							ImageTools.IO.IImageDecoder decoder = null;
+							IImageDecoder decoder = null;
 							switch (Path.GetExtension(filename).ToLower())
 							{
-								case ".jpg": decoder = new ImageTools.IO.Jpeg.JpegDecoder(); break;
-								case ".jpeg": decoder = new ImageTools.IO.Jpeg.JpegDecoder(); break;
-								case ".png": decoder = new ImageTools.IO.Png.PngDecoder(); break;
+								case ".jpg": decoder = new JpegDecoder(); break;
+								case ".jpeg": decoder = new JpegDecoder(); break;
+								case ".png": decoder = new PngDecoder(); break;
 								default:
 									Debug.LogError("Unsuported file ext type: " + Path.GetExtension(filename));
 									streamLoadedCallback(null, false);
@@ -82,7 +84,7 @@ namespace Reign.Plugin
 							}
 							var image = new ExtendedImage();
 							decoder.Decode(image, stream);
-							var newSize = Reign.MathUtilities.FitInViewIfLarger(image.PixelWidth, image.PixelHeight, maxWidth, maxHeight);
+							var newSize = MathUtilities.FitInViewIfLarger(image.PixelWidth, image.PixelHeight, maxWidth, maxHeight);
 							var newImage = ExtendedImage.Resize(image, (int)newSize.x, (int)newSize.y, new NearestNeighborResizer());
 
 							var encoder = new PngEncoder();
