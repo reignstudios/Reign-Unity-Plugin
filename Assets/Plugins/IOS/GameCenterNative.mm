@@ -97,6 +97,7 @@
 - (void)ReportAchievement:(NSString*)achievementID percentComplete:(double)percentComplete
 {
     GKAchievement* achievement = [[[GKAchievement alloc] initWithIdentifier:achievementID] autorelease];
+    achievement.showsCompletionBanner = YES;
     achievement.percentComplete = percentComplete;
     [achievement reportAchievementWithCompletionHandler:^(NSError *error)
      {
