@@ -593,6 +593,11 @@ namespace Reign.Plugin
 			ui.ShowNativeAchievementsPage(callback);
 		}
 
+		public void ResetUserAchievementsProgress(ResetUserAchievementsCallbackMethod callback, MonoBehaviour services)
+		{
+			if (callback != null) callback(false, "Unsupported on this platform!");
+		}
+
 		public void Update()
 		{
 			// do nothing...

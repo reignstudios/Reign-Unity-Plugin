@@ -124,6 +124,11 @@ namespace Reign.Plugin
 			throw new Exception("Failed to find GooglePlay LeaderboardID for: " + id);
 		}
 
+		public void ResetUserAchievementsProgress(ResetUserAchievementsCallbackMethod callback, MonoBehaviour services)
+		{
+			if (callback != null) callback(false, "Unsupported on this platform!");
+		}
+
 		public void Update ()
 		{
 			// check if init done

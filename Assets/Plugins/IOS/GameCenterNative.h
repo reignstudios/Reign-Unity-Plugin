@@ -21,6 +21,8 @@
     
     bool userAuthenticated, authenticateDone;
     NSString* authenticatedError, *userID;
+    
+    bool resetUserAchievementsDone, resetUserAchievementsSucceeded;
 }
 
 - (void)SetCallbacks;
@@ -30,4 +32,5 @@
 - (void)RequestAchievements;
 - (void)ShowScoresPage:(NSString*)leaderboardID;
 - (void)ShowAchievementsPage;
+- (void)ResetUserAchievements;
 @end

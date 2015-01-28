@@ -48,6 +48,7 @@ namespace Reign
 		private static RequestAchievementsCallbackMethod requestAchievementsCallback;
 		private static ShowNativeViewDoneCallbackMethod showNativeViewCallback;
 		private static CreatedScoreAPICallbackMethod createdCallback;
+		private static ResetUserAchievementsCallbackMethod resetUserAchievementsCallback;
 
 		private static void createdCallbackAsyncStatic(bool succeeded, string errorMessage)
 		{
@@ -111,6 +112,12 @@ namespace Reign
 		{
 			waitingForOperation = false;
 			if (showNativeViewCallback != null) showNativeViewCallback(succeeded, errorMessage);
+		}
+
+		private static void async_resetUserAchievementsCallback(bool succeeded, string errorMessage)
+		{
+			waitingForOperation = false;
+			if (resetUserAchievementsCallback != null) resetUserAchievementsCallback(succeeded, errorMessage);
 		}
 
 		/// <summary>
@@ -291,6 +298,22 @@ namespace Reign
 			showNativeViewCallback = callback;
 			plugin.ShowNativeAchievementsPage(async_showNativeViewCallback, ReignServices.Singleton);
 		}
+
+		/// <summary>
+		/// Resets the users achievement progress. (Currently only for iOS)
+		/// </summary>
+		public static void ResetUserAchievementsProgress(ResetUserAchievementsCallbackMethod callback)
+		{
+			if (waitingForOperation)
+			{
+				Debug.LogError("Must wait for last Score operation to complete.");
+				return;
+			}
+
+			waitingForOperation = true;
+			resetUserAchievementsCallback = callback;
+			plugin.ResetUserAchievementsProgress(async_resetUserAchievementsCallback, ReignServices.Singleton);
+		}
 	}
 }
 
@@ -419,6 +442,16 @@ namespace Reign.Plugin
 		/// <param name="callback"></param>
 		/// <param name="services"></param>
 		public void ShowNativeScoresPage(string leaderboardID, ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services)
+		{
+			if (callback != null) callback(false, "Dumy Score Obj");
+		}
+
+		/// <summary>
+		/// Dumy method.
+		/// </summary>
+		/// <param name="callback"></param>
+		/// <param name="services"></param>
+		public void ResetUserAchievementsProgress(ResetUserAchievementsCallbackMethod callback, MonoBehaviour services)
 		{
 			if (callback != null) callback(false, "Dumy Score Obj");
 		}

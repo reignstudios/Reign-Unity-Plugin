@@ -195,6 +195,18 @@
         [UnityGetGLViewController() presentModalViewController: achievements animated: YES];
     }
 }
+
+- (void)ResetUserAchievements
+{
+    resetUserAchievementsSucceeded = false;
+    resetUserAchievementsDone = false;
+    [GKAchievement resetAchievementsWithCompletionHandler:^(NSError *error)
+     {
+         if (error != nil) NSLog(@"ResetUserAchievements Error: %@", error.localizedDescription);
+         resetUserAchievementsSucceeded = error == nil;
+         resetUserAchievementsDone = true;
+     }];
+}
 @end
 
 // ----------------------------------
@@ -339,5 +351,26 @@ extern "C"
     void GameCeneterShowAchievementsPage()
     {
         [native ShowAchievementsPage];
+    }
+    
+    void GameCenterResetUserAchievements()
+    {
+        [native ResetUserAchievements];
+    }
+    
+    bool GameCenterResetUserAchievementsDone()
+    {
+        if (native == nil) return false;
+        bool value = native->resetUserAchievementsDone;
+        native->resetUserAchievementsDone = false;
+        return value;
+    }
+    
+    bool GameCenterResetUserAchievementsSucceeded()
+    {
+        if (native == nil) return false;
+        bool value = native->resetUserAchievementsSucceeded;
+        native->resetUserAchievementsSucceeded = false;
+        return value;
     }
 }

@@ -423,6 +423,13 @@ namespace Reign
 	public delegate void ShowNativeViewDoneCallbackMethod(bool succeeded, string errorMessage);
 
 	/// <summary>
+	/// Called after reset completed
+	/// </summary>
+	/// <param name="succeeded">Tells if the API was successful or not.</param>
+	/// <param name="errorMessage">Error message or null.</param>
+	public delegate void ResetUserAchievementsCallbackMethod(bool succeeded, string errorMessage);
+
+	/// <summary>
 	/// Used for formating score values
 	/// </summary>
 	/// <param name="score">Score value to format</param>
@@ -524,7 +531,15 @@ namespace Reign.Plugin
 		/// Use to show native achievement page
 		/// </summary>
 		/// <param name="callback">Callback fired when done</param>
+		/// <param name="services">Takes in ReignServices object</param>
 		void ShowNativeAchievementsPage(ShowNativeViewDoneCallbackMethod callback, MonoBehaviour services);
+
+		/// <summary>
+		/// Resets the users achievement progress.
+		/// </summary>
+		/// <param name="callback">Callback fired when done</param>
+		/// <param name="services">Takes in ReignServices object</param>
+		void ResetUserAchievementsProgress(ResetUserAchievementsCallbackMethod callback, MonoBehaviour services);
 
 		/// <summary>
 		/// Used for update events

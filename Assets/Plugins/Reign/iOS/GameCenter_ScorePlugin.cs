@@ -18,6 +18,7 @@ namespace Reign.Plugin
 		private ReportScoreCallbackMethod reportScoreCallback;
 		private ReportAchievementCallbackMethod reportAchievementCallback;
 		private RequestAchievementsCallbackMethod requestAchievementsCallback;
+		private ResetUserAchievementsCallbackMethod resetUserAchievementsCallback;
 
 		[DllImport("__Internal", EntryPoint="InitGameCenter")]
 		private static extern void InitGameCenter();
@@ -82,6 +83,15 @@ namespace Reign.Plugin
 		[DllImport("__Internal", EntryPoint="GameCeneterShowAchievementsPage")]
 		private static extern void GameCeneterShowAchievementsPage();
 
+		[DllImport("__Internal", EntryPoint="GameCenterResetUserAchievements")]
+		private static extern void GameCenterResetUserAchievements();
+
+		[DllImport("__Internal", EntryPoint="GameCenterResetUserAchievementsDone")]
+		private static extern bool GameCenterResetUserAchievementsDone();
+
+		[DllImport("__Internal", EntryPoint="GameCenterResetUserAchievementsSucceeded")]
+		private static extern bool GameCenterResetUserAchievementsSucceeded();
+
 		public GameCenter_ScorePlugin_iOS (ScoreDesc desc, CreatedScoreAPICallbackMethod callback)
 		{
 			this.desc = desc;
@@ -94,7 +104,10 @@ namespace Reign.Plugin
 			{
 				Debug.LogError(e.Message);
 				if (callback != null) callback(false, e.Message);
+				return;
 			}
+
+			if (callback != null) callback(true, null);
 		}
 
 		public void Authenticate (AuthenticateCallbackMethod callback, MonoBehaviour services)
@@ -153,7 +166,7 @@ namespace Reign.Plugin
 			if (percentComplete > found.PercentCompletedAtValue) percentComplete = found.PercentCompletedAtValue;
 
 			// if non-incremental achievement, then force percent complete to 100%
-			if (found.IsIncremental) percentComplete = found.PercentCompletedAtValue;
+			if (!found.IsIncremental) percentComplete = found.PercentCompletedAtValue;
 
 			// request
 			reportAchievementCallback = callback;
@@ -196,6 +209,19 @@ namespace Reign.Plugin
 			{
 				GameCenterShowScoresPage(findNativeLoaderboardID(leaderboardID));
 				if (callback != null) callback(true, null);
+			}
+			else
+			{
+				if (callback != null) callback(false, "Not Authenticated!");
+			}
+		}
+
+		public void ResetUserAchievementsProgress(ResetUserAchievementsCallbackMethod callback, MonoBehaviour services)
+		{
+			if (IsAuthenticated)
+			{
+				resetUserAchievementsCallback = callback;
+				GameCenterResetUserAchievements();
 			}
 			else
 			{
@@ -288,6 +314,12 @@ namespace Reign.Plugin
 				}
 
 				requestAchievementsCallback(achievements.ToArray(), succeeded, error);
+			}
+
+			// reset user achievements
+			if (GameCenterResetUserAchievementsDone() && resetUserAchievementsCallback != null)
+			{
+				resetUserAchievementsCallback(GameCenterResetUserAchievementsSucceeded(), "Unknown");
 			}
 		}
 	}
