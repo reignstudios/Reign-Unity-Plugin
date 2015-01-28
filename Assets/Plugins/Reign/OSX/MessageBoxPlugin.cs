@@ -7,8 +7,8 @@ namespace Reign.Plugin
 {
 	public class MessageBoxPlugin_OSX : IMessageBoxPlugin
 	{
-		[DllImport("/Users/andrewwitte/Reign/Reign-Unity-Plugin/Assets/Plugins/x86/Reign.iOS.bundle", EntryPoint="Foo")]
-		private extern static int MessageBox();//(IntPtr hWnd, string lpText, string lpCaption, uint uType);
+		[DllImport("/Users/andrewwitte/Reign/Reign-Unity-Plugin/Assets/Plugins/x86/ReignNative", EntryPoint="Foo")]
+		private extern static int Foo();//(IntPtr hWnd, string lpText, string lpCaption, uint uType);
 
 		private const uint MB_OK = (uint)0x00000000L;
 		private const uint MB_OKCANCEL = (uint)0x00000001L;
@@ -18,12 +18,12 @@ namespace Reign.Plugin
 		{
 			if (type == MessageBoxTypes.Ok)
 			{
-				MessageBox();
+				Foo();
 				if (callback != null) callback(MessageBoxResult.Ok);
 			}
 			else
 			{
-				int result = MessageBox();
+				int result = Foo();
 				Debug.Log("VALUE: " + result);
 				if (callback != null) callback(result != IDCANCEL ? MessageBoxResult.Ok : MessageBoxResult.Cancel);
 			}

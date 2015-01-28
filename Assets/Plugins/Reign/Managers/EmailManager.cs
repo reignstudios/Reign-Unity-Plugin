@@ -33,7 +33,7 @@ namespace Reign
 			#elif UNITY_STANDALONE_WIN
 			plugin = new EmailPlugin_Win32();
 			#else
-			plugin = new EmailPlugin();
+			plugin = new EmailPlugin_Dumy();
 			#endif
 			#endif
 		}
@@ -47,6 +47,17 @@ namespace Reign
 		public static void Send(string to, string subject, string body)
 		{
 			plugin.Send(to, subject, body);
+		}
+	}
+
+	namespace Plugin
+	{
+		public class EmailPlugin_Dumy : IEmailPlugin
+		{
+			public void Send(string to, string subject, string body)
+			{
+				// do nothing...
+			}
 		}
 	}
 }

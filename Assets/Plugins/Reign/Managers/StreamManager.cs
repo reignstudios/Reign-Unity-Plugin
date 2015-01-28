@@ -87,7 +87,7 @@ namespace Reign
 			#elif UNITY_STANDALONE_WIN
 			plugin = new StreamPlugin_Win32();
 			#else
-			plugin = new StreamPlugin();
+			plugin = new StreamsPlugin_Dumy();
 			#endif
 
 			ReignServices.AddService(update, null, null);
@@ -774,6 +774,62 @@ namespace Reign
 		{
 			return (((int)(byte)(ch0)) | ((int)(byte)(ch1) << 8) | ((int)(byte)(ch2) << 16) | ((int)(byte)(ch3) << 24));
 		}
+    }
+
+    namespace Plugin
+    {
+    	public class StreamsPlugin_Dumy : IStreamPlugin
+    	{
+			public void FileExists(string fileName, FolderLocations folderLocation, StreamExistsCallbackMethod callback)
+			{
+				if (callback != null) callback(false);
+			}
+
+			public void DeleteFile(string fileName, FolderLocations folderLocation, StreamDeleteCallbackMethod callback)
+			{
+				if (callback != null) callback(false);
+			}
+
+			public void SaveFile(string fileName, Stream stream, FolderLocations folderLocation, StreamSavedCallbackMethod steamSavedCallback)
+			{
+				if (steamSavedCallback != null) steamSavedCallback(false);
+			}
+
+			public void SaveFile(string fileName, byte[] data, FolderLocations folderLocation, StreamSavedCallbackMethod steamSavedCallback)
+			{
+				if (steamSavedCallback != null) steamSavedCallback(false);
+			}
+
+			public void LoadFile(string fileName, FolderLocations folderLocation, StreamLoadedCallbackMethod streamLoadedCallback)
+			{
+				if (streamLoadedCallback != null) streamLoadedCallback(null, false);
+			}
+
+			public void SaveFileDialog(Stream stream, FolderLocations folderLocation, string[] fileTypes, StreamSavedCallbackMethod streamSavedCallback)
+			{
+				if (streamSavedCallback != null) streamSavedCallback(false);
+			}
+
+			public void SaveFileDialog(byte[] data, FolderLocations folderLocation, string[] fileTypes, StreamSavedCallbackMethod streamSavedCallback)
+			{
+				if (streamSavedCallback != null) streamSavedCallback(false);
+			}
+
+			public void LoadFileDialog(FolderLocations folderLocation, int maxWidth, int maxHeight, int x, int y, int width, int height, string[] fileTypes, StreamLoadedCallbackMethod streamLoadedCallback)
+			{
+				if (streamLoadedCallback != null) streamLoadedCallback(null, false);
+			}
+
+			public void LoadCameraPicker(CameraQuality quality, int maxWidth, int maxHeight, StreamLoadedCallbackMethod streamLoadedCallback)
+			{
+				if (streamLoadedCallback != null) streamLoadedCallback(null, false);
+			}
+
+			public void Update()
+			{
+				// do nothing...
+			}
+    	}
     }
 
 	/// <summary>

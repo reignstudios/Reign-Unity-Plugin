@@ -35,7 +35,7 @@ namespace Reign
 			#elif UNITY_BLACKBERRY
 			plugin = new MarketingPlugin_BB10();
 			#else
-			plugin = new MarketingPlugin();
+			plugin = new IMarketingPlugin_Dumy();
 			#endif
 			#endif
 		}
@@ -56,6 +56,22 @@ namespace Reign
 		public static void OpenStoreForReview(MarketingDesc desc)
 		{
 			plugin.OpenStoreForReview(desc);
+		}
+	}
+
+	namespace Plugin
+	{
+		public class IMarketingPlugin_Dumy : IIMarketingPlugin
+		{
+			public void OpenStore(MarketingDesc desc)
+			{
+				// do nothing...
+			}
+
+			public void OpenStoreForReview(MarketingDesc desc)
+			{
+				// do nothing...
+			}
 		}
 	}
 }

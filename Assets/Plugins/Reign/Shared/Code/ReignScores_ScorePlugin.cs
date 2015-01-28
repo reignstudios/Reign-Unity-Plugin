@@ -504,7 +504,7 @@ namespace Reign.Plugin
 					#elif UNITY_STANDALONE_WIN
 					var id = achievementDesc.Win32_ReignScores_ID;
 					#elif UNITY_STANDALONE_OSX
-					var id = achievementDesc.OXS_ReignScores_ID;
+					var id = achievementDesc.OSX_ReignScores_ID;
 					#elif UNITY_STANDALONE_LINUX
 					var id = achievementDesc.Linux_ReignScores_ID;
 					#elif UNITY_WEBPLAYER
