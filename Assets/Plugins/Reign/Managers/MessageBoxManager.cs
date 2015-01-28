@@ -36,6 +36,8 @@ namespace Reign
 			plugin = new MessageBoxPlugin_BB10();
 			#elif UNITY_STANDALONE_WIN
 			plugin = new MessageBoxPlugin_Win32();
+			#elif UNITY_STANDALONE_OSX
+			plugin = new MessageBoxPlugin_OSX();
 			#else
 			plugin = new MessageBoxPlugin();
 			#endif

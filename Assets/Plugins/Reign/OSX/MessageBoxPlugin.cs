@@ -1,13 +1,14 @@
-﻿#if UNITY_STANDALONE_WIN
+﻿#if UNITY_STANDALONE_OSX
 using System;
+using UnityEngine;
 using System.Runtime.InteropServices;
 
 namespace Reign.Plugin
 {
-	public class MessageBoxPlugin_Win32 : IMessageBoxPlugin
+	public class MessageBoxPlugin_OSX : IMessageBoxPlugin
 	{
-		[DllImport("User32.dll", EntryPoint="MessageBox")]
-		private extern static int MessageBox(IntPtr hWnd, string lpText, string lpCaption, uint uType);
+		[DllImport("/Users/andrewwitte/Reign/Reign-Unity-Plugin/Assets/Plugins/x86/Reign.iOS.bundle", EntryPoint="Foo")]
+		private extern static int MessageBox();//(IntPtr hWnd, string lpText, string lpCaption, uint uType);
 
 		private const uint MB_OK = (uint)0x00000000L;
 		private const uint MB_OKCANCEL = (uint)0x00000001L;
@@ -17,12 +18,13 @@ namespace Reign.Plugin
 		{
 			if (type == MessageBoxTypes.Ok)
 			{
-				MessageBox(IntPtr.Zero, message, title, MB_OK);
+				MessageBox();
 				if (callback != null) callback(MessageBoxResult.Ok);
 			}
 			else
 			{
-				int result = MessageBox(IntPtr.Zero, message, title, MB_OKCANCEL);
+				int result = MessageBox();
+				Debug.Log("VALUE: " + result);
 				if (callback != null) callback(result != IDCANCEL ? MessageBoxResult.Ok : MessageBoxResult.Cancel);
 			}
 		}

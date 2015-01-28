@@ -1,7 +1,6 @@
 ﻿#if UNITY_STANDALONE_WIN
 using UnityEngine;
 using System.Collections;
-using UnityEditor;
 using System.IO;
 using ImageTools.IO.Png;
 using ImageTools.Filtering;
