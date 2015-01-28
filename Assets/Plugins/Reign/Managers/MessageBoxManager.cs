@@ -25,7 +25,8 @@ namespace Reign
 			
 			#if !DISABLE_REIGN
 			#if UNITY_EDITOR
-			plugin = new MessageBoxPlugin();
+			//plugin = new MessageBoxPlugin();
+			plugin = new MessageBoxPlugin_OSX();
 			#elif UNITY_WINRT
 			plugin = new MessageBoxPlugin_WinRT();
 			#elif UNITY_ANDROID
@@ -39,7 +40,7 @@ namespace Reign
 			#elif UNITY_STANDALONE_OSX
 			plugin = new MessageBoxPlugin_OSX();
 			#else
-			plugin = new MessageBoxPlugin();
+			plugin = new MessageBoxPlugin_Dumy();
 			#endif
 
 			ReignServices.AddService(update, null, null);
@@ -71,6 +72,22 @@ namespace Reign
 		private static void update()
 		{
 			plugin.Update();
+		}
+	}
+
+	namespace Plugin
+	{
+		public class MessageBoxPlugin_Dumy : IMessageBoxPlugin
+		{
+			public void Show(string title, string message, MessageBoxTypes type, MessageBoxCallback callback)
+			{
+				if (callback != null) callback(MessageBoxResult.Cancel);
+			}
+
+			public void Update()
+			{
+				// do nothing...
+			}
 		}
 	}
 }
