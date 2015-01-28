@@ -7,25 +7,29 @@ namespace Reign.Plugin
 {
 	public class MessageBoxPlugin_OSX : IMessageBoxPlugin
 	{
-		[DllImport("/Users/andrewwitte/Reign/Reign-Unity-Plugin/Assets/Plugins/x86/ReignNative", EntryPoint="Foo")]
-		private extern static int Foo();//(IntPtr hWnd, string lpText, string lpCaption, uint uType);
+		[DllImport("ReignNative", EntryPoint="MessageBoxInit")]
+		private extern static void MessageBoxInit();
 
-		private const uint MB_OK = (uint)0x00000000L;
-		private const uint MB_OKCANCEL = (uint)0x00000001L;
-		private const int IDCANCEL = 2;
+		[DllImport("ReignNative", EntryPoint="MessageBoxShow")]
+		private extern static int MessageBoxShow(string title, string message, int type);
+
+		public MessageBoxPlugin_OSX()
+		{
+			MessageBoxInit();
+		}
 
 		public void Show(string title, string message, MessageBoxTypes type, MessageBoxCallback callback)
 		{
 			if (type == MessageBoxTypes.Ok)
 			{
-				Foo();
+				MessageBoxShow(title, message, 0);
 				if (callback != null) callback(MessageBoxResult.Ok);
 			}
 			else
 			{
-				int result = Foo();
+				int result = MessageBoxShow(title, message, 1);
 				Debug.Log("VALUE: " + result);
-				if (callback != null) callback(result != IDCANCEL ? MessageBoxResult.Ok : MessageBoxResult.Cancel);
+				if (callback != null) callback(result == 1 ? MessageBoxResult.Ok : MessageBoxResult.Cancel);
 			}
 		}
 		
