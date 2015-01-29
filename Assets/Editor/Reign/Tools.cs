@@ -181,6 +181,7 @@ namespace Reign.EditorTools
 				}
 			}
 
+			AssetDatabase.Refresh();
 			Debug.Log("Clean Done!");
 		}
 
