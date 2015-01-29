@@ -266,6 +266,16 @@ namespace Reign
 		Back
 	}
 
+	public enum AnalogTypes
+	{
+		AxisLeftX,
+		AxisLeftY,
+		AxisRightX,
+		AxisRightY,
+		TriggerLeft,
+		TriggerRight
+	}
+
 	public enum ControllerTargets
 	{
 		Generic,
@@ -276,6 +286,7 @@ namespace Reign
 	public static class InputEx
 	{
 		public static ControllerTargets ControllerTarget = ControllerTargets.Xbox360;
+		public static float AnalogTolerance = .25f;
 
 		// generic button mapping
 		public static KeyCode GenericButton1 = KeyCode.JoystickButton0;
@@ -289,6 +300,16 @@ namespace Reign
 			{
 				var key = (KeyCode)i;
 				if (Input.GetKeyDown(key)) Debug.Log("KeyPressed: " + key);
+			}
+		}
+
+		public static void LogAnalogs()
+		{
+			for (int i = 0; i != 6; ++i)
+			{
+				var analog = (AnalogTypes)i;
+				float value = GetAxis(analog);
+				if (value != 0) Debug.Log(string.Format("AnalogType {0} value: {1}", analog, value));
 			}
 		}
 
@@ -405,6 +426,35 @@ namespace Reign
 		public static bool GetKeyUp(KeyCodeEx key)
 		{
 			return Input.GetKeyUp(ConvertKeyCode(key));
+		}
+
+		private static string getAnalogTypeName(AnalogTypes type)
+		{
+			switch (type)
+			{
+				case AnalogTypes.AxisLeftX: return "AxisLeftX";
+				case AnalogTypes.AxisLeftY: return "AxisLeftY";
+				case AnalogTypes.AxisRightX: return "AxisRightX";
+				case AnalogTypes.AxisRightY: return "AxisRightY";
+				case AnalogTypes.TriggerLeft: return "TriggerLeft";
+				case AnalogTypes.TriggerRight: return "TriggerRight";
+				default: return "Unsuported AnalogType: " + type;
+			}
+		}
+
+		private static float processAnalogValue(float value)
+		{
+			return (Mathf.Abs(value) <= AnalogTolerance) ? 0 : value;
+		}
+
+		public static float GetAxis(AnalogTypes type)
+		{
+			return processAnalogValue(Input.GetAxisRaw(getAnalogTypeName(type)));
+		}
+
+		public static float GetAxisRaw(AnalogTypes type)
+		{
+			return Input.GetAxisRaw(getAnalogTypeName(type));
 		}
 	}
 }

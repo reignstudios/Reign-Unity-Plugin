@@ -221,7 +221,7 @@ namespace System.Text.Reign
 			get
 			{
 				if (EncodingASCII.Singleton == null) EncodingASCII.Singleton = new EncodingASCII();
-				return (EncodingASCII)EncodingASCII.Singleton;
+				return EncodingASCII.Singleton;
 			}
 		}
 
@@ -230,7 +230,7 @@ namespace System.Text.Reign
 			get
 			{
 				if (EncodingUTF8.Singleton == null) EncodingUTF8.Singleton = new EncodingUTF8();
-				return (EncodingUTF8)EncodingUTF8.Singleton;
+				return EncodingUTF8.Singleton;
 			}
 		}
 
@@ -242,6 +242,8 @@ namespace System.Text.Reign
 
 	public class EncodingASCII : Encoding
 	{
+		public new static EncodingASCII Singleton;
+
 		public new delegate string GetStringCallbackMathod(byte[] bytes, int index, int count);
 		public new GetStringCallbackMathod GetString;
 
@@ -256,6 +258,8 @@ namespace System.Text.Reign
 
 	public class EncodingUTF8 : Encoding
 	{
+		public new static EncodingUTF8 Singleton;
+
 		public new delegate string GetStringCallbackMathod(byte[] bytes, int index, int count);
 		public new GetStringCallbackMathod GetString;
 

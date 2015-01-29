@@ -378,9 +378,21 @@ namespace Reign.Plugin
 			});
 		}
 
+		#if UNITY_METRO_8_0
+		bool buyInAppAsync_Done = false, buyInAppAsync_Successful = false;
+		#endif
 		public void BuyInApp(string inAppID, InAppPurchaseBuyCallbackMethod purchasedCallback)
 		{
 			buyInAppAsync(inAppID, purchasedCallback);
+
+			#if UNITY_METRO_8_0
+			while (!buyInAppAsync_Done) Thread.Sleep(1);
+			if (buyInAppAsync_Successful)
+			{
+				PlayerPrefs.SetInt("ReignIAP_PurchasedAwarded_" + inAppID, 0);
+				PlayerPrefs.Save();
+			}
+			#endif
 		}
 
 		#if WINDOWS_PHONE
@@ -408,6 +420,9 @@ namespace Reign.Plugin
 						string productID = null;
 						if (testing) productID = wp8TestListingInformation.ProductListings[inAppID].ProductId;
 						else productID = licenseInformation.ProductLicenses[inAppID].ProductId;
+						#elif UNITY_METRO_8_0
+						string results;
+						string productID = licenseInformation.ProductLicenses[inAppID].ProductId;
 						#else
 						PurchaseResults results;
 						string productID = licenseInformation.ProductLicenses[inAppID].ProductId;
@@ -422,6 +437,8 @@ namespace Reign.Plugin
 								PlayerPrefs.SetInt("ReignIAP_PurchasedAwarded_" + inAppID, 0);
 								PlayerPrefs.Save();
 							}
+							#elif UNITY_METRO_8_0
+							results = await CurrentAppSimulator.RequestProductPurchaseAsync(productID, true);
 							#else
 							results = await CurrentAppSimulator.RequestProductPurchaseAsync(productID);
 							#endif
@@ -435,12 +452,21 @@ namespace Reign.Plugin
 								PlayerPrefs.SetInt("ReignIAP_PurchasedAwarded_" + inAppID, 0);
 								PlayerPrefs.Save();
 							}
+							#elif UNITY_METRO_8_0
+							results = await CurrentApp.RequestProductPurchaseAsync(productID, true);
 							#else
 							results = await CurrentApp.RequestProductPurchaseAsync(productID);
 							#endif
 						}
 						
-						#if UNITY_METRO
+						#if UNITY_METRO_8_0
+						if (!string.IsNullOrEmpty(results) || licenseInformation.ProductLicenses[inAppID].IsActive)
+						{
+							// must hack async PlayerPref bug in Unity here.
+							buyInAppAsync_Successful = true;
+							buyInAppAsync_Done = true;
+						}
+						#elif UNITY_METRO
 						if (results.Status == ProductPurchaseStatus.Succeeded || results.Status == ProductPurchaseStatus.AlreadyPurchased || licenseInformation.ProductLicenses[inAppID].IsActive)
 						{
 							PlayerPrefs.SetInt("ReignIAP_PurchasedAwarded_" + inAppID, 0);
@@ -460,6 +486,12 @@ namespace Reign.Plugin
 							{
 								purchasedCallback(inAppID, licenseInformation.ProductLicenses[inAppID].IsActive);
 								if (licenseInformation.ProductLicenses[inAppID].IsConsumable) CurrentApp.ReportProductFulfillment(productID);
+							}
+							#elif UNITY_METRO_8_0
+							purchasedCallback(inAppID, !string.IsNullOrEmpty(results) || licenseInformation.ProductLicenses[inAppID].IsActive);
+							if (isConsumbable(inAppID))
+							{
+								Debug.LogError("NOTE: Consumable IAP not supported in 8.0");
 							}
 							#else
 							purchasedCallback(inAppID, results.Status == ProductPurchaseStatus.Succeeded || results.Status == ProductPurchaseStatus.AlreadyPurchased || licenseInformation.ProductLicenses[inAppID].IsActive);
@@ -481,6 +513,8 @@ namespace Reign.Plugin
 				{
 					if (purchasedCallback != null) purchasedCallback(inAppID, true);
 				}
+
+				buyInAppAsync_Done = true;
 			});
 		}
 

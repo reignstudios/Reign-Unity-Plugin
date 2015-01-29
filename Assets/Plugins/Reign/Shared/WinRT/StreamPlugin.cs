@@ -472,7 +472,15 @@ namespace Reign.Plugin
 							#if UNITY_METRO
 							using (var tempStream = await file.OpenStreamForReadAsync())
 							{
+								#if UNITY_METRO_8_0
+								using (var outputStream = new MemoryStream().AsOutputStream())
+								{
+									await RandomAccessStream.CopyAsync(tempStream.AsInputStream(), outputStream);
+									stream = await resizeImageStream((IRandomAccessStream)outputStream, maxWidth, maxHeight);
+								}
+								#else
 								stream = await resizeImageStream(tempStream.AsRandomAccessStream(), maxWidth, maxHeight);
+								#endif
 							}
 
 							streamLoadedCallback(stream, true);

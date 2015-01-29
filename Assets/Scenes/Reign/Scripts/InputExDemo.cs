@@ -7,5 +7,6 @@ public class InputExDemo : MonoBehaviour
 	void Update()
 	{
 		InputEx.LogKeys();
+		InputEx.LogAnalogs();
 	}
 }
