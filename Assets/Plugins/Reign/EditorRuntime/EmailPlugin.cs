@@ -16,7 +16,11 @@ namespace Reign.Plugin
 			theStringBuilder.Append("&subject=" + subject);
 			theStringBuilder.Append("&body=" + body);
 			//&attachment="/files/audio/attachment.mp3"
+			#if UNITY_WEBPLAYER
+			UnityEngine.Application.OpenURL(theStringBuilder.ToString());
+			#else
 			Process.Start(theStringBuilder.ToString());
+			#endif
 		}
 	}
 }
