@@ -276,24 +276,26 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 		{
 			if (resultcode == Activity.RESULT_OK)
 			{
-				Log.d("GooglePlayScores", "Trying to connect after RESULT_OK");
+				Log.d(logTag, "Trying to connect after RESULT_OK");
 				client.connect();
 			}
 			else if (resultcode == GamesActivityResultCodes.RESULT_RECONNECT_REQUIRED)
 			{
-				Log.d("GooglePlayScores", "Trying to connect after RESULT_RECONNECT_REQUIRED");
+				Log.d(logTag, "Trying to connect after RESULT_RECONNECT_REQUIRED");
 				client.connect();
 			}
 			else if (resultcode == Activity.RESULT_CANCELED)
 			{
-				Log.d("GooglePlayScores", "Canceled connection");
+				Log.d(logTag, "Canceled connection");
 				isAuthenticated = false;
 				client.disconnect();
+				events.add("Error:ConnectionCanceled");
 			}
 			else
 			{
+				Log.d(logTag, "Failed to connect");
 				isAuthenticated = false;
-				Log.d("GooglePlayScores", "Failed to connect");
+				events.add("Error:FailedToConnect");
 			}
 			
 			return true;
