@@ -379,10 +379,15 @@ namespace Reign.Plugin
 		}
 
 		#if UNITY_METRO_8_0
-		bool buyInAppAsync_Done = false, buyInAppAsync_Successful = false;
+		bool buyInAppAsync_Done, buyInAppAsync_Successful;
 		#endif
 		public void BuyInApp(string inAppID, InAppPurchaseBuyCallbackMethod purchasedCallback)
 		{
+			#if UNITY_METRO_8_0
+			buyInAppAsync_Done = false;
+			buyInAppAsync_Successful = false;
+			#endif
+
 			buyInAppAsync(inAppID, purchasedCallback);
 
 			#if UNITY_METRO_8_0
@@ -514,7 +519,9 @@ namespace Reign.Plugin
 					if (purchasedCallback != null) purchasedCallback(inAppID, true);
 				}
 
+				#if UNITY_METRO_8_0
 				buyInAppAsync_Done = true;
+				#endif
 			});
 		}
 
