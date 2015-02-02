@@ -34,9 +34,7 @@
     {
         userID = [[NSString alloc] initWithString:[GKLocalPlayer localPlayer].alias];
         NSLog(@"Authentication changed: player authenticated with user: %@", userID);
-        authenticatedError = nil;
         userAuthenticated = true;
-        authenticateDone = true;
     }
     else if (![GKLocalPlayer localPlayer].isAuthenticated)
     {
@@ -53,6 +51,10 @@
 
 - (void)Authenticate
 {
+    if (authenticatedError != nil) [authenticatedError release];
+    authenticatedError = nil;
+    userAuthenticated = false;
+    authenticateDone = false;
     NSLog(@"Authenticating local user...");
     if([GKLocalPlayer localPlayer].authenticated == false)
     {
@@ -65,7 +67,17 @@
                  userAuthenticated = false;
                  authenticateDone = true;
              }
+             else
+             {
+                 userAuthenticated = true;
+                 authenticateDone = true;
+             }
          }];
+    }
+    else
+    {
+        userAuthenticated = true;
+        authenticateDone = true;
     }
 }
 
@@ -228,7 +240,6 @@ extern "C"
     
     void AuthenticateGameCenter()
     {
-        native->authenticateDone = false;
         [native Authenticate];
     }
     bool GameCenterCheckAuthenticateDone()
