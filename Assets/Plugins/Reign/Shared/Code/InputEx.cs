@@ -55,7 +55,7 @@ namespace Reign
 
 	public enum ControllerTargets
 	{
-		Generic,
+		Custom,
 		Xbox360,
 		PS3
 	}
