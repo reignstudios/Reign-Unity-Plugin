@@ -6,7 +6,9 @@ public class InputExDemo : MonoBehaviour
 {
 	void Update()
 	{
-		InputEx.LogKeys();
+		// You can log input here for debuging
+		//InputEx.LogKeys();
+		InputEx.LogButtons(true);
 		InputEx.LogAnalogs();
 	}
 }

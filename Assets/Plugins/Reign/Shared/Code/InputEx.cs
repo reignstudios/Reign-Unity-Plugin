@@ -60,6 +60,42 @@ namespace Reign
 		PS3
 	}
 
+	#if UNITY_STANDALONE_WIN
+	class InputExButtonAnalogValue
+	{
+		public Buttons Button;
+		public ControllerPlayers Player;
+		public bool On, Down, Up;
+
+		public InputExButtonAnalogValue(Buttons button, ControllerPlayers player)
+		{
+			this.Button = button;
+			this.Player = player;
+		}
+
+		public void Update()
+		{
+			bool lastOn = On;
+			On = false;
+			Down = false;
+			Up = false;
+			switch (Button)
+			{
+				case Buttons.DPadLeft: On = Input.GetAxisRaw(string.Format("Axis{0}_{1}", 6, Player)) < -.5; break;
+				case Buttons.DPadRight: On = Input.GetAxisRaw(string.Format("Axis{0}_{1}", 6, Player)) > .5; break;
+				case Buttons.DPadDown: On = Input.GetAxisRaw(string.Format("Axis{0}_{1}", 7, Player)) < -.5; break;
+				case Buttons.DPadUp: On = Input.GetAxisRaw(string.Format("Axis{0}_{1}", 7, Player)) > .5; break;
+				default:
+					Debug.LogError("Unsuported Button Analog type: " + Button);
+					return;
+			}
+
+			if (On && !lastOn) Down = true;
+			if (!On && lastOn) Up = true;
+		}
+	}
+	#endif
+
 	public static class InputEx
 	{
 		public static ControllerTargets ControllerTarget = ControllerTargets.Xbox360;
@@ -80,6 +116,19 @@ namespace Reign
 			}
 		}
 
+		public static void LogButtons(bool convertNames)
+		{
+			for (int i = 0; i != 14; ++i)
+			{
+				var button = (Buttons)i;
+				if (InputEx.GetButtonDown(button, ControllerPlayers.All))
+				{
+					if (convertNames) Debug.Log("ButtonPressed: " + GetPlatformButtonName(button));
+					else Debug.Log("ButtonPressed: " + button);
+				}
+			}
+		}
+
 		public static void LogAnalogs()
 		{
 			for (int i = 0; i != 6; ++i)
@@ -90,120 +139,120 @@ namespace Reign
 			}
 		}
 
-		public static string GetPlatformButtonName(Buttons key)
+		public static string GetPlatformButtonName(Buttons button)
 		{
 			// Cross buttons
-			if (key == Buttons.Button1)
+			if (button == Buttons.Button1)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return "A";
 				else if (ControllerTarget == ControllerTargets.PS3) return "X";
 			}
-			else if (key == Buttons.Button2)
+			else if (button == Buttons.Button2)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return "B";
 				else if (ControllerTarget == ControllerTargets.PS3) return "Circle";
 			}
-			else if (key == Buttons.Button3)
+			else if (button == Buttons.Button3)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return "X";
 				else if (ControllerTarget == ControllerTargets.PS3) return "Square";
 			}
-			else if (key == Buttons.Button4)
+			else if (button == Buttons.Button4)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return "Y";
 				else if (ControllerTarget == ControllerTargets.PS3) return "Triangle";
 			}
 
 			// System buttons
-			else if (key == Buttons.Start)
+			else if (button == Buttons.Start)
 			{
-				return key.ToString();
+				return button.ToString();
 			}
-			else if (key == Buttons.Back)
+			else if (button == Buttons.Back)
 			{
 				if (ControllerTarget == ControllerTargets.PS3) return "Select";
 			}
 
-			return key.ToString();
+			return button.ToString();
 		}
 
-		public static KeyCode ConvertKeyCode(Buttons key, ControllerPlayers player)
+		public static KeyCode ConvertKeyCode(Buttons button, ControllerPlayers player)
 		{
 			// Cross buttons
-			if (key == Buttons.Button1)
+			if (button == Buttons.Button1)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton0;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
 			}
-			else if (key == Buttons.Button2)
+			else if (button == Buttons.Button2)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton1;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
 			}
-			else if (key == Buttons.Button3)
+			else if (button == Buttons.Button3)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton2;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
 			}
-			else if (key == Buttons.Button4)
+			else if (button == Buttons.Button4)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton3;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
 			}
 
 			// DPad buttons
-			else if (key == Buttons.DPadLeft)
+			else if (button == Buttons.DPadLeft)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.None;// TODO
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.None;
 			}
-			else if (key == Buttons.DPadRight)
+			else if (button == Buttons.DPadRight)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.None;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.None;
 			}
-			else if (key == Buttons.DPadDown)
+			else if (button == Buttons.DPadDown)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.None;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.None;
 			}
-			else if (key == Buttons.DPadUp)
+			else if (button == Buttons.DPadUp)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.None;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.None;
 			}
 
 			// Bumper buttons
-			else if (key == Buttons.BumperLeft)
+			else if (button == Buttons.BumperLeft)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton4;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
 			}
-			else if (key == Buttons.BumperRight)
+			else if (button == Buttons.BumperRight)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton5;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
 			}
 
 			// System buttons
-			else if (key == Buttons.Start)
+			else if (button == Buttons.Start)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton7;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
 			}
-			else if (key == Buttons.Back)
+			else if (button == Buttons.Back)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton6;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
 			}
 
 			// Analog buttons
-			else if (key == Buttons.AnalogLeft)
+			else if (button == Buttons.AnalogLeft)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton8;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
 			}
-			else if (key == Buttons.AnalogRight)
+			else if (button == Buttons.AnalogRight)
 			{
 				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton9;
 				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
@@ -212,19 +261,46 @@ namespace Reign
 			return KeyCode.None;
 		}
 
-		public static bool GetButton(Buttons key, ControllerPlayers player)
+		public static bool GetButton(Buttons button, ControllerPlayers player)
 		{
-			return Input.GetKey(ConvertKeyCode(key, player));
+			#if UNITY_STANDALONE_WIN
+			if (ControllerTarget == ControllerTargets.Xbox360)
+			{
+				var analog = InputExService.FindButtonAnalog(button, player);
+				if (analog != null) return analog.On;
+				else return Input.GetKey(ConvertKeyCode(button, player));
+			}
+			#endif
+
+			return Input.GetKey(ConvertKeyCode(button, player));
 		}
 
-		public static bool GetButtonDown(Buttons key, ControllerPlayers player)
+		public static bool GetButtonDown(Buttons button, ControllerPlayers player)
 		{
-			return Input.GetKeyDown(ConvertKeyCode(key, player));
+			#if UNITY_STANDALONE_WIN
+			if (ControllerTarget == ControllerTargets.Xbox360)
+			{
+				var analog = InputExService.FindButtonAnalog(button, player);
+				if (analog != null) return analog.Down;
+				else return Input.GetKeyDown(ConvertKeyCode(button, player));
+			}
+			#endif
+
+			return Input.GetKeyDown(ConvertKeyCode(button, player));
 		}
 
-		public static bool GetButtonUp(Buttons key, ControllerPlayers player)
+		public static bool GetButtonUp(Buttons button, ControllerPlayers player)
 		{
-			return Input.GetKeyUp(ConvertKeyCode(key, player));
+			#if UNITY_STANDALONE_WIN
+			if (ControllerTarget == ControllerTargets.Xbox360)
+			{
+				var analog = InputExService.FindButtonAnalog(button, player);
+				if (analog != null) return analog.Up;
+				else return Input.GetKeyUp(ConvertKeyCode(button, player));
+			}
+			#endif
+
+			return Input.GetKeyUp(ConvertKeyCode(button, player));
 		}
 
 		private static string getAnalogTypeName(AnalogTypes type, ControllerPlayers player)
