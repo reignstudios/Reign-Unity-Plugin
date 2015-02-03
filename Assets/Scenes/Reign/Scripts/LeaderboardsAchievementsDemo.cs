@@ -198,7 +198,6 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 		// init
 		ScoreManager.Init(desc, createdCallback);
-		ScoreManager.Authenticate(authenticateCallback);
 
 		// <<< ReignScores manual methods >>>
 		//ScoreManager.RequestScores(...);
@@ -210,6 +209,7 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 	private void createdCallback(bool success, string errorMessage)
 	{
 		if (!success) Debug.LogError(errorMessage);
+		else ScoreManager.Authenticate(authenticateCallback);
 	}
 
 	private void scoreFormatCallback(int score, out string scoreValue)

@@ -69,7 +69,7 @@
              }
              else
              {
-                 userAuthenticated = true;
+                 userAuthenticated = [GKLocalPlayer localPlayer].authenticated;
                  authenticateDone = true;
              }
          }];
@@ -86,24 +86,24 @@
     GKScore* scoreReporter = [[[GKScore alloc] initWithCategory:leaderboardID] autorelease];
     scoreReporter.value = score;
     [scoreReporter reportScoreWithCompletionHandler: ^(NSError *error)
-    {
-        if (error != nil)
-        {
-            reportScoreError = [[NSString alloc] initWithString:error.localizedDescription];
-            reportScoreSucceeded = false;
-        }
-        else
-        {
-            if (reportScoreError != nil)
-            {
-                [reportScoreError dealloc];
-                reportScoreError = nil;
-            }
-            reportScoreSucceeded = true;
-        }
-        
-        reportScoreDone = true;
-    }];
+     {
+         if (error != nil)
+         {
+             reportScoreError = [[NSString alloc] initWithString:error.localizedDescription];
+             reportScoreSucceeded = false;
+         }
+         else
+         {
+             if (reportScoreError != nil)
+             {
+                 [reportScoreError dealloc];
+                 reportScoreError = nil;
+             }
+             reportScoreSucceeded = true;
+         }
+         
+         reportScoreDone = true;
+     }];
 }
 
 - (void)ReportAchievement:(NSString*)achievementID percentComplete:(double)percentComplete
@@ -141,37 +141,37 @@
     }
     
     [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error)
-    {
-        if (error != nil)
-        {
-            NSLog(@"RequestAchievements Error: %@", error.localizedDescription);
-            if (requestAchievementError != nil)
-            {
-                [requestAchievementError dealloc];
-                requestAchievementError = nil;
-            }
-            requestAchievementError = [[NSMutableString alloc] initWithString:error.localizedDescription];
-            requestAchievementSucceeded = false;
-            requestAchievementDone = true;
-        }
-        else if (achievements != nil)
-        {
-            NSLog(@"RequestAchievements Succeeded: %d", achievements.count);
-            requestAchievementResponse = [[NSMutableString alloc] initWithString:@""];
-            bool staring = true;
-            for (GKAchievement* a in achievements)
-            {
-                if (!staring) [requestAchievementResponse appendString:@":"];
-                staring = false;
-                [requestAchievementResponse appendString:a.identifier];
-                [requestAchievementResponse appendString:@":"];
-                [requestAchievementResponse appendString:[NSString stringWithFormat:@"%f", a.percentComplete]];
-            }
-            
-            requestAchievementSucceeded = true;
-            requestAchievementDone = true;
-        }
-    }];
+     {
+         if (error != nil)
+         {
+             NSLog(@"RequestAchievements Error: %@", error.localizedDescription);
+             if (requestAchievementError != nil)
+             {
+                 [requestAchievementError dealloc];
+                 requestAchievementError = nil;
+             }
+             requestAchievementError = [[NSMutableString alloc] initWithString:error.localizedDescription];
+             requestAchievementSucceeded = false;
+             requestAchievementDone = true;
+         }
+         else if (achievements != nil)
+         {
+             NSLog(@"RequestAchievements Succeeded: %d", achievements.count);
+             requestAchievementResponse = [[NSMutableString alloc] initWithString:@""];
+             bool staring = true;
+             for (GKAchievement* a in achievements)
+             {
+                 if (!staring) [requestAchievementResponse appendString:@":"];
+                 staring = false;
+                 [requestAchievementResponse appendString:a.identifier];
+                 [requestAchievementResponse appendString:@":"];
+                 [requestAchievementResponse appendString:[NSString stringWithFormat:@"%f", a.percentComplete]];
+             }
+             
+             requestAchievementSucceeded = true;
+             requestAchievementDone = true;
+         }
+     }];
 }
 
 - (void)leaderboardViewControllerDidFinish:(GKLeaderboardViewController *)viewController
