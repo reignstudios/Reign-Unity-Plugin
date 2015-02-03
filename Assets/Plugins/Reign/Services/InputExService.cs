@@ -5,6 +5,7 @@ using Reign;
 
 public class InputExService : MonoBehaviour
 {
+	#if UNITY_STANDALONE_WIN
 	private static List<InputExButtonAnalogValue> buttonAnalogs;
 
 	internal static InputExButtonAnalogValue FindButtonAnalog(Buttons button, ControllerPlayers player)
@@ -16,6 +17,7 @@ public class InputExService : MonoBehaviour
 
 		return null;
 	}
+	#endif
 
 	void Awake()
 	{
@@ -52,6 +54,8 @@ public class InputExService : MonoBehaviour
 
 	void Update()
 	{
+		#if UNITY_STANDALONE_WIN
 		foreach (var analog in buttonAnalogs) analog.Update();
+		#endif
 	}
 }
