@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Reign
 {
-	public enum Buttons
+	public enum ButtonTypes
 	{
 		// Cross buttons
-		Button1,
-		Button2,
-		Button3,
-		Button4,
+		CrossButtonLeft,
+		CrossButtonRight,
+		CrossButtonBottom,
+		CrossButtonTop,
 
 		// DPad buttons
 		DPadLeft,
@@ -42,301 +42,251 @@ namespace Reign
 
 	public enum ControllerPlayers
 	{
-		All,
+		Any,
 		Player1,
 		Player2,
 		Player3,
-		Player4,
-		//Player5,
-		//Player6,
-		//Player7,
-		//Player8
+		Player4
 	}
 
-	public enum ControllerTargets
+	public class InputExButtonMap
 	{
-		Custom,
-		Xbox360,
-		PS3
-	}
-
-	#if UNITY_STANDALONE_WIN
-	class InputExButtonAnalogValue
-	{
-		public Buttons Button;
+		public ButtonTypes Type;
 		public ControllerPlayers Player;
-		public bool On, Down, Up;
+		public string Name, AnalogName;
+		public bool AnalogPositive;
+		public bool AnalogOn, AnalogDown, AnalogUp;
 
-		public InputExButtonAnalogValue(Buttons button, ControllerPlayers player)
+		public InputExButtonMap(ButtonTypes type, ControllerPlayers player, string name)
 		{
-			this.Button = button;
+			this.Type = type;
 			this.Player = player;
+			this.Name = name;
+		}
+
+		public InputExButtonMap(ButtonTypes type, ControllerPlayers player, string name, string analogName, bool analogPositive)
+		{
+			this.Type = type;
+			this.Player = player;
+			this.Name = name;
+			this.AnalogName = analogName;
+			this.AnalogPositive = analogPositive;
 		}
 
 		public void Update()
 		{
-			bool lastOn = On;
-			On = false;
-			Down = false;
-			Up = false;
-			switch (Button)
-			{
-				case Buttons.DPadLeft: On = Input.GetAxisRaw(string.Format("Axis{0}_{1}", 6, Player)) < -.5; break;
-				case Buttons.DPadRight: On = Input.GetAxisRaw(string.Format("Axis{0}_{1}", 6, Player)) > .5; break;
-				case Buttons.DPadDown: On = Input.GetAxisRaw(string.Format("Axis{0}_{1}", 7, Player)) < -.5; break;
-				case Buttons.DPadUp: On = Input.GetAxisRaw(string.Format("Axis{0}_{1}", 7, Player)) > .5; break;
-				default:
-					Debug.LogError("Unsuported Button Analog type: " + Button);
-					return;
-			}
+			if (AnalogName == null) return;
 
-			if (On && !lastOn) Down = true;
-			if (!On && lastOn) Up = true;
+			bool lastOn = AnalogOn;
+			if (AnalogPositive) AnalogOn = Input.GetAxisRaw(AnalogName) >= .5;
+			else AnalogOn = Input.GetAxisRaw(AnalogName) <= -.5;
+
+			if (AnalogOn && !lastOn) AnalogDown = true;
+			else AnalogDown = false;
+
+			if (!AnalogOn && lastOn) AnalogUp = true;
+			else AnalogUp = false;
 		}
 	}
-	#endif
+
+	public class InputExAnalogMap
+	{
+		public AnalogTypes Type;
+		public ControllerPlayers Player;
+		public string Name;
+
+		public InputExAnalogMap(AnalogTypes type, ControllerPlayers player, string name)
+		{
+			this.Type = type;
+			this.Player = player;
+			this.Name = name;
+		}
+	}
 
 	public static class InputEx
 	{
-		public static ControllerTargets ControllerTarget = ControllerTargets.Xbox360;
-		public static float AnalogTolerance = .25f;
+		public static float AnalogTolerance = .25f, AnalogTriggerTolerance = .1f;
+		public static InputExButtonMap[] ButtonMappings;
+		public static InputExAnalogMap[] AnalogMappings;
 
-		// generic button mapping
-		public static KeyCode GenericButton1 = KeyCode.JoystickButton0;
-		public static KeyCode GenericButton2 = KeyCode.JoystickButton1;
-		public static KeyCode GenericButton3 = KeyCode.JoystickButton2;
-		public static KeyCode GenericButton4 = KeyCode.JoystickButton3;
-
-		public static void LogKeys()
+		static InputEx()
 		{
+			ButtonMappings = new InputExButtonMap[]
+			{
+				// Cross buttons
+				new InputExButtonMap(ButtonTypes.CrossButtonLeft, ControllerPlayers.Any, "Left CrossButton - PlayerAny"),
+				new InputExButtonMap(ButtonTypes.CrossButtonRight, ControllerPlayers.Any, "Right CrossButton - PlayerAny"),
+				new InputExButtonMap(ButtonTypes.CrossButtonBottom, ControllerPlayers.Any, "Bottom CrossButton - PlayerAny"),
+				new InputExButtonMap(ButtonTypes.CrossButtonTop, ControllerPlayers.Any, "Top CrossButton - PlayerAny"),
+
+				// DPad buttons
+				#if UNITY_STANDALONE_WIN
+				new InputExButtonMap(ButtonTypes.DPadLeft, ControllerPlayers.Any, "Left DPadButton - PlayerAny", "Horizontal DPadAnalog - PlayerAny", false),
+				new InputExButtonMap(ButtonTypes.DPadRight, ControllerPlayers.Any, "Right DPadButton - PlayerAny", "Horizontal DPadAnalog - PlayerAny", true),
+				new InputExButtonMap(ButtonTypes.DPadDown, ControllerPlayers.Any, "Down DPadButton - PlayerAny", "Vertical DPadAnalog - PlayerAny", false),
+				new InputExButtonMap(ButtonTypes.DPadUp, ControllerPlayers.Any, "Up DPadButton - PlayerAny", "Vertical DPadAnalog - PlayerAny", true),
+				#else
+				new InputExButtonMap(ButtonTypes.DPadLeft, ControllerPlayers.Any, "Left DPadButton - PlayerAny"),
+				new InputExButtonMap(ButtonTypes.DPadRight, ControllerPlayers.Any, "Right DPadButton - PlayerAny"),
+				new InputExButtonMap(ButtonTypes.DPadDown, ControllerPlayers.Any, "Down DPadButton - PlayerAny"),
+				new InputExButtonMap(ButtonTypes.DPadUp, ControllerPlayers.Any, "Up DPadButton - PlayerAny"),
+				#endif
+
+				// Bumper buttons
+				new InputExButtonMap(ButtonTypes.BumperLeft, ControllerPlayers.Any, "Left Bumper - PlayerAny"),
+				new InputExButtonMap(ButtonTypes.BumperRight, ControllerPlayers.Any, "Right Bumper - PlayerAny"),
+
+				// Analog buttons
+				new InputExButtonMap(ButtonTypes.AnalogLeft, ControllerPlayers.Any, "Left AnalogButton - PlayerAny"),
+				new InputExButtonMap(ButtonTypes.AnalogRight, ControllerPlayers.Any, "Right AnalogButton - PlayerAny"),
+
+				// System buttons
+				new InputExButtonMap(ButtonTypes.Start, ControllerPlayers.Any, "Start Button - PlayerAny"),
+				new InputExButtonMap(ButtonTypes.Back, ControllerPlayers.Any, "Back Button - PlayerAny")
+			};
+
+			AnalogMappings = new InputExAnalogMap[]
+			{
+				// Sticks
+				new InputExAnalogMap(AnalogTypes.AxisLeftX, ControllerPlayers.Any, "Left AnalogX - PlayerAny"),
+				new InputExAnalogMap(AnalogTypes.AxisLeftY, ControllerPlayers.Any, "Left AnalogY - PlayerAny"),
+				new InputExAnalogMap(AnalogTypes.AxisRightX, ControllerPlayers.Any, "Right AnalogX - PlayerAny"),
+				new InputExAnalogMap(AnalogTypes.AxisRightY, ControllerPlayers.Any, "Right AnalogY - PlayerAny"),
+
+				// Triggers
+				new InputExAnalogMap(AnalogTypes.TriggerLeft, ControllerPlayers.Any, "Left Trigger - PlayerAny"),
+				new InputExAnalogMap(AnalogTypes.TriggerRight, ControllerPlayers.Any, "Right Trigger - PlayerAny")
+			};
+		}
+
+		public static string LogKeys()
+		{
+			string label = null;
 			for (int i = 0; i != 430; ++i)
 			{
 				var key = (KeyCode)i;
-				if (Input.GetKeyDown(key)) Debug.Log("KeyPressed: " + key);
-			}
-		}
-
-		public static void LogButtons(bool convertNames)
-		{
-			for (int i = 0; i != 14; ++i)
-			{
-				var button = (Buttons)i;
-				if (InputEx.GetButtonDown(button, ControllerPlayers.All))
+				if (Input.GetKeyDown(key))
 				{
-					if (convertNames) Debug.Log("ButtonPressed: " + GetPlatformButtonName(button));
-					else Debug.Log("ButtonPressed: " + button);
+					label = "KeyPressed: " + key;
+					Debug.Log(label);
 				}
 			}
+
+			return label;
 		}
 
-		public static void LogAnalogs()
+		public static string LogButtons()
 		{
+			string label = null;
+			for (int i = 0; i != 14; ++i)
+			{
+				var button = (ButtonTypes)i;
+				if (InputEx.GetButtonDown(button, ControllerPlayers.Any))
+				{
+					label = "ButtonPressed: " + button;
+					Debug.Log(label);
+				}
+			}
+
+			return label;
+		}
+
+		public static string LogAnalogs()
+		{
+			string label = null;
 			for (int i = 0; i != 6; ++i)
 			{
 				var analog = (AnalogTypes)i;
-				float value = GetAxis(analog, ControllerPlayers.All);
-				if (value != 0) Debug.Log(string.Format("AnalogType {0} value: {1}", analog, value));
-			}
-		}
-
-		public static string GetPlatformButtonName(Buttons button)
-		{
-			// Cross buttons
-			if (button == Buttons.Button1)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return "A";
-				else if (ControllerTarget == ControllerTargets.PS3) return "X";
-			}
-			else if (button == Buttons.Button2)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return "B";
-				else if (ControllerTarget == ControllerTargets.PS3) return "Circle";
-			}
-			else if (button == Buttons.Button3)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return "X";
-				else if (ControllerTarget == ControllerTargets.PS3) return "Square";
-			}
-			else if (button == Buttons.Button4)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return "Y";
-				else if (ControllerTarget == ControllerTargets.PS3) return "Triangle";
-			}
-
-			// System buttons
-			else if (button == Buttons.Start)
-			{
-				return button.ToString();
-			}
-			else if (button == Buttons.Back)
-			{
-				if (ControllerTarget == ControllerTargets.PS3) return "Select";
-			}
-
-			return button.ToString();
-		}
-
-		public static KeyCode ConvertKeyCode(Buttons button, ControllerPlayers player)
-		{
-			// Cross buttons
-			if (button == Buttons.Button1)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton0;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
-			}
-			else if (button == Buttons.Button2)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton1;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
-			}
-			else if (button == Buttons.Button3)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton2;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
-			}
-			else if (button == Buttons.Button4)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton3;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
-			}
-
-			// DPad buttons
-			else if (button == Buttons.DPadLeft)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.None;// TODO
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.None;
-			}
-			else if (button == Buttons.DPadRight)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.None;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.None;
-			}
-			else if (button == Buttons.DPadDown)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.None;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.None;
-			}
-			else if (button == Buttons.DPadUp)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.None;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.None;
-			}
-
-			// Bumper buttons
-			else if (button == Buttons.BumperLeft)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton4;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
-			}
-			else if (button == Buttons.BumperRight)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton5;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
-			}
-
-			// System buttons
-			else if (button == Buttons.Start)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton7;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
-			}
-			else if (button == Buttons.Back)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton6;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
-			}
-
-			// Analog buttons
-			else if (button == Buttons.AnalogLeft)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton8;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
-			}
-			else if (button == Buttons.AnalogRight)
-			{
-				if (ControllerTarget == ControllerTargets.Xbox360) return KeyCode.JoystickButton9;
-				else if (ControllerTarget == ControllerTargets.PS3) return KeyCode.JoystickButton0;
-			}
-
-			return KeyCode.None;
-		}
-
-		public static bool GetButton(Buttons button, ControllerPlayers player)
-		{
-			#if UNITY_STANDALONE_WIN
-			if (ControllerTarget == ControllerTargets.Xbox360)
-			{
-				var analog = InputExService.FindButtonAnalog(button, player);
-				if (analog != null) return analog.On;
-				else return Input.GetKey(ConvertKeyCode(button, player));
-			}
-			#endif
-
-			return Input.GetKey(ConvertKeyCode(button, player));
-		}
-
-		public static bool GetButtonDown(Buttons button, ControllerPlayers player)
-		{
-			#if UNITY_STANDALONE_WIN
-			if (ControllerTarget == ControllerTargets.Xbox360)
-			{
-				var analog = InputExService.FindButtonAnalog(button, player);
-				if (analog != null) return analog.Down;
-				else return Input.GetKeyDown(ConvertKeyCode(button, player));
-			}
-			#endif
-
-			return Input.GetKeyDown(ConvertKeyCode(button, player));
-		}
-
-		public static bool GetButtonUp(Buttons button, ControllerPlayers player)
-		{
-			#if UNITY_STANDALONE_WIN
-			if (ControllerTarget == ControllerTargets.Xbox360)
-			{
-				var analog = InputExService.FindButtonAnalog(button, player);
-				if (analog != null) return analog.Up;
-				else return Input.GetKeyUp(ConvertKeyCode(button, player));
-			}
-			#endif
-
-			return Input.GetKeyUp(ConvertKeyCode(button, player));
-		}
-
-		private static string getAnalogTypeName(AnalogTypes type, ControllerPlayers player)
-		{
-			const string axisFormat = "Axis{0}_{1}";
-			if (ControllerTarget == ControllerTargets.Xbox360)
-			{
-				switch (type)
+				float value = GetAxis(analog, ControllerPlayers.Any);
+				if (value != 0)
 				{
-					case AnalogTypes.AxisLeftX: return string.Format(axisFormat, 1, player);
-					case AnalogTypes.AxisLeftY: return string.Format(axisFormat, 2, player);
-					case AnalogTypes.AxisRightX: return string.Format(axisFormat, 4, player);
-					case AnalogTypes.AxisRightY: return string.Format(axisFormat, 5, player);
-					case AnalogTypes.TriggerLeft: return string.Format(axisFormat, 9, player);
-					case AnalogTypes.TriggerRight: return string.Format(axisFormat, 10, player);
-					default: return "Unsuported AnalogType: " + type;
+					label = string.Format("AnalogType {0} value: {1}", analog, value);
+					Debug.Log(label);
 				}
 			}
-			
-			Debug.LogError("Unknown ControllerTarget: " + ControllerTarget);
+
+			return label;
+		}
+
+		private static string findButtonName(ButtonTypes type, ControllerPlayers player, out InputExButtonMap mapping)
+		{
+			foreach (var map in ButtonMappings)
+			{
+				if (map.Type == type && map.Player == player)
+				{
+					mapping = map;
+					return map.Name;
+				}
+			}
+
+			Debug.LogError(string.Format("Failed to find Button {0} for Player {1}", type, player));
+			mapping = null;
 			return "Unknown";
 		}
 
-		private static float processAnalogValue(float value)
+		public static bool GetButton(ButtonTypes type, ControllerPlayers player)
 		{
-			return (Mathf.Abs(value) <= AnalogTolerance) ? 0 : value;
+			InputExButtonMap mapping;
+			string name = findButtonName(type, player, out mapping);
+			if (mapping != null && mapping.AnalogOn) return true;
+
+			return Input.GetButton(name);
+		}
+
+		public static bool GetButtonDown(ButtonTypes type, ControllerPlayers player)
+		{
+			InputExButtonMap mapping;
+			string name = findButtonName(type, player, out mapping);
+			if (mapping != null && mapping.AnalogDown) return true;
+
+			return Input.GetButtonDown(name);
+		}
+
+		public static bool GetButtonUp(ButtonTypes type, ControllerPlayers player)
+		{
+			InputExButtonMap mapping;
+			string name = findButtonName(type, player, out mapping);
+			if (mapping != null && mapping.AnalogUp) return true;
+
+			return Input.GetButtonUp(name);
+		}
+
+		private static string findAnalogName(AnalogTypes type, ControllerPlayers player)
+		{
+			foreach (var map in AnalogMappings)
+			{
+				if (map.Type == type && map.Player == player)
+				{
+					return map.Name;
+				}
+			}
+
+			Debug.LogError(string.Format("Failed to find Analog {0} for Player {1}", type, player));
+			return "Unknown";
+		}
+
+		private static float processAnalogValue(AnalogTypes type, float value)
+		{
+			float tolerance = AnalogTolerance;
+			switch (type)
+			{
+				case AnalogTypes.TriggerLeft:
+				case AnalogTypes.TriggerRight:
+					tolerance = AnalogTriggerTolerance;
+					break;
+			}
+
+			return (Mathf.Abs(value) <= tolerance) ? 0 : value;
 		}
 
 		public static float GetAxis(AnalogTypes type, ControllerPlayers player)
 		{
-			return processAnalogValue(Input.GetAxisRaw(getAnalogTypeName(type, player)));
+			return processAnalogValue(type, Input.GetAxisRaw(findAnalogName(type, player)));
 		}
 
 		public static float GetAxisRaw(AnalogTypes type, ControllerPlayers player)
 		{
-			return Input.GetAxisRaw(getAnalogTypeName(type, player));
+			return Input.GetAxisRaw(findAnalogName(type, player));
 		}
 	}
 }

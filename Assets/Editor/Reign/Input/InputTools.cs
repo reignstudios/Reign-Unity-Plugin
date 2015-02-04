@@ -7,18 +7,6 @@ namespace Reign.EditorTools
 {
 	public class InputTools
 	{
-		[MenuItem("Edit/Reign/Input/Save Universal Default")]
-		static void SaveAsUniversalDefaultLayout()
-		{
-			saveActiveLayoutAsDefault("Universal");
-		}
-
-		[MenuItem("Edit/Reign/Input/Apply Universal Default")]
-		static void ApplyUniversalDefaultInputLayout()
-		{
-			applyDefaultLayout("Universal");
-		}
-
 		[MenuItem("Edit/Reign/Input/Save active platform layout as Default")]
 		static void SaveAsDefaultLayout()
 		{
