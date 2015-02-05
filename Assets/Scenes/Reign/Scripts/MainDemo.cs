@@ -68,5 +68,11 @@ public class MainDemo : MonoBehaviour
 			if (LeaderboardsAchievementsDemo.Singleton != null) LeaderboardsAchievementsDemo.Singleton.gameObject.SetActive(true);
 			Application.LoadLevel("LeaderboardsAchievementsDemo");
 		}
+
+		offset += 34;
+		if (GUI.Button(new Rect(20, offset, 148, 32), "InputEx"))
+		{
+			Application.LoadLevel("InputExDemo");
+		}
 	}
 }

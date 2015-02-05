@@ -34,6 +34,13 @@ public class InputExDemo : MonoBehaviour
 
 	void OnGUI()
 	{
-		GUI.Label(new Rect(0, 0, 256, 64), label);
+		if (GUI.Button(new Rect(0, 0, 64, 32), "Back"))
+		{
+			gameObject.SetActive(false);
+			Application.LoadLevel("MainDemo");
+			return;
+		}
+
+		GUI.Label(new Rect(0, 128, 256, 64), label);
 	}
 }
