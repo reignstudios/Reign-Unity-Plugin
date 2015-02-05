@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Reign;
 
+/// <summary>
+/// InputEx service, used for enhancing Unitys Input API.
+/// </summary>
 public class InputExService : MonoBehaviour
 {
 	private static InputExService singleton;
@@ -21,6 +24,6 @@ public class InputExService : MonoBehaviour
 
 	void Update()
 	{
-		foreach (var map in InputEx.ButtonMappings) map.Update();
+		foreach (var map in InputEx.ButtonMappings) map.update();
 	}
 }
