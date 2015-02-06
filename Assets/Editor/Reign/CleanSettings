@@ -1,4 +1,6 @@
-/Editor/Reign/Input/DefaultLayouts/InputManager_Universal
+/Editor/Reign/Input/DefaultLayouts/InputManager_Linux
+/Editor/Reign/Input/DefaultLayouts/InputManager_OSX
+/Editor/Reign/Input/DefaultLayouts/InputManager_Win32
 /Editor/Reign/Input/InputTools.cs
 /Editor/Reign/CleanSettings
 /Editor/Reign/Reign.EditorTools.pdb
@@ -39,7 +41,7 @@
 /Scenes/Reign/AdsDemo.unity
 /Scenes/Reign/EmailDemo.unity
 /Scenes/Reign/InAppPurchaseDemo.unity
-/Scenes/Reign/InputEx.unity
+/Scenes/Reign/InputExDemo.unity
 /Scenes/Reign/InterstitialAdDemo.unity
 /Scenes/Reign/LeaderboardsAchievementsDemo.unity
 /Scenes/Reign/MainDemo.unity
@@ -67,6 +69,8 @@
 /Plugins/Reign/Math/Vector2Extensions.cs
 /Plugins/Reign/Math/Vector3Extensions.cs
 /Plugins/Reign/Math/Vector4Extensions.cs
+/Plugins/Reign/Services/InputExService.cs
+/Plugins/Reign/Services/InputExService.prefab
 /Plugins/Reign/Services/ReignServices.cs
 /Plugins/Reign/Services/ReignServices.prefab
 /Plugins/Reign/Tools/PerPixelOrthoCamera.cs
