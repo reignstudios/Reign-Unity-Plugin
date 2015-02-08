@@ -9,7 +9,7 @@ namespace Reign.Plugin
 		public bool Visible {get; set;}
 		private bool testing, guiOverride;
 		private int offsetX, offsetY, width, height;
-
+		
 		public AdPlugin(AdDesc desc, AdCreatedCallbackMethod createdCallback)
 		{
 			guiOverride = desc.Editor_AdGUIOverrideEnabled;

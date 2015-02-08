@@ -76,6 +76,7 @@
 /Plugins/Reign/Tools/PerPixelOrthoCamera.cs
 /Plugins/Reign/Shared/Code/InputEx.cs
 /Plugins/Reign/Shared/Code/MM_AdPlugin.cs
+/Plugins/Reign/Shared/Code/PlayerPrefsEx.cs
 /Plugins/Reign/Shared/Code/ReignScores_ClassicGUI.cs
 /Plugins/Reign/Shared/Code/ReignScores_ScorePlugin.cs
 /Plugins/Reign/Shared/Code/StreamPluginBase.cs

@@ -22,16 +22,16 @@ public class AdsDemo : MonoBehaviour
 		}
 		Singleton = this;
 
+		// NOTE: use 'ad.Visible = true/false' instead of delete and re-creating Ads!
+		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't create the same Ad twice.
+		adStatus = "none";
+
 		uiStyle = new GUIStyle()
 		{
 			alignment = TextAnchor.MiddleCenter,
 			fontSize = 32,
 			normal = new GUIStyleState() {textColor = Color.white},
 		};
-
-		// NOTE: use 'ad.Visible = true/false' instead of delete and re-creating Ads!
-		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't create the same Ad twice.
-		adStatus = "none";
 
 		// Ads - NOTE: You can pass in multiple "AdDesc" objects if you want more then one ad.
 		var desc = new AdDesc();

@@ -378,26 +378,9 @@ namespace Reign.Plugin
 			});
 		}
 
-		#if UNITY_METRO_8_0
-		bool buyInAppAsync_Done, buyInAppAsync_Successful;
-		#endif
 		public void BuyInApp(string inAppID, InAppPurchaseBuyCallbackMethod purchasedCallback)
 		{
-			#if UNITY_METRO_8_0
-			buyInAppAsync_Done = false;
-			buyInAppAsync_Successful = false;
-			#endif
-
 			buyInAppAsync(inAppID, purchasedCallback);
-
-			#if UNITY_METRO_8_0
-			while (!buyInAppAsync_Done) Thread.Sleep(1);
-			if (buyInAppAsync_Successful)
-			{
-				PlayerPrefs.SetInt("ReignIAP_PurchasedAwarded_" + inAppID, 0);
-				PlayerPrefs.Save();
-			}
-			#endif
 		}
 
 		#if WINDOWS_PHONE
@@ -439,8 +422,7 @@ namespace Reign.Plugin
 							await CurrentAppSimulator.RequestProductPurchaseAsync(productID, false);
 							if (wp8TestLicenseInformation.ProductLicenses[inAppID].IsActive)
 							{
-								PlayerPrefs.SetInt("ReignIAP_PurchasedAwarded_" + inAppID, 0);
-								PlayerPrefs.Save();
+								PlayerPrefsEx.SetIntAsync("ReignIAP_PurchasedAwarded_" + inAppID, 0, true);
 							}
 							#elif UNITY_METRO_8_0
 							results = await CurrentAppSimulator.RequestProductPurchaseAsync(productID, true);
@@ -454,8 +436,7 @@ namespace Reign.Plugin
 							await CurrentApp.RequestProductPurchaseAsync(productID, false);
 							if (licenseInformation.ProductLicenses[inAppID].IsActive)
 							{
-								PlayerPrefs.SetInt("ReignIAP_PurchasedAwarded_" + inAppID, 0);
-								PlayerPrefs.Save();
+								PlayerPrefsEx.SetIntAsync("ReignIAP_PurchasedAwarded_" + inAppID, 0, true);
 							}
 							#elif UNITY_METRO_8_0
 							results = await CurrentApp.RequestProductPurchaseAsync(productID, true);
@@ -467,15 +448,12 @@ namespace Reign.Plugin
 						#if UNITY_METRO_8_0
 						if (!string.IsNullOrEmpty(results) || licenseInformation.ProductLicenses[inAppID].IsActive)
 						{
-							// must hack async PlayerPref bug in Unity here.
-							buyInAppAsync_Successful = true;
-							buyInAppAsync_Done = true;
+							PlayerPrefsEx.SetIntAsync("ReignIAP_PurchasedAwarded_" + inAppID, 0, true);
 						}
 						#elif UNITY_METRO
 						if (results.Status == ProductPurchaseStatus.Succeeded || results.Status == ProductPurchaseStatus.AlreadyPurchased || licenseInformation.ProductLicenses[inAppID].IsActive)
 						{
-							PlayerPrefs.SetInt("ReignIAP_PurchasedAwarded_" + inAppID, 0);
-							PlayerPrefs.Save();
+							PlayerPrefsEx.SetIntAsync("ReignIAP_PurchasedAwarded_" + inAppID, 0, true);
 						}
 						#endif
 						
@@ -518,10 +496,6 @@ namespace Reign.Plugin
 				{
 					if (purchasedCallback != null) purchasedCallback(inAppID, true);
 				}
-
-				#if UNITY_METRO_8_0
-				buyInAppAsync_Done = true;
-				#endif
 			});
 		}
 

@@ -33,6 +33,7 @@ public class InAppPurchaseDemo : MonoBehaviour
 			return;
 		}
 		Singleton = this;
+		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't init the same API twice.
 
 		uiStyle = new GUIStyle()
 		{
@@ -40,8 +41,6 @@ public class InAppPurchaseDemo : MonoBehaviour
 			fontSize = 32,
 			normal = new GUIStyleState() {textColor = Color.white},
 		};
-
-		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't init the same API twice.
 
 		// InApp-Purchases - NOTE: you can set different "In App IDs" for each platform.
 		var inAppIDs = new InAppPurchaseID[3];

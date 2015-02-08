@@ -20,6 +20,7 @@ public class InterstitialAdDemo : MonoBehaviour
 			return;
 		}
 		Singleton = this;
+		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't create the same Ad twice.
 
 		uiStyle = new GUIStyle()
 		{
@@ -27,8 +28,6 @@ public class InterstitialAdDemo : MonoBehaviour
 			fontSize = 32,
 			normal = new GUIStyleState() {textColor = Color.white},
 		};
-
-		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't create the same Ad twice.
 
 		var desc = new InterstitialAdDesc();
 

@@ -21,6 +21,7 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 			return;
 		}
 		Singleton = this;
+		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't init the same API twice.
 
 		uiStyle = new GUIStyle()
 		{
@@ -28,8 +29,6 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 			fontSize = 32,
 			normal = new GUIStyleState() {textColor = Color.white},
 		};
-
-		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't init the same API twice.
 
 		// Leaderboards ---------------------------
 		var leaderboards = new LeaderboardDesc[1];

@@ -7,6 +7,32 @@ namespace Reign.EditorTools
 {
 	public class InputTools
 	{
+		[MenuItem("Edit/Reign/Input/Apply Platform Mapping layout")]
+		static void ApplyPlatformMappingInputLayout()
+		{
+			applyDefaultLayout("PlatformMapping");
+		}
+
+		[MenuItem("Edit/Reign/Input/Save Editor layout")]
+		static void SaveEditorInputLayout()
+		{
+			#if UNITY_EDITOR_WIN
+			saveActiveLayoutAsDefault("EditorWin32");
+			#elif UNITY_EDITOR_OSX
+			saveActiveLayoutAsDefault("EditorOSX");
+			#endif
+		}
+
+		[MenuItem("Edit/Reign/Input/Apply Editor layout")]
+		static void ApplyEditorInputLayout()
+		{
+			#if UNITY_EDITOR_WIN
+			applyDefaultLayout("EditorWin32");
+			#elif UNITY_EDITOR_OSX
+			applyDefaultLayout("EditorOSX");
+			#endif
+		}
+
 		[MenuItem("Edit/Reign/Input/Save active platform layout as Default")]
 		static void SaveAsDefaultLayout()
 		{
