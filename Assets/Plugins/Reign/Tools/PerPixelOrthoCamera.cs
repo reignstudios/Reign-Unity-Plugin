@@ -24,7 +24,7 @@ public class PerPixelOrthoCamera : MonoBehaviour
 
 	void Start()
 	{
-		this.camera = base.camera;
+		this.camera = GetComponent<Camera>();
 		LateUpdate();
 	}
 

@@ -302,11 +302,19 @@ namespace Reign.EditorTools
 		[PostProcessBuild]
 		static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
 		{
+			#if UNITY_5
+			if (target == BuildTarget.WSAPlayer || target == BuildTarget.WP8Player)
+			#else
 			if (target == BuildTarget.MetroPlayer || target == BuildTarget.WP8Player)
+			#endif
 			{
 				var productName = PlayerSettings.productName.Replace(" ", "").Replace("_", "");
 				
+				#if UNITY_5
+				if (EditorUserBuildSettings.wsaSDK == WSASDK.UniversalSDK81 && EditorUserBuildSettings.activeBuildTarget != BuildTarget.WP8Player)
+				#else
 				if (EditorUserBuildSettings.metroSDK == MetroSDK.UniversalSDK81 && EditorUserBuildSettings.activeBuildTarget != BuildTarget.WP8Player)
+				#endif
 				{
 					var projPath = string.Format("{0}/{1}/{1}.Shared/{1}.Shared.projItems", pathToBuiltProject, productName);
 					Debug.Log("Modifing Proj: " + projPath);
