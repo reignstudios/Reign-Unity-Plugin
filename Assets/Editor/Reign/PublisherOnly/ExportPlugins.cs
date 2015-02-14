@@ -361,7 +361,7 @@ public static class ExportPlugins
 	// Open Source Tools
 	private static List<string> getOpenSourceFiles(List<string> files)
 	{
-		files = getGlobalFiles(files);
+		if (files == null) files = new List<string>();
 
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/ImageTools/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/SharpZipLib/", files);
