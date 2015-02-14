@@ -357,4 +357,26 @@ public static class ExportPlugins
 		globalFilesAdded = false;
 		exportUnityPackages(getAllFiles(null, true), true, "Ultimate", folder);
 	}
+
+	// Open Source Tools
+	private static List<string> getOpenSourceFiles(List<string> files)
+	{
+		files = getGlobalFiles(files);
+
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/ImageTools/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/SharpZipLib/", files);
+
+		return files;
+	}
+
+	[MenuItem("Reign Dev/Create Unitypackage/Open Source Tools")]
+	static void ExportOpenSourceUnityPackages()
+	{
+		string folder = EditorUtility.SaveFolderPanel("Export", "", "Data");
+		if (string.IsNullOrEmpty(folder)) return;
+		folder += "/";
+
+		globalFilesAdded = false;
+		exportUnityPackages(getOpenSourceFiles(null), false, "OpenSource", folder);
+	}
 }
