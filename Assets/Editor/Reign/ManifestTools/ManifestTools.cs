@@ -49,6 +49,11 @@ namespace Reign.EditorTools
 			string filename = EditorUtility.OpenFilePanel("Android Manifest", Application.dataPath+"/Editor/Reign/ManifestTools/DefaultAndroidManifests", "xml");
 			if (string.IsNullOrEmpty(filename)) return;
 			
+			loadAndroidManifiest(filename);
+		}
+
+		internal static void loadAndroidManifiest(string filename)
+		{
 			EditorApplication.SaveAssets();
 			File.Copy(filename, Application.dataPath + "/Plugins/Android/AndroidManifest.xml", true);
 			AssetDatabase.Refresh();

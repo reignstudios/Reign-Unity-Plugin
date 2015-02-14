@@ -25,13 +25,6 @@
 			</intent-filter>
 			<meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="true"/>
 		</activity>
-		
-		<!-- Amazon InAppPurchase receiver -->
-		<receiver android:name = "com.amazon.device.iap.ResponseReceiver" >
-	        <intent-filter>
-	            <action android:name = "com.amazon.inapp.purchasing.NOTIFY" android:permission = "com.amazon.inapp.purchasing.Permission.NOTIFY"/>
-			</intent-filter>
-	    </receiver>
 	    
 	    <!-- Amazon Ads -->
 	    <activity android:name="com.amazon.device.ads.AdActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
@@ -45,29 +38,5 @@
 		<!-- GooglePlay Leaderboards and Achievements -->
 		<meta-data android:name="com.google.android.gms.appstate.APP_ID" android:value="\ xxxxxxxxxxxx" /><!-- Set to your Game Services AppID -->
 		<meta-data android:name="com.google.android.gms.games.APP_ID" android:value="\ xxxxxxxxxxxx" /><!-- Set to your Game Services AppID -->
-
-		<!-- Amazon GameCircle -->
-		<activity android:name="com.amazon.ags.html5.overlay.GameCircleUserInterface" android:theme="@style/GCOverlay" android:hardwareAccelerated="false"></activity>
-		<activity android:name="com.amazon.ags.html5.overlay.GameCircleAlertUserInterface" android:theme="@style/GCAlert" android:hardwareAccelerated="false"></activity>
-		<activity android:name="com.amazon.identity.auth.device.authorization.AuthorizationActivity" android:theme="@android:style/Theme.NoDisplay" android:allowTaskReparenting="true" android:launchMode="singleTask">
-		  <intent-filter>
-		     <action android:name="android.intent.action.VIEW" />
-		     <category android:name="android.intent.category.DEFAULT" />
-		     <category android:name="android.intent.category.BROWSABLE" />
-		     <data android:host="com.xxxx.xxxx" android:scheme="amzn" /><!-- Set to your bundle/package id -->
-		  </intent-filter>
-		</activity>
-		<receiver android:name="com.amazon.identity.auth.device.authorization.PackageIntentReceiver" android:enabled="true">
-		  <intent-filter>
-		     <action android:name="android.intent.action.PACKAGE_INSTALL" />
-		     <action android:name="android.intent.action.PACKAGE_ADDED" />
-		     <data android:scheme="package" />
-		  </intent-filter>
-		</receiver>
-
-		<!-- Smasung IAP -->
-		<activity android:name="com.sec.android.iap.lib.activity.InboxActivity" android:theme="@style/Theme.Empty" android:configChanges="orientation|screenSize"/>
-        <activity android:name="com.sec.android.iap.lib.activity.PaymentActivity" android:theme="@style/Theme.Empty" android:configChanges="orientation|screenSize"/>
-        <activity android:name="com.sec.android.iap.lib.activity.ItemActivity" android:theme="@style/Theme.Empty" android:configChanges="orientation|screenSize"/>
 	</application>
 </manifest>

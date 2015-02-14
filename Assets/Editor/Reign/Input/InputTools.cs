@@ -96,6 +96,12 @@ namespace Reign.EditorTools
 					saveActiveLayoutAsDefault("WebPlayer");
 					break;
 
+				#if UNITY_5
+				case BuildTarget.WebGL:
+					saveActiveLayoutAsDefault("WebPlayer");
+					break;
+				#endif
+
 				case BuildTarget.PSM:
 				case BuildTarget.PSP2:
 					saveActiveLayoutAsDefault("Vita");
@@ -122,7 +128,7 @@ namespace Reign.EditorTools
 		}
 
 		[MenuItem("Edit/Reign/Input/Apply Default layout for active platform")]
-		static void ApplyDefaultInputLayout()
+		internal static void ApplyDefaultInputLayout()
 		{
 			switch (EditorUserBuildSettings.activeBuildTarget)
 			{
@@ -184,6 +190,12 @@ namespace Reign.EditorTools
 					applyDefaultLayout("WebPlayer");
 					break;
 
+				#if UNITY_5
+				case BuildTarget.WebGL:
+					applyDefaultLayout("WebPlayer");
+					break;
+				#endif
+
 				case BuildTarget.PSM:
 				case BuildTarget.PSP2:
 					applyDefaultLayout("Vita");
@@ -241,7 +253,7 @@ namespace Reign.EditorTools
 			AssetDatabase.Refresh();
 		}
 
-		static void applyDefaultLayout(string platform)
+		internal static void applyDefaultLayout(string platform)
 		{
 			EditorApplication.SaveAssets();
 			string root = Application.dataPath.Replace("Assets", "ProjectSettings");
