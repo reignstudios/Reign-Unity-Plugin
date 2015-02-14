@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Reign.EditorTools
 {
-	public class InputTools
+	public static class InputTools
 	{
 		[MenuItem("Edit/Reign/Input/Apply Platform Mapping layout")]
 		static void ApplyPlatformMappingInputLayout()
@@ -212,7 +212,7 @@ namespace Reign.EditorTools
 		[MenuItem("Edit/Reign/Input/Save custom platform layout")]
 		static void SaveCustomPlatformLayout()
 		{
-			string filename = EditorUtility.SaveFilePanel("Input Layout", Application.dataPath+"", "InputManager_Custom", "");
+			string filename = EditorUtility.SaveFilePanel("Input Layout", Application.dataPath+"/Editor/Reign/Input/DefaultLayouts", "InputManager_Custom", "");
 			if (string.IsNullOrEmpty(filename)) return;
 			
 			EditorApplication.SaveAssets();
@@ -224,7 +224,7 @@ namespace Reign.EditorTools
 		[MenuItem("Edit/Reign/Input/Load custom platform layout")]
 		static void LoadCustomPlatformLayout()
 		{
-			string filename = EditorUtility.OpenFilePanel("Input Layout", Application.dataPath+"", "");
+			string filename = EditorUtility.OpenFilePanel("Input Layout", Application.dataPath+"/Editor/Reign/Input/DefaultLayouts", "");
 			if (string.IsNullOrEmpty(filename)) return;
 			
 			EditorApplication.SaveAssets();
