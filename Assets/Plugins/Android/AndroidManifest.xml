@@ -11,6 +11,7 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Required for Amazon IAP Testing and Camera -->
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- May be Required for some devices -->
 	<uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- Required for GooglePlay Leaderboards and Achievements -->
+	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
 	<!-- Application -->
 	<application android:icon="@drawable/app_icon" android:label="@string/app_name">
