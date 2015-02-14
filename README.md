@@ -11,7 +11,6 @@ TODO
 
 Roadmap
 ========================================================================
-- Add InputEx for easy cross platform controller support.
 - Add Desktop platform support.
 - Add PSM Vita support.
 - Add Ouya support.
