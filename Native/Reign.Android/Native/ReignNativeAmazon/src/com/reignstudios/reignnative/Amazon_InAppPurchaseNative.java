@@ -18,6 +18,7 @@ import android.util.Log;
 
 import com.amazon.device.iap.PurchasingListener;
 import com.amazon.device.iap.PurchasingService;
+import com.amazon.device.iap.model.FulfillmentResult;
 import com.amazon.device.iap.model.Product;
 import com.amazon.device.iap.model.ProductDataResponse;
 import com.amazon.device.iap.model.PurchaseResponse;
@@ -371,6 +372,7 @@ public class Amazon_InAppPurchaseNative implements PurchasingListener, ReignActi
                 }*/
 
                 //printReceipt(purchaseResponse.getReceipt());
+            	PurchasingService.notifyFulfillment(purchaseResponse.getReceipt().getReceiptId(), FulfillmentResult.FULFILLED);
             	Log.d(logTag, "Successful purchase.");
                 buySuccess = true;
             	buyDone = true;
