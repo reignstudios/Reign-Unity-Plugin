@@ -130,8 +130,6 @@ public class ReignServices : MonoBehaviour
 		if (newScreenWidth != lastScreenWidth || newScreenHeight != lastScreenHeight)
 		{
 			if (ScreenSizeChangedCallback != null) ScreenSizeChangedCallback(lastScreenWidth, lastScreenHeight, newScreenWidth, newScreenHeight);
-			lastScreenWidth = newScreenWidth;
-			lastScreenHeight = newScreenHeight;
 		}
 		lastScreenWidth = Screen.width;
 		lastScreenHeight = Screen.height;
