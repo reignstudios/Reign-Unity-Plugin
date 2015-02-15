@@ -284,7 +284,7 @@ namespace Reign.EditorTools
 		#endregion
 
 		#region PlatformTools
-		private static void applyCompilerDirectives(bool append, params string[] directives)
+		internal static void applyCompilerDirectives(bool append, params string[] directives)
 		{
 			var platform = EditorUserBuildSettings.selectedBuildTargetGroup;
 			string valueBlock = PlayerSettings.GetScriptingDefineSymbolsForGroup(platform);
@@ -335,7 +335,7 @@ namespace Reign.EditorTools
 			Debug.Log("Compiler Directives set to: " + newValue);
 		}
 
-		private static void removeCompilerDirectives(params string[] directives)
+		internal static void removeCompilerDirectives(params string[] directives)
 		{
 			var platform = EditorUserBuildSettings.selectedBuildTargetGroup;
 			string valueBlock = PlayerSettings.GetScriptingDefineSymbolsForGroup(platform);
@@ -383,178 +383,6 @@ namespace Reign.EditorTools
 		{
 			removeCompilerDirectives("DISABLE_REIGN");
 		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for Android_GooglePlay")]
-		private static void SetPlatformDefaults_Android_GooglePlay()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Android;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.Android);
-			applyCompilerDirectives(false, "GOOGLEPLAY");
-			InputTools.ApplyDefaultInputLayout();
-			ManifestTools.loadAndroidManifiest(Application.dataPath + "/Editor/Reign/ManifestTools/DefaultAndroidManifests/AndroidManifest_GooglePlay.xml");
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for Android_GooglePlay_TV")]
-		private static void SetPlatformDefaults_Android_GooglePlay_TV()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Android;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.Android);
-			applyCompilerDirectives(false, "GOOGLEPLAY", "TV");
-			InputTools.ApplyDefaultInputLayout();
-			ManifestTools.loadAndroidManifiest(Application.dataPath + "/Editor/Reign/ManifestTools/DefaultAndroidManifests/AndroidManifest_AndroidTV.xml");
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for Android_Amazon")]
-		private static void SetPlatformDefaults_Android_Amazon()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Android;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.Android);
-			applyCompilerDirectives(false, "AMAZON");
-			InputTools.ApplyDefaultInputLayout();
-			ManifestTools.loadAndroidManifiest(Application.dataPath + "/Editor/Reign/ManifestTools/DefaultAndroidManifests/AndroidManifest_Amazon.xml");
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for Android_Amazon_TV")]
-		private static void SetPlatformDefaults_Android_Amazon_TV()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Android;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.Android);
-			applyCompilerDirectives(false, "AMAZON", "TV");
-			InputTools.ApplyDefaultInputLayout();
-			ManifestTools.loadAndroidManifiest(Application.dataPath + "/Editor/Reign/ManifestTools/DefaultAndroidManifests/AndroidManifest_AmazonFireTV.xml");
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for Android_Samsung")]
-		private static void SetPlatformDefaults_Android_Samsung()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Android;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.Android);
-			applyCompilerDirectives(false, "SAMSUNG");
-			InputTools.ApplyDefaultInputLayout();
-			ManifestTools.loadAndroidManifiest(Application.dataPath + "/Editor/Reign/ManifestTools/DefaultAndroidManifests/AndroidManifest_Samsung.xml");
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for Android_Ouya_TV")]
-		private static void SetPlatformDefaults_Android_Ouya_TV()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Android;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.Android);
-			applyCompilerDirectives(false, "OUYA", "TV");
-			InputTools.applyDefaultLayout("Ouya");
-			ManifestTools.loadAndroidManifiest(Application.dataPath + "/Editor/Reign/ManifestTools/DefaultAndroidManifests/AndroidManifest_Ouya.xml");
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for Android_GameStick_TV")]
-		private static void SetPlatformDefaults_Android_GameStick_TV()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Android;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.Android);
-			applyCompilerDirectives(false, "GAMESTICK", "TV");
-			InputTools.applyDefaultLayout("GameStick");
-			ManifestTools.loadAndroidManifiest(Application.dataPath + "/Editor/Reign/ManifestTools/DefaultAndroidManifests/AndroidManifest_GameStick.xml");
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for iOS")]
-		private static void SetPlatformDefaults_iOS()
-		{
-			#if UNITY_5
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.iOS;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.iOS);
-			#else
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.iPhone;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.iPhone);
-			#endif
-			clearCompilerDirectives();
-			InputTools.ApplyDefaultInputLayout();
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for WP8")]
-		private static void SetPlatformDefaults_WP8()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.WP8;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.WP8Player);
-			clearCompilerDirectives();
-			InputTools.ApplyDefaultInputLayout();
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for WinRT")]
-		private static void SetPlatformDefaults_WinRT()
-		{
-			#if UNITY_5
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.WSA;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.WSAPlayer);
-			#else
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Metro;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.MetroPlayer);
-			#endif
-			clearCompilerDirectives();
-			InputTools.ApplyDefaultInputLayout();
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for BlackBerry")]
-		private static void SetPlatformDefaults_BlackBerry()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.BlackBerry;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.BlackBerry);
-			clearCompilerDirectives();
-			InputTools.ApplyDefaultInputLayout();
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for Win32")]
-		private static void SetPlatformDefaults_Win32()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Standalone;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneWindows);
-			clearCompilerDirectives();
-			InputTools.ApplyDefaultInputLayout();
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for _OSX")]
-		private static void SetPlatformDefaults_OSX()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Standalone;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneOSXIntel);
-			clearCompilerDirectives();
-			InputTools.ApplyDefaultInputLayout();
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for Linux")]
-		private static void SetPlatformDefaults_Linux()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Standalone;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneLinux);
-			clearCompilerDirectives();
-			InputTools.ApplyDefaultInputLayout();
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for PSVita")]
-		private static void SetPlatformDefaults_PSVita()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.PSM;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.PSM);
-			clearCompilerDirectives();
-			InputTools.ApplyDefaultInputLayout();
-		}
-
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for WebPlayer")]
-		private static void SetPlatformDefaults_WebPlayer()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.WebPlayer;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.WebPlayer);
-			clearCompilerDirectives();
-			InputTools.ApplyDefaultInputLayout();
-		}
-
-		#if UNITY_5
-		[MenuItem("Edit/Reign/Platform Tools/Set defaults for WebGL")]
-		private static void SetPlatformDefaults_WebGL()
-		{
-			EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.WebGL;
-			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.WebGL);
-			clearCompilerDirectives();
-			InputTools.ApplyDefaultInputLayout();
-		}
-		#endif
 		#endregion
 	}
 }

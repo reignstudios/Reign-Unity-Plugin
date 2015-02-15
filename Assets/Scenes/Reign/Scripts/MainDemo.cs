@@ -75,4 +75,9 @@ public class MainDemo : MonoBehaviour
 			Application.LoadLevel("InputExDemo");
 		}
 	}
+
+	void Update()
+	{
+		if (Input.GetKeyUp(KeyCode.Escape)) Application.Quit();
+	}
 }
