@@ -20,6 +20,10 @@ public class ReignServices : MonoBehaviour
 	internal delegate void frameDoneCallbackMethod();
 	internal frameDoneCallbackMethod frameDoneCallback;
 
+	private static int lastScreenWidth, lastScreenHeight;
+	public delegate void ScreenSizeChangedCallbackMethod(int oldWidth, int oldHeight, int newWidth, int newHeight);
+	public static event ScreenSizeChangedCallbackMethod ScreenSizeChangedCallback;
+
 	/// <summary>
 	/// Sevice delegate method.
 	/// </summary>
@@ -71,6 +75,9 @@ public class ReignServices : MonoBehaviour
 		#if DISABLE_REIGN
 		Debug.LogWarning("NOTE: Reign is disabled for this platform. Check Player Settings for 'DISABLE_REIGN'");
 		#endif
+
+		lastScreenWidth = Screen.width;
+		lastScreenHeight = Screen.height;
 	}
 	
 	/// <summary>
@@ -117,6 +124,17 @@ public class ReignServices : MonoBehaviour
 			requestFrameDone = false;
 			StartCoroutine(frameSync());
 		}
+
+		int newScreenWidth = Screen.width;
+		int newScreenHeight = Screen.height;
+		if (newScreenWidth != lastScreenWidth || newScreenHeight != lastScreenHeight)
+		{
+			if (ScreenSizeChangedCallback != null) ScreenSizeChangedCallback(lastScreenWidth, lastScreenHeight, newScreenWidth, newScreenHeight);
+			lastScreenWidth = newScreenWidth;
+			lastScreenHeight = newScreenHeight;
+		}
+		lastScreenWidth = Screen.width;
+		lastScreenHeight = Screen.height;
 	}
 
 	private IEnumerator frameSync()

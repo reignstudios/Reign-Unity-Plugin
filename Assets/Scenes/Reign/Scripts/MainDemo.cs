@@ -17,6 +17,13 @@ public class MainDemo : MonoBehaviour
 		const string warning = "NOTE: Make sure to add all the Reign Demo projects you wish to test in the 'Build Settings' window!\nThis makes for easy device testing.";
 		Debug.Log(warning);
 		Debug.LogWarning(warning);
+
+		ReignServices.ScreenSizeChangedCallback += ReignServices_ScreenSizeChangedCallback;
+	}
+
+	void ReignServices_ScreenSizeChangedCallback(int oldWidth, int oldHeight, int newWidth, int newHeight)
+	{
+		Debug.Log(string.Format("Screen Size Changed: OldSize = {0}, {1} NewSize = {2}, {3}", oldWidth, oldHeight, newWidth, newHeight));
 	}
 
 	void OnGUI()
