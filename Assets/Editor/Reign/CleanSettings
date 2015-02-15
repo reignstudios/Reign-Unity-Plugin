@@ -1,7 +1,14 @@
+/Editor/Reign/Input/DefaultLayouts/InputManager_EditorOSX
+/Editor/Reign/Input/DefaultLayouts/InputManager_EditorWin32
 /Editor/Reign/Input/DefaultLayouts/InputManager_Linux
 /Editor/Reign/Input/DefaultLayouts/InputManager_OSX
+/Editor/Reign/Input/DefaultLayouts/InputManager_PlatformMapping
 /Editor/Reign/Input/DefaultLayouts/InputManager_Win32
 /Editor/Reign/Input/InputTools.cs
+/Editor/Reign/ManifestTools/DefaultAndroidManifests/AndroidManifest_Amazon.xml
+/Editor/Reign/ManifestTools/DefaultAndroidManifests/AndroidManifest_GooglePlay.xml
+/Editor/Reign/ManifestTools/DefaultAndroidManifests/AndroidManifest_Samsung.xml
+/Editor/Reign/ManifestTools/ManifestTools.cs
 /Editor/Reign/CleanSettings
 /Editor/Reign/Reign.EditorTools.pdb
 /Editor/Reign/ReignScores.zip
@@ -38,6 +45,8 @@
 /Scenes/Reign/Scripts/MarketingDemo.cs
 /Scenes/Reign/Scripts/MessageBoxDemo.cs
 /Scenes/Reign/Scripts/StreamsDemo.cs
+/Scenes/Reign/Tools/InputMapper.cs
+/Scenes/Reign/Tools/InputMapper.unity
 /Scenes/Reign/AdsDemo.unity
 /Scenes/Reign/EmailDemo.unity
 /Scenes/Reign/InAppPurchaseDemo.unity
@@ -588,7 +597,6 @@
 /Plugins/Android/res/values-ar/common_strings.xml
 /Plugins/Android/res/values-ar/strings.xml
 /Plugins/Android/res/values-az/strings.xml
-/Plugins/Android/res/values-be/common_strings.xml
 /Plugins/Android/res/values-bg/common_strings.xml
 /Plugins/Android/res/values-bg/strings.xml
 /Plugins/Android/res/values-bn/strings.xml
@@ -760,6 +768,7 @@
 /Plugins/Android/in-app-purchasing-2.0.1.jar
 /Plugins/Android/libAmazonGamesJni.so
 /Plugins/Android/login-with-amazon-sdk.jar
+/Plugins/Android/proguard-project.txt
 /Plugins/Android/Reign.Android.zip
 /Plugins/Android/ReignAndroidManifest.xml
 /Plugins/Android/reignnative.jar
