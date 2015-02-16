@@ -86,7 +86,16 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 		{
 			public void run()
 			{
-				if (!client.isConnected()) client.connect();
+				try
+				{
+					isAuthenticated = client.isConnected();
+					if (!isAuthenticated) client.connect();
+				}
+				catch (Exception e)
+				{
+					isAuthenticated = false;
+					Log.i(logTag, "Error when trying to connect: " + e.toString());
+				}
 			}
 		});
 	}
@@ -98,9 +107,40 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 		{
 			public void run()
 			{
-				if (client.isConnected()) client.disconnect();
+				try
+				{
+					if (client.isConnected()) client.disconnect();
+				}
+				catch (Exception e)
+				{
+					isAuthenticated = false;
+					Log.i(logTag, "Error when trying to disconnect: " + e.toString());
+					client.disconnect();
+				}
 			}
 		});
+	}
+	
+	private static boolean checkAuthenticationState()
+	{
+		try
+		{
+			if (!isAuthenticated || !client.isConnected())
+			{
+				isAuthenticated = false;
+				Log.i(logTag, "Failed because user not logged in!");
+				return false;
+			}
+		}
+		catch (Exception e)
+		{
+			isAuthenticated = false;
+			Log.i(logTag, "Authentication error: " + e.toString());
+			client.disconnect();
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public static void ReportAchievement(final String id, final float percentComplete, final boolean isIncrementalType)
@@ -109,6 +149,8 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 		{
 			public void run()
 			{
+				if (!checkAuthenticationState()) return;
+				
 				PendingResult<UpdateAchievementResult> result = null;
 				if (isIncrementalType) result = Games.Achievements.setStepsImmediate(client, id, (int)percentComplete);
 				else result = Games.Achievements.unlockImmediate(client, id);
@@ -133,6 +175,8 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 		{
 			public void run()
 			{
+				if (!checkAuthenticationState()) return;
+				
 				PendingResult<SubmitScoreResult> result = Games.Leaderboards.submitScoreImmediate(client, id, scoreValue);//.setResultCallback(singleton);
 				ResultCallback<SubmitScoreResult> resultCallback = new ResultCallback<SubmitScoreResult>()
 				{
@@ -156,6 +200,8 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 		{
 			public void run()
 			{
+				if (!checkAuthenticationState()) return;
+				
 				PendingResult<LoadAchievementsResult> result = Games.Achievements.load(client, true);
 				ResultCallback<LoadAchievementsResult> resultCallback = new ResultCallback<LoadAchievementsResult>()
 				{
@@ -204,6 +250,7 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 		{
 			public void run()
 			{
+				if (!checkAuthenticationState()) return;
 				ReignUnityActivity.ReignContext.startActivityForResult(Games.Achievements.getAchievementsIntent(client), REQUEST_ACHIEVEMENTS_ID);
 			}
 		});
@@ -215,6 +262,7 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 		{
 			public void run()
 			{
+				if (!checkAuthenticationState()) return;
 				ReignUnityActivity.ReignContext.startActivityForResult(Games.Leaderboards.getLeaderboardIntent(client, id), REQUEST_LEADERBOARD_ID);
 			}
 		});
@@ -268,8 +316,21 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 	{
 		if (requestCode == REQUEST_ACHIEVEMENTS_ID || requestCode == REQUEST_LEADERBOARD_ID)
 		{
-			if (resultcode == Activity.RESULT_OK || resultcode == Activity.RESULT_CANCELED) events.add("ShowNativePage:Success");
-			else events.add("ShowNativePage:Failed with code " + resultcode);
+			if (resultcode == GamesActivityResultCodes.RESULT_RECONNECT_REQUIRED)
+			{
+				Log.d(logTag, "Diconnected");
+				isAuthenticated = false;
+				client.disconnect();
+			}
+			else if (resultcode == Activity.RESULT_OK || resultcode == Activity.RESULT_CANCELED)
+			{
+				events.add("ShowNativePage:Success");
+			}
+			else
+			{
+				events.add("ShowNativePage:Failed with code " + resultcode);
+			}
+			
 			return true;
 		}
 		else if (requestCode == RC_RESOLVE_ID)
@@ -277,11 +338,13 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 			if (resultcode == Activity.RESULT_OK)
 			{
 				Log.d(logTag, "Trying to connect after RESULT_OK");
+				isAuthenticated = false;
 				client.connect();
 			}
 			else if (resultcode == GamesActivityResultCodes.RESULT_RECONNECT_REQUIRED)
 			{
 				Log.d(logTag, "Trying to connect after RESULT_RECONNECT_REQUIRED");
+				isAuthenticated = false;
 				client.connect();
 			}
 			else if (resultcode == Activity.RESULT_CANCELED)
