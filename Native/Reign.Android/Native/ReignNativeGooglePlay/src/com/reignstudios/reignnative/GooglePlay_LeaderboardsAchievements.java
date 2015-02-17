@@ -95,6 +95,7 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 				{
 					isAuthenticated = false;
 					Log.i(logTag, "Error when trying to connect: " + e.toString());
+					events.add("Error:AuthenticateFailed");
 				}
 			}
 		});
@@ -321,6 +322,7 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 				Log.d(logTag, "Diconnected");
 				isAuthenticated = false;
 				client.disconnect();
+				events.add("ShowNativePage:Success");
 			}
 			else if (resultcode == Activity.RESULT_OK || resultcode == Activity.RESULT_CANCELED)
 			{
