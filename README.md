@@ -21,7 +21,6 @@ Roadmap
 - Look into AdDuplex
 - Look into InMobi
 - Win8/WP8 Live Tile features
-- Possible Win8.0 support.
 - Look into PlayHaven, Chartboost and Flurry
 - Custom button text for MessageBox buttons
 - Look into making encrypted PlayerPrefs
