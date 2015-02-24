@@ -94,7 +94,7 @@ namespace Reign.Plugin
 				try
 				{
 					adControl = new AdControl();
-					#if WINDOWS_PHONE
+					#if WINDOWS_PHONE || UNITY_WP_8_1
 					adControl.IsAutoRefreshEnabled = desc.WP8_MicrosoftAdvertising_UseBuiltInRefresh;
 					if (!desc.WP8_MicrosoftAdvertising_UseBuiltInRefresh)
 					{
@@ -120,16 +120,43 @@ namespace Reign.Plugin
 					adControl.AdRefreshed += adControl_AdRefreshed;
 					#endif
 					adControl.ErrorOccurred += adControl_ErrorOccurred;
-					
-					#if UNITY_METRO
-					adControl.ApplicationId = desc.Testing ? "d25517cb-12d4-4699-8bdc-52040c712cab" : desc.WinRT_MicrosoftAdvertising_ApplicationID;
-					adControl.AdUnitId = desc.WinRT_MicrosoftAdvertising_UnitID;
-					#else
+			
+					#if WINDOWS_PHONE || UNITY_WP_8_1
 					adControl.ApplicationId = desc.Testing ? "test_client" : desc.WP8_MicrosoftAdvertising_ApplicationID;
 					adControl.AdUnitId = desc.WP8_MicrosoftAdvertising_UnitID;
-					#endif
-			
-					#if UNITY_METRO
+					switch (desc.WP8_MicrosoftAdvertising_AdSize)
+					{
+						case WP8_MicrosoftAdvertising_AdSize.Wide_640x100:
+							adControl.Width = 640;
+							adControl.Height = 100;
+							if (desc.Testing) adControl.AdUnitId = "Image640_100";
+							break;
+
+						case WP8_MicrosoftAdvertising_AdSize.Wide_480x80:
+							adControl.Width = 480;
+							adControl.Height = 80;
+							if (desc.Testing) adControl.AdUnitId = "Image480_80";
+							break;
+
+						case WP8_MicrosoftAdvertising_AdSize.Wide_320x50:
+							adControl.Width = 320;
+							adControl.Height = 50;
+							if (desc.Testing) adControl.AdUnitId = "Image320_50";
+							break;
+
+						case WP8_MicrosoftAdvertising_AdSize.Wide_300x50:
+							adControl.Width = 300;
+							adControl.Height = 50;
+							if (desc.Testing) adControl.AdUnitId = "Image300_50";
+							break;
+
+						default:
+							Debug.LogError("AdPlugin: Unsuported Ad size");
+							break;
+					}
+					#elif UNITY_METRO
+					adControl.ApplicationId = desc.Testing ? "d25517cb-12d4-4699-8bdc-52040c712cab" : desc.WinRT_MicrosoftAdvertising_ApplicationID;
+					adControl.AdUnitId = desc.WinRT_MicrosoftAdvertising_UnitID;
 					switch (desc.WinRT_MicrosoftAdvertising_AdSize)
 					{
 						case WinRT_MicrosoftAdvertising_AdSize.Tall_160x600:
@@ -160,37 +187,6 @@ namespace Reign.Plugin
 							adControl.Width = 250;
 							adControl.Height = 250;
 							if (desc.Testing) adControl.AdUnitId = "10043105";
-							break;
-
-						default:
-							Debug.LogError("AdPlugin: Unsuported Ad size");
-							break;
-					}
-					#else
-					switch (desc.WP8_MicrosoftAdvertising_AdSize)
-					{
-						case WP8_MicrosoftAdvertising_AdSize.Wide_640x100:
-							adControl.Width = 640;
-							adControl.Height = 100;
-							if (desc.Testing) adControl.AdUnitId = "Image640_100";
-							break;
-
-						case WP8_MicrosoftAdvertising_AdSize.Wide_480x80:
-							adControl.Width = 480;
-							adControl.Height = 80;
-							if (desc.Testing) adControl.AdUnitId = "Image480_80";
-							break;
-
-						case WP8_MicrosoftAdvertising_AdSize.Wide_320x50:
-							adControl.Width = 320;
-							adControl.Height = 50;
-							if (desc.Testing) adControl.AdUnitId = "Image320_50";
-							break;
-
-						case WP8_MicrosoftAdvertising_AdSize.Wide_300x50:
-							adControl.Width = 300;
-							adControl.Height = 50;
-							if (desc.Testing) adControl.AdUnitId = "Image300_50";
 							break;
 
 						default:
