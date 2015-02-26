@@ -111,6 +111,7 @@ namespace Reign
 		private static void initMethodPointers()
 		{
 			StreamPlugin_WinRT.InitNative = init_StreamPlugin;
+			SocialPlugin_WinRT.InitNative = init_SocialPlugin;
 			MicrosoftStore_InAppPurchasePlugin_WinRT.InitNative = init_MicrosoftStore_InAppPurchasePlugin;
 			MicrosoftAdvertising_AdPlugin_WinRT.InitNative = init_MicrosoftAdvertising_AdPlugin;
 			MessageBoxPlugin_WinRT.InitNative = init_MessageBoxPlugin;
@@ -149,6 +150,11 @@ namespace Reign
 		private static void init_StreamPlugin(StreamPlugin_WinRT plugin)
 		{
 			plugin.Native = new StreamPlugin_Native();
+		}
+
+		private static void init_SocialPlugin(SocialPlugin_WinRT plugin)
+		{
+			plugin.Native = new SocialPlugin_Native();
 		}
 
 		private static void init_MicrosoftStore_InAppPurchasePlugin(MicrosoftStore_InAppPurchasePlugin_WinRT plugin, InAppPurchaseDesc desc, InAppPurchaseCreatedCallbackMethod createdCallback)

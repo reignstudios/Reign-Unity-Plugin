@@ -175,6 +175,7 @@ namespace Reign.EditorTools
 					"Shared/WinRT/MicrosoftAdvertising_AdPlugin.cs",
 					"Shared/WinRT/MicrosoftStore_InAppPurchasePlugin.cs",
 					"Shared/WinRT/StreamPlugin.cs",
+					"Shared/WinRT/SocialPlugin.cs",
 					"Shared/WinRT/WinRTPlugin.cs",
 
 					#if UNITY_WP8
@@ -207,7 +208,7 @@ namespace Reign.EditorTools
 						{
 							foreach (var a in element.Attributes())
 							{
-								if (a.Name.LocalName == "Include" && a.Value == sourceFileName)
+								if (a.Name.LocalName == "Include" && a.Value == (extraRefValue + sourceFileName))
 								{
 									needToRefFile = false;
 									break;

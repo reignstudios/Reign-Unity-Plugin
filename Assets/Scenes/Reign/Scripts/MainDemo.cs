@@ -81,6 +81,12 @@ public class MainDemo : MonoBehaviour
 		{
 			Application.LoadLevel("InputExDemo");
 		}
+
+		offset += 34;
+		if (GUI.Button(new Rect(148 + 20, 34, 148, 32), "Social"))
+		{
+			Application.LoadLevel("SocialDemo");
+		}
 	}
 
 	void Update()
