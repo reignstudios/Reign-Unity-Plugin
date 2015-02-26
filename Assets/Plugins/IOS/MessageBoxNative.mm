@@ -17,7 +17,9 @@
 - (void)dealloc
 {
     // dispose...
+    #if !UNITY_5_0_0
     [super dealloc];
+    #endif
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -69,7 +71,9 @@
     }
     
     [alert show];
+    #if !UNITY_5_0_0
     [alert release];
+    #endif
 }
 @end
 
@@ -89,7 +93,9 @@ extern "C"
     {
         if (native != nil)
         {
+            #if !UNITY_5_0_0
             [native release];
+            #endif
             native = nil;
         }
     }

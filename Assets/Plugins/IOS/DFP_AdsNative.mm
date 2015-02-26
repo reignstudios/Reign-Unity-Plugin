@@ -26,12 +26,16 @@
     {
         bannerView.delegate = nil;
         [bannerView removeFromSuperview];
+        #if !UNITY_5_0_0
         [bannerView release];
+        #endif
         bannerView = nil;
     }
     
+    #if !UNITY_5_0_0
     [events dealloc];
     [super dealloc];
+    #endif
 }
 
 - (void)adViewDidReceiveAd:(DFPBannerView *)view
@@ -171,7 +175,13 @@ extern "C"
     
     void DFP_DisposeAd(DFP_AdsNative* ad)
     {
-        if (ad != nil) [ad release];
+        if (ad != nil)
+        {
+            #if !UNITY_5_0_0
+            [ad release];
+            #endif
+            ad = nil;
+        }
     }
     
     void DFP_CreateAd(DFP_AdsNative* ad, int gravity, int adSizeIndex, char* unitID)

@@ -25,7 +25,9 @@
     if (ad != nil)
     {
         ad.delegate = nil;
+        #if !UNITY_5_0_0
         [ad release];
+        #endif
         ad = nil;
     }
     
@@ -35,8 +37,10 @@
         unitID = nil;
     }
     
+    #if !UNITY_5_0_0
     [events dealloc];
     [super dealloc];
+    #endif
 }
 
 - (void)interstitialDidReceiveAd:(GADInterstitial*)interstitial
@@ -82,7 +86,9 @@
     if (ad != nil && ad.hasBeenUsed)
     {
         ad.delegate = nil;
+        #if !UNITY_5_0_0
         [ad release];
+        #endif
         ad = nil;
     }
     
@@ -126,7 +132,13 @@ extern "C"
     
     void AdMob_Interstitial_DisposeAd(AdMob_InterstitialAdNative* ad)
     {
-        if (ad != nil) [ad release];
+        if (ad != nil)
+        {
+            #if !UNITY_5_0_0
+            [ad release];
+            #endif
+            ad = nil;
+        }
     }
     
     void AdMob_Interstitial_CreateAd(AdMob_InterstitialAdNative* ad, char* unitID)

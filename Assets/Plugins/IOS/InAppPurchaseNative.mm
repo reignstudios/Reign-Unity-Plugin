@@ -22,17 +22,23 @@
     
     if (productIdentifiers != nil)
     {
+        #if !UNITY_5_0_0
         [productIdentifiers release];
+        #endif
         productIdentifiers = nil;
     }
     
     if (products != nil)
     {
+        #if !UNITY_5_0_0
         [products release];
+        #endif
         products = nil;
     }
     
+    #if !UNITY_5_0_0
     [super dealloc];
+    #endif
 }
 
 - (void)CreateAppleStore:(char**)productIDs :(int)productIDCount
@@ -294,7 +300,13 @@ extern "C"
     
     void DisposeInAppPurchase(InAppPurchaseNative* native)
     {
-        if (native != nil) [native release];
+        if (native != nil)
+        {
+            #if !UNITY_5_0_0
+            [native release];
+            #endif
+            native = nil;
+        }
     }
     
     void CreateInAppPurchase(InAppPurchaseNative* native, char** productIDs, int productIDCount)

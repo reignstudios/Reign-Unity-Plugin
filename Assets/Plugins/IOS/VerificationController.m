@@ -86,7 +86,9 @@ static VerificationController *singleton;
     // Encode the receiptData for the itms receipt verification POST request.
     __block NSString *jsonObjectString = [self encodeBase64:(uint8_t *)transaction.transactionReceipt.bytes
                                              length:transaction.transactionReceipt.length];
+    #if !UNITY_5_0_0
     [jsonObjectString retain];
+    #endif
     
     // Create the POST request payload.
     NSString *payload = [NSString stringWithFormat:@"{\"receipt-data\" : \"%@\", \"password\" : \"%@\"}",
@@ -466,13 +468,21 @@ static VerificationController *singleton;
     
     // Include some Security framework SPIs
     extern CFStringRef kSecTrustInfoExtendedValidationKey;
+    #if !UNITY_5_0_0
     extern CFDictionaryRef SecTrustCopyInfo(SecTrustRef trust);
+    #else
+    extern NSDictionary* SecTrustCopyInfo(SecTrustRef trust);
+    #endif
     
     BOOL trusted = NO;
     SecTrustResultType trust_result;
     if ((noErr == SecTrustEvaluate(trust, &trust_result)) && (trust_result == kSecTrustResultUnspecified))
     {
-        NSDictionary *trust_info = (NSDictionary *)SecTrustCopyInfo(trust);
+        #if !UNITY_5_0_0
+        NSDictionary* trust_info = (NSDictionary*)SecTrustCopyInfo(trust);
+        #else
+        NSDictionary* trust_info = SecTrustCopyInfo(trust);
+        #endif
         id hasEV = [trust_info objectForKey:(__bridge NSString *)kSecTrustInfoExtendedValidationKey];
         trusted =  [hasEV isKindOfClass:[NSValue class]] && [hasEV boolValue];
     }

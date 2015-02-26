@@ -17,7 +17,9 @@
 - (void)dealloc
 {
     // dispose...
+    #if !UNITY_5_0_0
     [super dealloc];
+    #endif
 }
 
 - (void)showViewController:(UIViewController*)viewController
@@ -88,7 +90,9 @@ extern "C"
     {
         if (native != nil)
         {
+            #if !UNITY_5_0_0
             [native release];
+            #endif
             native = nil;
         }
     }

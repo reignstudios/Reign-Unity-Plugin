@@ -25,7 +25,9 @@
 - (void)dealloc
 {
     // dispose...
+    #if !UNITY_5_0_0
     [super dealloc];
+    #endif
 }
 
 - (void)authenticationChanged
@@ -51,7 +53,9 @@
 
 - (void)Authenticate
 {
+    #if !UNITY_5_0_0
     if (authenticatedError != nil) [authenticatedError release];
+    #endif
     authenticatedError = nil;
     userAuthenticated = false;
     authenticateDone = false;
@@ -83,7 +87,11 @@
 
 - (void)ReportScore:(int64_t)score leaderboardID:(NSString*)leaderboardID
 {
+    #if !UNITY_5_0_0
     GKScore* scoreReporter = [[[GKScore alloc] initWithCategory:leaderboardID] autorelease];
+    #else
+    GKScore* scoreReporter = [[GKScore alloc] initWithCategory:leaderboardID];
+    #endif
     scoreReporter.value = score;
     [scoreReporter reportScoreWithCompletionHandler: ^(NSError *error)
      {
@@ -96,7 +104,9 @@
          {
              if (reportScoreError != nil)
              {
+                 #if !UNITY_5_0_0
                  [reportScoreError dealloc];
+                #endif
                  reportScoreError = nil;
              }
              reportScoreSucceeded = true;
@@ -108,7 +118,11 @@
 
 - (void)ReportAchievement:(NSString*)achievementID percentComplete:(double)percentComplete
 {
+    #if !UNITY_5_0_0
     GKAchievement* achievement = [[[GKAchievement alloc] initWithIdentifier:achievementID] autorelease];
+    #else
+    GKAchievement* achievement = [[GKAchievement alloc] initWithIdentifier:achievementID];
+    #endif
     achievement.showsCompletionBanner = YES;
     achievement.percentComplete = percentComplete;
     [achievement reportAchievementWithCompletionHandler:^(NSError *error)
@@ -122,7 +136,9 @@
          {
              if (reportAchievementError != nil)
              {
+                 #if !UNITY_5_0_0
                  [reportAchievementError dealloc];
+                #endif
                  reportAchievementError = nil;
              }
              reportAchievementSucceeded = true;
@@ -136,7 +152,9 @@
 {
     if (requestAchievementResponse != nil)
     {
+        #if !UNITY_5_0_0
         [requestAchievementResponse dealloc];
+        #endif
         requestAchievementResponse = nil;
     }
     
@@ -147,7 +165,9 @@
              NSLog(@"RequestAchievements Error: %@", error.localizedDescription);
              if (requestAchievementError != nil)
              {
+                 #if !UNITY_5_0_0
                  [requestAchievementError dealloc];
+                #endif
                  requestAchievementError = nil;
              }
              requestAchievementError = [[NSMutableString alloc] initWithString:error.localizedDescription];
@@ -177,7 +197,9 @@
 - (void)leaderboardViewControllerDidFinish:(GKLeaderboardViewController *)viewController
 {
     [UnityGetGLViewController() dismissModalViewControllerAnimated: YES];
+    #if !UNITY_5_0_0
     [viewController release];
+    #endif
 }
 
 - (void)ShowScoresPage:(NSString*)leaderboardID
@@ -189,14 +211,18 @@
         leaderboardController.timeScope = GKLeaderboardTimeScopeWeek;
         leaderboardController.leaderboardDelegate = self;
         [UnityGetGLViewController() presentModalViewController: leaderboardController animated: YES];
+        #if !UNITY_5_0_0
         [leaderboardID dealloc];
+        #endif
     }
 }
 
 - (void)achievementViewControllerDidFinish:(GKAchievementViewController *)viewController;
 {
     [UnityGetGLViewController() dismissModalViewControllerAnimated: YES];
+    #if !UNITY_5_0_0
     [viewController release];
+    #endif
 }
 
 - (void)ShowAchievementsPage

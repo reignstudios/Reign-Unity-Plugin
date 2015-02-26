@@ -26,12 +26,16 @@
     {
         bannerView.delegate = nil;
         [bannerView removeFromSuperview];
+        #if !UNITY_5_0_0
         [bannerView release];
+        #endif
         bannerView = nil;
     }
     
+    #if !UNITY_5_0_0
     [events dealloc];
     [super dealloc];
+    #endif
 }
 
 - (void)adViewDidReceiveAd:(GADBannerView *)view
@@ -171,7 +175,13 @@ extern "C"
     
     void AdMob_DisposeAd(AdMob_AdsNative* ad)
     {
-        if (ad != nil) [ad release];
+        if (ad != nil)
+        {
+            #if !UNITY_5_0_0
+            [ad release];
+            #endif
+            ad = nil;
+        }
     }
     
     void AdMob_CreateAd(AdMob_AdsNative* ad, int gravity, int adSizeIndex, char* unitID)

@@ -17,7 +17,9 @@
 - (void)dealloc
 {
     // dispose...
+    #if !UNITY_5_0_0
     [super dealloc];
+    #endif
 }
 
 - (void)image:(UIImage*)image finishedSavingImage:(NSError*)error contextInfo:(void*)contextInfo
@@ -154,7 +156,9 @@ int ShowPhotoPicker_maxWidth, ShowPhotoPicker_maxHeight;
 {
     if (popoverViewController != nil)
     {
+        #if !UNITY_5_0_0
         [popoverViewController release];
+        #endif
         popoverViewController = nil;
     }
     
@@ -195,7 +199,11 @@ int ShowPhotoPicker_maxWidth, ShowPhotoPicker_maxHeight;
 
 - (void)ShowPhotoPicker:(UIImagePickerControllerSourceType)type maxWidth:(int)maxWidth maxHeight:(int)maxHeight
 {
+    #if !UNITY_5_0_0
     UIImagePickerController *picker = [[[UIImagePickerController alloc] init] autorelease];
+    #else
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    #endif
     picker.delegate = self;
     picker.sourceType = type;
     picker.allowsEditing = false;
@@ -249,7 +257,9 @@ extern "C"
     {
         if (native != nil)
         {
+            #if !UNITY_5_0_0
             [native release];
+            #endif
             native = nil;
         }
     }

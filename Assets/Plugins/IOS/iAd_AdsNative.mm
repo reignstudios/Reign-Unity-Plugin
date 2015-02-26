@@ -22,12 +22,16 @@
     {
         iAd.delegate = nil;
         [iAd removeFromSuperview];
+        #if !UNITY_5_0_0
         [iAd release];
+        #endif
         iAd = nil;
     }
     
+    #if !UNITY_5_0_0
     [events dealloc];
     [super dealloc];
+    #endif
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView*)banner willLeaveApplication:(BOOL)willLeave
@@ -135,7 +139,13 @@ extern "C"
     
     void iAd_DisposeAd(iAd_AdsNative* ad)
     {
-        if (ad != nil) [ad release];
+        if (ad != nil)
+        {
+            #if !UNITY_5_0_0
+            [ad release];
+            #endif
+            ad = nil;
+        }
     }
     
     void iAd_CreateAd(iAd_AdsNative* ad, int gravity)
