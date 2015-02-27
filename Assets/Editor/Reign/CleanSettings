@@ -44,6 +44,7 @@
 /Scenes/Reign/Scripts/MainDemo.cs
 /Scenes/Reign/Scripts/MarketingDemo.cs
 /Scenes/Reign/Scripts/MessageBoxDemo.cs
+/Scenes/Reign/Scripts/SocialDemo.cs
 /Scenes/Reign/Scripts/StreamsDemo.cs
 /Scenes/Reign/Tools/InputMapper.cs
 /Scenes/Reign/Tools/InputMapper.unity
@@ -56,6 +57,7 @@
 /Scenes/Reign/MainDemo.unity
 /Scenes/Reign/MarketingDemo.unity
 /Scenes/Reign/MessageBoxDemo.unity
+/Scenes/Reign/SocialDemo.unity
 /Scenes/Reign/StreamsDemo.unity
 /Plugins/Reign/EditorRuntime/AdPlugin.cs
 /Plugins/Reign/EditorRuntime/EmailPlugin.cs
@@ -70,7 +72,9 @@
 /Plugins/Reign/Managers/InterstitialAdManager.cs
 /Plugins/Reign/Managers/MarketingManager.cs
 /Plugins/Reign/Managers/MessageBoxManager.cs
+/Plugins/Reign/Managers/PushNotificationManager.cs
 /Plugins/Reign/Managers/ScoreManager.cs
+/Plugins/Reign/Managers/SocialManager.cs
 /Plugins/Reign/Managers/StreamManager.cs
 /Plugins/Reign/Math/Bound2.cs
 /Plugins/Reign/Math/Bound3.cs
@@ -96,7 +100,9 @@
 /Plugins/Reign/Shared/Interfaces/IInterstitialAdPlugin.cs
 /Plugins/Reign/Shared/Interfaces/IMarketingPlugin.cs
 /Plugins/Reign/Shared/Interfaces/IMessageBoxPlugin.cs
+/Plugins/Reign/Shared/Interfaces/IPushNotificationPlugin.cs
 /Plugins/Reign/Shared/Interfaces/IScorePlugin.cs
+/Plugins/Reign/Shared/Interfaces/ISocialPlugin.cs
 /Plugins/Reign/Shared/Interfaces/IStreamPlugin.cs
 /Plugins/Reign/Shared/ImageTools/BMP/BmpCompression.cs
 /Plugins/Reign/Shared/ImageTools/BMP/BmpDecoder.cs
@@ -356,6 +362,8 @@
 /Plugins/Reign/Shared/WinRT/MessageBoxPlugin.cs
 /Plugins/Reign/Shared/WinRT/MicrosoftAdvertising_AdPlugin.cs
 /Plugins/Reign/Shared/WinRT/MicrosoftStore_InAppPurchasePlugin.cs
+/Plugins/Reign/Shared/WinRT/PushNotificationPlugin.cs
+/Plugins/Reign/Shared/WinRT/SocialPlugin.cs
 /Plugins/Reign/Shared/WinRT/StreamPlugin.cs
 /Plugins/Reign/Shared/WinRT/WinRTPlugin.cs
 /StreamingAssets/Reign/BB10/Ads/PlaceHolder_120x20.png
