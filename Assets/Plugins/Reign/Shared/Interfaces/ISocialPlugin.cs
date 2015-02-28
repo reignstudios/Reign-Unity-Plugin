@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Reign.Plugin
+namespace Reign
 {
 	public enum SocialShareTypes
 	{
-		Images
+		Image_PNG,
+		Image_JPG
 	}
+}
 
+namespace Reign.Plugin
+{
 	public interface ISocialPlugin
 	{
-		void Share(byte[] data, SocialShareTypes type);
+		void Share(byte[] data, string title, string desc, SocialShareTypes type);
 	}
 }

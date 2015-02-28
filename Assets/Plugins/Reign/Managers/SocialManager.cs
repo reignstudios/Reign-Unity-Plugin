@@ -14,22 +14,24 @@ namespace Reign
 			plugin = new SocialPlugin_Dumy();
 			#elif UNITY_WINRT
 			plugin = new SocialPlugin_WinRT();
+			#elif UNITY_ANDROID
+			plugin = new SocialPlugin_Android();
 			#else
 			plugin = new SocialPlugin_Dumy();
 			#endif
 		}
 
-		public static void ShareImage(byte[] data, SocialShareTypes type)
+		public static void Share(byte[] data, string title, string desc, SocialShareTypes type)
 		{
-			plugin.Share(data, type);
+			plugin.Share(data, title, desc, type);
 		}
 	}
 
 	public class SocialPlugin_Dumy : ISocialPlugin
 	{
-		public void Share(byte[] data, SocialShareTypes type)
+		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
 		{
-			Debug.Log("ShareImage not supported in this environment!");
+			Debug.Log("Share not supported in this environment!");
 		}
 	}
 }
