@@ -187,14 +187,23 @@ int ShowPhotoPicker_maxWidth, ShowPhotoPicker_maxHeight;
 
 - (void)showViewController:(UIViewController*)viewController
 {
-    //UnityPause(true);
+    /*//UnityPause(true);
     
     // cancel the previous delayed call to dismiss the view controller if it exists
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     
     // show the picker
     UIViewController *vc = UnityGetGLViewController();
-    [vc presentModalViewController:viewController animated:YES];
+    [vc presentModalViewController:viewController animated:YES];*/
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    UIViewController *vc = UnityGetGLViewController();
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        viewController.popoverPresentationController.sourceView = vc.view;
+        viewController.popoverPresentationController.sourceRect = PopoverRect;
+    }
+    [vc presentViewController:viewController animated:YES completion:nil];
 }
 
 - (void)ShowPhotoPicker:(UIImagePickerControllerSourceType)type maxWidth:(int)maxWidth maxHeight:(int)maxHeight
@@ -214,16 +223,16 @@ int ShowPhotoPicker_maxWidth, ShowPhotoPicker_maxHeight;
     ImageLoadDone = false;
     
     // We need to display this in a popover on iPad
-    NSString* version = [[UIDevice currentDevice] systemVersion];
+    /*NSString* version = [[UIDevice currentDevice] systemVersion];
     if([version integerValue] < 8.0 && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && type != UIImagePickerControllerSourceTypeCamera)
     {
-        /*Class popoverClass = NSClassFromString(@"UIPopoverController");
-         if(!popoverClass)
-         {
-         ImageLoadSucceeded = false;
-         ImageLoadDone = true;
-         return;
-         }*/
+        //Class popoverClass = NSClassFromString(@"UIPopoverController");
+         //if(!popoverClass)
+         //{
+         //ImageLoadSucceeded = false;
+         //ImageLoadDone = true;
+         //return;
+         //}
         
         //popoverViewController = [[popoverClass alloc] initWithContentViewController:picker];
         popoverViewController = [[UIPopoverController alloc] initWithContentViewController:picker];
@@ -237,7 +246,9 @@ int ShowPhotoPicker_maxWidth, ShowPhotoPicker_maxHeight;
     else
     {
         [self showViewController:picker];
-    }
+    }*/
+    
+    [self showViewController:picker];
 }
 @end
 

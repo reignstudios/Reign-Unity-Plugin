@@ -18,6 +18,11 @@ namespace Reign.Plugin
 			if (type == SocialShareTypes.Image_PNG || type == SocialShareTypes.Image_JPG) native.CallStatic("ShareImage", data, title, type == SocialShareTypes.Image_PNG);
 			else Debug.LogError("Unusported Share type: " + type);
 		}
+
+		public void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		{
+			Share(data, title, desc, type);
+		}
 	}
 }
 #endif
