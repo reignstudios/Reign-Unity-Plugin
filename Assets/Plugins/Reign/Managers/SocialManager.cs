@@ -18,6 +18,8 @@ namespace Reign
 			plugin = new SocialPlugin_Android();
 			#elif UNITY_IOS
 			plugin = new SocialPlugin_iOS();
+			#elif UNITY_BLACKBERRY
+			plugin = new SocialPlugin_BB10();
 			#else
 			plugin = new SocialPlugin_Dumy();
 			#endif
