@@ -20,9 +20,18 @@ namespace Reign.Plugin
 {
 	public class SocialPlugin_Native : ISocialPlugin
 	{
-		public void Share(byte[] data, SocialShareTypes type)
+		private string shareTitle, shareDesc;
+
+		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
 		{
-			StreamManager.SaveFile("SharedImage.png", data, FolderLocations.Storage, imageSavedCallback);
+			shareTitle = title;
+			shareDesc = desc;
+			StreamManager.SaveFile("ReignSharedImage.png", data, FolderLocations.Storage, imageSavedCallback);
+		}
+
+		public void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		{
+			Share(data, title, desc, type);
 		}
 
 		private async void imageSavedCallback(bool succeeded)
@@ -30,7 +39,7 @@ namespace Reign.Plugin
 			#if WINDOWS_PHONE
 			string filename;
 			using (var m = new MediaLibrary())
-			using (var image = m.SavePicture("SharedImage.png", data))
+			using (var image = m.SavePicture("ReignSharedImage.png", data))
 			{
 				filename = MediaLibraryExtensions.GetPath(image);
 			}
@@ -53,12 +62,12 @@ namespace Reign.Plugin
 		private async void shareStorageItemsHandler(DataTransferManager sender, DataRequestedEventArgs e)
 		{
 			DataRequest request = e.Request;
-			request.Data.Properties.Title = "Share StorageItems Example";
-			request.Data.Properties.Description = "Demonstrates how to share files.";
+			request.Data.Properties.Title = shareTitle;
+			request.Data.Properties.Description = shareDesc;
 			DataRequestDeferral deferral = request.GetDeferral();
 			try
 			{
-				StorageFile shareFile = await ApplicationData.Current.LocalFolder.GetFileAsync("SharedImage.png");
+				StorageFile shareFile = await ApplicationData.Current.LocalFolder.GetFileAsync("ReignSharedImage.png");
 				var storageItems = new List<IStorageItem>();
 				storageItems.Add(shareFile);
 				request.Data.SetStorageItems(storageItems);       
@@ -92,9 +101,14 @@ namespace Reign.Plugin
 			InitNative(this);
 		}
 
-		public void Share(byte[] data, SocialShareTypes type)
+		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
 		{
-			Native.Share(data, type);
+			Native.Share(data, title, desc, type);
+		}
+
+		public void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		{
+			Native.Share(data, title, desc, x, y, width, height, type);
 		}
 	}
 }

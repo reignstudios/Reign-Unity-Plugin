@@ -377,6 +377,7 @@
 /Plugins/Reign/BB10/InAppPurchasePlugin.cs
 /Plugins/Reign/BB10/MarketingPlugin.cs
 /Plugins/Reign/BB10/MessageBoxPlugin.cs
+/Plugins/Reign/BB10/SocialPlugin.cs
 /Plugins/Reign/BB10/StreamPlugin.cs
 /Plugins/iOS/AdMob_AdsNative.h
 /Plugins/iOS/AdMob_AdsNative.mm
@@ -418,6 +419,8 @@
 /Plugins/iOS/MessageBoxNative.mm
 /Plugins/iOS/NSData+Base64.h
 /Plugins/iOS/NSData+Base64.m
+/Plugins/iOS/SocialNative.h
+/Plugins/iOS/SocialNative.mm
 /Plugins/iOS/StreamNative.h
 /Plugins/iOS/StreamNative.mm
 /Plugins/iOS/UnityTypes.h
@@ -433,6 +436,7 @@
 /Plugins/Reign/iOS/InAppPurchasePlugin.cs
 /Plugins/Reign/iOS/MarketingPlugin.cs
 /Plugins/Reign/iOS/MessageBoxPlugin.cs
+/Plugins/Reign/iOS/SocialPlugin.cs
 /Plugins/Reign/iOS/StreamPlugin.cs
 /Plugins/Android/assets/api_key.txt
 /Plugins/Android/res/color/common_signin_btn_text_dark.xml
@@ -798,4 +802,5 @@
 /Plugins/Reign/Android/MarketingPlugin.cs
 /Plugins/Reign/Android/MessageBoxPlugin.cs
 /Plugins/Reign/Android/Samsung_InAppPurchasePlugin.cs
+/Plugins/Reign/Android/SocialPlugin.cs
 /Plugins/Reign/Android/StreamPlugin.cs
