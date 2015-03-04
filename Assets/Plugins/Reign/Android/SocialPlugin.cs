@@ -13,6 +13,11 @@ namespace Reign.Plugin
 			native = new AndroidJavaClass("com.reignstudios.reignnative.SocialNative");
 		}
 
+		public void Init(SocialDesc desc)
+		{
+			// do nothing...
+		}
+
 		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
 		{
 			if (type == SocialShareTypes.Image_PNG || type == SocialShareTypes.Image_JPG) native.CallStatic("ShareImage", data, title, type == SocialShareTypes.Image_PNG);

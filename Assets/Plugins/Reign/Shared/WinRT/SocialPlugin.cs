@@ -22,6 +22,11 @@ namespace Reign.Plugin
 	{
 		private string shareTitle, shareDesc;
 
+		public void Init(SocialDesc desc)
+		{
+			// do nothing...
+		}
+
 		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
 		{
 			shareTitle = title;
@@ -99,6 +104,11 @@ namespace Reign.Plugin
 		public SocialPlugin_WinRT()
 		{
 			InitNative(this);
+		}
+
+		public void Init(SocialDesc desc)
+		{
+			Native.Init(desc);
 		}
 
 		public void Share(byte[] data, string title, string desc, SocialShareTypes type)

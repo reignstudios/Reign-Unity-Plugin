@@ -26,6 +26,11 @@ namespace Reign.Plugin
 			DisposeSocial();
 		}
 
+		public void Init(SocialDesc desc)
+		{
+			// do nothing...
+		}
+
 		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
 		{
 			Share(data, title, desc, 0, 0, 10, 10, type);
