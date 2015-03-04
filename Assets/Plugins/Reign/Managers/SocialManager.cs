@@ -25,6 +25,11 @@ namespace Reign
 			#endif
 		}
 
+		public static void Init(SocialDesc desc)
+		{
+			plugin.Init(desc);
+		}
+
 		public static void Share(byte[] data, string title, string desc, SocialShareTypes type)
 		{
 			plugin.Share(data, title, desc, type);
@@ -38,6 +43,11 @@ namespace Reign
 
 	public class SocialPlugin_Dumy : ISocialPlugin
 	{
+		public void Init(SocialDesc desc)
+		{
+			Debug.Log("Share not supported in this environment!");
+		}
+
 		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
 		{
 			Debug.Log("Share not supported in this environment!");
