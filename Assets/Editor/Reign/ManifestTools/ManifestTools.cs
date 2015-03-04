@@ -38,7 +38,6 @@ namespace Reign.EditorTools
 			if (string.IsNullOrEmpty(filename)) return;
 			
 			EditorApplication.SaveAssets();
-			string root = Application.dataPath.Replace("Assets", "ProjectSettings");
 			File.Copy(Application.dataPath + "/Plugins/Android/AndroidManifest.xml", filename, true);
 			AssetDatabase.Refresh();
 		}
