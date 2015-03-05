@@ -211,9 +211,6 @@
         leaderboardController.timeScope = GKLeaderboardTimeScopeWeek;
         leaderboardController.leaderboardDelegate = self;
         [UnityGetGLViewController() presentModalViewController: leaderboardController animated: YES];
-        #if !UNITY_5_0_0
-        [leaderboardID dealloc];
-        #endif
     }
 }
 
