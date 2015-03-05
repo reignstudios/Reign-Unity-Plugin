@@ -99,7 +99,7 @@
     }
     
     UIViewController *vc = UnityGetGLViewController();
-    if(vc) [vc dismissModalViewControllerAnimated:YES];
+    if(vc) [vc dismissViewControllerAnimated:YES completion:nil];
 }
 
 void fitInViewIfLarger(float objectWidth, float objectHeight, float viewWidth, float viewHeight, float* newWidth, float* newHeight)

@@ -31,7 +31,7 @@
     
     // show the view
 	UIViewController *vc = UnityGetGLViewController();
-	[vc presentModalViewController:viewController animated:YES];
+    [vc presentViewController:viewController animated:YES completion:nil];
 }
 
 - (void)dismissViewController
@@ -40,7 +40,7 @@
     
     // close the view
 	UIViewController *vc = UnityGetGLViewController();
-	if(vc) [vc dismissModalViewControllerAnimated:YES];
+    if(vc) [vc dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
