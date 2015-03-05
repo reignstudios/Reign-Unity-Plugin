@@ -288,6 +288,10 @@ bool restoreDone = true;
 // ----------------------------------
 // Unity C Link
 // ----------------------------------
+#if UNITY_5_0_0
+static NSMutableArray* NativeIAPs = nil;
+#endif
+
 extern "C"
 {
     InAppPurchaseNative* InitInAppPurchase(bool testing, const char* const sharedSecretKey)
@@ -295,6 +299,11 @@ extern "C"
         InAppPurchaseNative* iap = [[InAppPurchaseNative alloc] init];
         iap->testing = testing;
         iap->sharedSecretKey = [[NSString alloc] initWithUTF8String:sharedSecretKey];
+        
+        #if UNITY_5_0_0
+        if (NativeIAPs == nil) NativeIAPs = [[NSMutableArray alloc] init];
+        [NativeIAPs addObject:iap];
+        #endif
         return iap;
     }
     
@@ -304,6 +313,8 @@ extern "C"
         {
             #if !UNITY_5_0_0
             [native release];
+            #else
+            [NativeIAPs removeObject:native];
             #endif
             native = nil;
         }

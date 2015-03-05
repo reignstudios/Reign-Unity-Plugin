@@ -128,12 +128,21 @@
 // ----------------------------------
 // Unity C Link
 // ----------------------------------
+#if UNITY_5_0_0
+static NSMutableArray* NativeAds = nil;
+#endif
+
 extern "C"
 {
     iAd_AdsNative* iAd_InitAd(bool testing)
     {
         iAd_AdsNative* ad = [[iAd_AdsNative alloc] init];
         ad->testing = testing;
+        
+        #if UNITY_5_0_0
+        if (NativeAds == nil) NativeAds = [[NSMutableArray alloc] init];
+        [NativeAds addObject:ad];
+        #endif
         return ad;
     }
     
@@ -143,6 +152,8 @@ extern "C"
         {
             #if !UNITY_5_0_0
             [ad release];
+            #else
+            [NativeAds removeObject:ad];
             #endif
             ad = nil;
         }
