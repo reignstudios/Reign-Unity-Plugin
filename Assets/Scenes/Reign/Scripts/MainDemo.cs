@@ -1,23 +1,32 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class MainDemo : MonoBehaviour
 {
-	GUIStyle uiStyle;
+	public Button MessageBoxesButton, EmailButton, StreamsButton, MarketingButton, AdsButton, InterstitialAdsButton, IAPButton, ScoresButton, InputExButton, SocialButton;
 
 	void Start ()
 	{
-		uiStyle = new GUIStyle()
-		{
-			alignment = TextAnchor.MiddleCenter,
-			fontSize = 32,
-			normal = new GUIStyleState() {textColor = Color.white}
-		};
-
+		// helpful message
 		const string warning = "NOTE: Make sure to add all the Reign Demo projects you wish to test in the 'Build Settings' window!\nThis makes for easy device testing.";
 		Debug.Log(warning);
 		Debug.LogWarning(warning);
 
+		// bind button events
+		MessageBoxesButton.Select();
+		MessageBoxesButton.onClick.AddListener(messageBoxesClicked);
+		EmailButton.onClick.AddListener(emailClicked);
+		StreamsButton.onClick.AddListener(streamsClicked);
+		MarketingButton.onClick.AddListener(marketingClicked);
+		AdsButton.onClick.AddListener(adsClicked);
+		InterstitialAdsButton.onClick.AddListener(interstitialAdsClicked);
+		IAPButton.onClick.AddListener(iapClicked);
+		ScoresButton.onClick.AddListener(scoresClicked);
+		InputExButton.onClick.AddListener(inputExClicked);
+		SocialButton.onClick.AddListener(socialClicked);
+
+		// helpful utility to get screen size changed events!
 		ReignServices.ScreenSizeChangedCallback += ReignServices_ScreenSizeChangedCallback;
 	}
 
@@ -26,67 +35,54 @@ public class MainDemo : MonoBehaviour
 		Debug.Log(string.Format("Screen Size Changed: OldSize = {0}, {1} NewSize = {2}, {3}", oldWidth, oldHeight, newWidth, newHeight));
 	}
 
-	void OnGUI()
+	private void messageBoxesClicked()
 	{
-		float offset = 0;
-		if (GUI.Button(new Rect(Screen.width-128, offset, 128, 32), "Clear PlayerPrefs"))
-		{
-			PlayerPrefs.DeleteAll();
-			Debug.Log("PlayerPrefs Cleared!");
-		}
-		GUI.Label(new Rect((Screen.width/2)-(256*.5f), offset, 256, 32), "<< Reign Plugin Demos >>", uiStyle);
+		Application.LoadLevel("MessageBoxDemo");
+	}
 
-		offset += 34;
-		if (GUI.Button(new Rect(20, offset, 148, 32), "Message Boxes")) Application.LoadLevel("MessageBoxDemo");
+	private void emailClicked()
+	{
+		Application.LoadLevel("EmailDemo");
+	}
 
-		offset += 34;
-		if (GUI.Button(new Rect(20, offset, 148, 32), "Send Email")) Application.LoadLevel("EmailDemo");
+	private void streamsClicked()
+	{
+		Application.LoadLevel("StreamsDemo");
+	}
 
-		offset += 34;
-		if (GUI.Button(new Rect(20, offset, 148, 32), "Data Streams")) Application.LoadLevel("StreamsDemo");
+	private void marketingClicked()
+	{
+		Application.LoadLevel("MarketingDemo");
+	}
 
-		offset += 34;
-		if (GUI.Button(new Rect(20, offset, 148, 32), "Marketing")) Application.LoadLevel("MarketingDemo");
+	private void adsClicked()
+	{
+		Application.LoadLevel("AdsDemo");
+	}
 
-		offset += 34;
-		if (GUI.Button(new Rect(20, offset, 148, 32), "Ads"))
-		{
-			if (AdsDemo.Singleton != null) AdsDemo.Singleton.gameObject.SetActive(true);
-			Application.LoadLevel("AdsDemo");
-		}
+	private void interstitialAdsClicked()
+	{
+		Application.LoadLevel("InterstitialAdDemo");
+	}
 
-		offset += 34;
-		if (GUI.Button(new Rect(20, offset, 148, 32), "Interstitial Ads"))
-		{
-			if (InterstitialAdDemo.Singleton != null) InterstitialAdDemo.Singleton.gameObject.SetActive(true);
-			Application.LoadLevel("InterstitialAdDemo");
-		}
+	private void iapClicked()
+	{
+		Application.LoadLevel("IAPDemo");
+	}
 
-		offset += 34;
-		if (GUI.Button(new Rect(20, offset, 148, 32), "IAP"))
-		{
-			if (InAppPurchaseDemo.Singleton != null) InAppPurchaseDemo.Singleton.gameObject.SetActive(true);
-			Application.LoadLevel("InAppPurchaseDemo");
-		}
+	private void scoresClicked()
+	{
+		Application.LoadLevel("ScoresDemo");
+	}
 
-		offset += 34;
-		if (GUI.Button(new Rect(20, offset, 200, 32), "Leaderboards & Achievements"))
-		{
-			if (LeaderboardsAchievementsDemo.Singleton != null) LeaderboardsAchievementsDemo.Singleton.gameObject.SetActive(true);
-			Application.LoadLevel("LeaderboardsAchievementsDemo");
-		}
+	private void inputExClicked()
+	{
+		Application.LoadLevel("InputExDemo");
+	}
 
-		offset += 34;
-		if (GUI.Button(new Rect(20, offset, 148, 32), "InputEx"))
-		{
-			Application.LoadLevel("InputExDemo");
-		}
-
-		offset += 34;
-		if (GUI.Button(new Rect(148 + 20, 34, 148, 32), "Social"))
-		{
-			Application.LoadLevel("SocialDemo");
-		}
+	private void socialClicked()
+	{
+		Application.LoadLevel("SocialDemo");
 	}
 
 	void Update()

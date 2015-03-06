@@ -4,6 +4,9 @@ using Reign.Plugin;
 
 namespace Reign
 {
+	/// <summary>
+	/// Used to manage social features
+	/// </summary>
 	public static class SocialManager
 	{
 		private static ISocialPlugin plugin;
@@ -25,16 +28,38 @@ namespace Reign
 			#endif
 		}
 
+		/// <summary>
+		/// Used to init the Social API
+		/// </summary>
+		/// <param name="desc">Social Desc</param>
 		public static void Init(SocialDesc desc)
 		{
 			plugin.Init(desc);
 		}
 
+		/// <summary>
+		/// Invokes the native share view (BlackBerry uses Unity UI)
+		/// </summary>
+		/// <param name="data">Data you wish to share</param>
+		/// <param name="title">Title for native view</param>
+		/// <param name="desc">Description for native view</param>
+		/// <param name="type">Type of data sharing</param>
 		public static void Share(byte[] data, string title, string desc, SocialShareTypes type)
 		{
 			plugin.Share(data, title, desc, type);
 		}
 
+		/// <summary>
+		/// Invokes the native share view (BlackBerry uses Unity UI)
+		/// </summary>
+		/// <param name="data">Data you wish to share</param>
+		/// <param name="title">Title for native view</param>
+		/// <param name="desc">Description for native view</param>
+		/// <param name="x">iOS view position X</param>
+		/// <param name="y">iOS view position Y</param>
+		/// <param name="width">iOS view Width</param>
+		/// <param name="height">iOS view Height</param>
+		/// <param name="type">Type of data sharing</param>
 		public static void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
 		{
 			plugin.Share(data, title, desc, x, y, width, height, type);
