@@ -3,6 +3,7 @@
 // -----------------------------------------------
 
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 using System.IO;
 using System.Collections;
@@ -10,26 +11,12 @@ using Reign;
 
 public class StreamsDemo : MonoBehaviour
 {
-	public Texture2D ReignLogo, ReignLogo2;
-	private Texture2D currentImage;
-
-	private bool saveDataFileStatus, loadDataFileStatus;
-	private string saveDataFileStatusText, loadDataFileStatusText;
-
-	private bool waiting;
-	GUIStyle uiStyle;
+	public Sprite ReignLogo, ReignLogo2;
+	public Image ReignImage;
+	public Button BackButton, SaveFileButton, LoadFileButton, SaveToPicturesButton, LoadFromPicturesButton, CameraPickerButton, ImagePickerButton, SaveImageDlgButton;
 
 	void Start()
 	{
-		uiStyle = new GUIStyle()
-		{
-			alignment = TextAnchor.MiddleCenter,
-			fontSize = 32,
-			normal = new GUIStyleState() {textColor = Color.white},
-		};
-
-		currentImage = ReignLogo;
-
 		// NOTE: Other usfull methods...
 		//StreamManager.SaveScreenShotToPictures(...);
 		//StreamManager.MakeFourCC(...);
@@ -51,96 +38,106 @@ public class StreamsDemo : MonoBehaviour
 		var encoder = new PngEncoder();
 		encoder.Encode(image, stream);
 		*/
+
+		// bind button events
+		SaveFileButton.Select();
+		BackButton.onClick.AddListener(backClicked);
+		SaveFileButton.onClick.AddListener(saveFileClicked);
+		LoadFileButton.onClick.AddListener(loadFileClicked);
+		SaveToPicturesButton.onClick.AddListener(saveToPicturesClicked);
+		LoadFromPicturesButton.onClick.AddListener(loadFromPicturesClicked);
+		CameraPickerButton.onClick.AddListener(cameraPickerClicked);
+		ImagePickerButton.onClick.AddListener(imagePickerClicked);
+		SaveImageDlgButton.onClick.AddListener(saveImageDlgClicked);
 	}
 
-	void OnGUI()
+	private void saveImageDlgClicked()
 	{
-		float offset = 0;
-		GUI.Label(new Rect((Screen.width/2)-(256*.5f), offset, 256, 32), "<< File Streams Demo >>", uiStyle);
-		if (GUI.Button(new Rect(0, offset, 64, 32), "Back")) Application.LoadLevel("MainDemo");
-		offset += 34;
+		// NOTE: SaveFileDialog are only supported on WinRT
+		var data = ReignLogo.texture.EncodeToPNG();
+		StreamManager.SaveFileDialog(data, FolderLocations.Pictures, new string[]{".png"}, imageSavedCallback);
+	}
 
-		// ui scale
-		float scale = new Vector2(Screen.width, Screen.height).magnitude / new Vector2(1280, 720).magnitude;
+	private void imagePickerClicked()
+	{
+		// NOTE: Unity only supports loading png and jpg data
+		StreamManager.LoadFileDialog(FolderLocations.Pictures, 128, 128, new string[]{".png", ".jpg", ".jpeg"}, imageLoadedCallback);
+	}
 
-		// draw logo
-		GUI.DrawTexture(new Rect((Screen.width/2)-(64*scale), (64*scale)+offset, 128*scale, 128*scale), currentImage);
+	private void cameraPickerClicked()
+	{
+		StreamManager.LoadCameraPicker(CameraQuality.Med, 128, 128, imageLoadedCallback);
+	}
 
-		// Local data files
-		if (!saveDataFileStatus && !loadDataFileStatus && GUI.Button(new Rect(0, (64*scale)+offset, 128, 64*scale), "Save Data file"))
-		{
-			// NOTE: Only supported on WinRT
-			saveDataFileStatusText = "Saving Data...";
-			saveDataFileStatus = true;
-			var data = new byte[1] {(byte)UnityEngine.Random.Range(0, 255)};
-			StreamManager.SaveFile("MyFile.data", data, FolderLocations.Storage, dataFileSavedCallback);
-		}
-		else
-		{
-			GUI.Label(new Rect(132, (64*scale)+offset, 256, 64*scale), saveDataFileStatusText);
-		}
+	private void loadFromPicturesClicked()
+	{
+		// NOTE: LoadFile doesn't support the Pictures folder on iOS.
+		disableButtons();
+		StreamManager.LoadFile("TEST.png", FolderLocations.Pictures, imageLoadedCallback);
+	}
 
-		if (!saveDataFileStatus && !loadDataFileStatus && GUI.Button(new Rect(0, (128*scale)+offset, 128, 64*scale), "Load Data file"))
-		{
-			loadDataFileStatusText = "Loading Data...";
-			loadDataFileStatus = true;
-			StreamManager.LoadFile("MyFile.data", FolderLocations.Storage, dataFileLoadedCallback);
-		}
-		else
-		{
-			GUI.Label(new Rect(132, (128*scale)+offset, 256, 64*scale), loadDataFileStatusText);
-		}
+	private void saveToPicturesClicked()
+	{
+		disableButtons();
+		var data = ReignLogo.texture.EncodeToPNG();
+		StreamManager.SaveFile("TEST.png", data, FolderLocations.Pictures, imageSavedCallback);
+	}
 
-		// save and load images
-		if (!waiting && GUI.Button(new Rect(0, (200*scale)+offset, 128, 64*scale), "Save Reign Logo"))
-		{
-			waiting = true;
-			var data = ReignLogo.EncodeToPNG();
-			StreamManager.SaveFile("TEST.png", data, FolderLocations.Pictures, imageSavedCallback);
-		}
+	private void loadFileClicked()
+	{
+		disableButtons();
+		StreamManager.LoadFile("MyFile.data", FolderLocations.Storage, dataFileLoadedCallback);
+	}
 
-		if (!waiting && GUI.Button(new Rect(0, ((200+64)*scale)+offset, 128, 64*scale), "Load Reign Logo"))
-		{
-			waiting = true;
-			// NOTE: LoadFile doesn't support the Pictures folder on iOS.
-			StreamManager.LoadFile("TEST.png", FolderLocations.Pictures, imageLoadedCallback);
-		}
+	private void saveFileClicked()
+	{
+		disableButtons();
+		var data = new byte[1] {(byte)UnityEngine.Random.Range(0, 255)};
+		StreamManager.SaveFile("MyFile.data", data, FolderLocations.Storage, dataFileSavedCallback);
+	}
 
-		if (!waiting && GUI.Button(new Rect(0, (332*scale)+offset, 128, 64*scale), "Save Image Picker"))
-		{
-			waiting = true;
-			// NOTE: SaveFileDialog for pictures not supported on iOS.
-			var data = ReignLogo.EncodeToPNG();
-			StreamManager.SaveFileDialog(data, FolderLocations.Pictures, new string[]{".png"}, imageSavedCallback);
-		}
+	private void backClicked()
+	{
+		Application.LoadLevel("MainDemo");
+	}
 
-		if (!waiting && GUI.Button(new Rect(0, ((332+64)*scale)+offset, 128, 64*scale), "Image Picker"))
-		{
-			waiting = true;
-			// NOTE: Unity only supports loading png and jpg data
-			StreamManager.LoadFileDialog(FolderLocations.Pictures, 128, 128, new string[]{".png", ".jpg", ".jpeg"}, imageLoadedCallback);
-		}
+	private void disableButtons()
+	{
+		BackButton.enabled = false;
+		SaveFileButton.enabled = false;
+		LoadFileButton.enabled = false;
+		SaveToPicturesButton.enabled = false;
+		LoadFromPicturesButton.enabled = false;
+		CameraPickerButton.enabled = false;
+		ImagePickerButton.enabled = false;
+		SaveImageDlgButton.enabled = false;
+	}
 
-		if (!waiting && GUI.Button(new Rect(0, ((332+128)*scale)+offset, 128, 64*scale), "Camera Picker"))
-		{
-			waiting = true;
-			StreamManager.LoadCameraPicker(CameraQuality.Med, 128, 128, imageLoadedCallback);
-		}
+	private void enableButtons()
+	{
+		BackButton.enabled = true;
+		SaveFileButton.enabled = true;
+		LoadFileButton.enabled = true;
+		SaveToPicturesButton.enabled = true;
+		LoadFromPicturesButton.enabled = true;
+		CameraPickerButton.enabled = true;
+		ImagePickerButton.enabled = true;
+		SaveImageDlgButton.enabled = true;
 	}
 
 	private void dataFileSavedCallback(bool succeeded)
 	{
-		saveDataFileStatus = false;
-		saveDataFileStatusText = "Data Saved Status: " + succeeded;
+		enableButtons();
+		MessageBoxManager.Show("Data Status", "Data Saved: " + succeeded);
 	}
 
 	private void dataFileLoadedCallback(Stream stream, bool succeeded)
 	{
 		try
 		{
-			loadDataFileStatus = false;
-			loadDataFileStatusText = "Data Loaded Status: " + succeeded;
-			if (succeeded) loadDataFileStatusText += " Data: " + stream.ReadByte();
+			enableButtons();
+			MessageBoxManager.Show("Image Status", "Data Loaded: " + succeeded);
+			if (succeeded) Debug.Log("Data Value: " + stream.ReadByte());
 		}
 		catch (Exception e)
 		{
@@ -155,14 +152,14 @@ public class StreamsDemo : MonoBehaviour
 
 	private void imageSavedCallback(bool succeeded)
 	{
-		waiting = false;
+		enableButtons();
 		MessageBoxManager.Show("Image Status", "Image Saved: " + succeeded);
-		if (succeeded) currentImage = ReignLogo2;
+		if (succeeded) ReignImage.sprite = ReignLogo2;
 	}
 
 	private void imageLoadedCallback(Stream stream, bool succeeded)
 	{
-		waiting = false;
+		enableButtons();
 		MessageBoxManager.Show("Image Status", "Image Loaded: " + succeeded);
 		if (!succeeded)
 		{
@@ -174,8 +171,10 @@ public class StreamsDemo : MonoBehaviour
 		{
 			var data = new byte[stream.Length];
 			stream.Read(data, 0, data.Length);
-			currentImage = new Texture2D(4, 4);
-			currentImage.LoadImage(data);
+			var newImage = new Texture2D(4, 4);
+			newImage.LoadImage(data);
+			newImage.Apply();
+			ReignImage.sprite = Sprite.Create(newImage, new Rect(0, 0, newImage.width, newImage.height), new Vector2(.5f, .5f));
 		}
 		catch (Exception e)
 		{

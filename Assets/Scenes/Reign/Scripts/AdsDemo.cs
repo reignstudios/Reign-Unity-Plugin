@@ -3,38 +3,38 @@
 // -----------------------------------------------
 
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using Reign;
 
 public class AdsDemo : MonoBehaviour
 {
 	public static AdsDemo Singleton;
-	private Ad ad;
-	private string adStatus;
-	GUIStyle uiStyle;
+	private static Ad ad;
+
+	public Text AdStatusText;
+	public Button RefreshButton, VisibilityButton, BackButton;
+	public Image AdImage;// UI based ad placement
 
 	void Start()
 	{
+		// make sure we don't init the same Ad twice
 		if (Singleton != null)
 		{
 			Destroy(gameObject);
 			return;
 		}
 		Singleton = this;
-
-		// NOTE: use 'ad.Visible = true/false' instead of delete and re-creating Ads!
-		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't create the same Ad twice.
-		adStatus = "none";
-
-		uiStyle = new GUIStyle()
-		{
-			alignment = TextAnchor.MiddleCenter,
-			fontSize = 32,
-			normal = new GUIStyleState() {textColor = Color.white},
-		};
+		
+		// bind button events
+		RefreshButton.Select();
+		RefreshButton.onClick.AddListener(refreshClicked);
+		VisibilityButton.onClick.AddListener(visibilityClicked);
+		BackButton.onClick.AddListener(backClicked);
 
 		// Ads - NOTE: You can pass in multiple "AdDesc" objects if you want more then one ad.
 		var desc = new AdDesc();
+
 		// global settings
 		desc.Testing = true;// NOTE: To test ads on iOS, you must enable them in iTunes Connect.
 		desc.Visible = true;
@@ -114,9 +114,24 @@ public class AdsDemo : MonoBehaviour
 		ad = AdManager.CreateAd(desc, adCreatedCallback);
 	}
 
+	private void refreshClicked()
+	{
+		ad.Refresh();
+	}
+
+	private void visibilityClicked()
+	{
+		ad.Visible = !ad.Visible;
+	}
+
+	private void backClicked()
+	{
+		Application.LoadLevel("MainDemo");
+	}
+
 	private void adCreatedCallback(bool succeeded)
 	{
-		adStatus = succeeded ? "Ads Succeded" : "Ads Failed";
+		AdStatusText.text = succeeded ? "Ads Succeded" : "Ads Failed";
 	}
 
 	private void eventCallback(AdEvents adEvent, string eventMessage)
@@ -124,39 +139,39 @@ public class AdsDemo : MonoBehaviour
 		// NOTE: On BB10 these events never get called!
 		switch (adEvent)
 		{
-			case AdEvents.Refreshed: adStatus = "Refreshed"; break;
-			case AdEvents.Clicked: adStatus = "Clicked"; break;
-			case AdEvents.Error: adStatus = "Error: " + eventMessage; break;
+			case AdEvents.Refreshed: AdStatusText.text = "Refreshed"; break;
+			case AdEvents.Clicked: AdStatusText.text = "Clicked"; break;
+			case AdEvents.Error: AdStatusText.text = "Error: " + eventMessage; break;
 		}
 	}
 
-	void OnGUI()
-	{
-		GUI.matrix = Matrix4x4.identity;
-		GUI.color = Color.white;
+	//void OnGUI()
+	//{
+	//	GUI.matrix = Matrix4x4.identity;
+	//	GUI.color = Color.white;
 
-		float offset = 0;
-		GUI.Label(new Rect((Screen.width/2)-(256*.5f), offset, 256, 32), "<< Banner Ads Demo >>", uiStyle);
-		if (GUI.Button(new Rect(0, offset, 64, 32), "Back"))
-		{
-			gameObject.SetActive(false);
-			Application.LoadLevel("MainDemo");
-			return;
-		}
-		offset += 34;
+	//	float offset = 0;
+	//	GUI.Label(new Rect((Screen.width/2)-(256*.5f), offset, 256, 32), "<< Banner Ads Demo >>", uiStyle);
+	//	if (GUI.Button(new Rect(0, offset, 64, 32), "Back"))
+	//	{
+	//		gameObject.SetActive(false);
+	//		Application.LoadLevel("MainDemo");
+	//		return;
+	//	}
+	//	offset += 34;
 
-		GUI.Label(new Rect(0, Screen.height/2, 256, 64), "Ad status: " + adStatus);
+	//	GUI.Label(new Rect(0, Screen.height/2, 256, 64), "Ad status: " + adStatus);
 				
-		// Manual Refresh does not work on (Apple iAd) or (BB10 Ads).
-		if (GUI.Button(new Rect(0, offset, 128, 64), "Manual Refresh")) ad.Refresh();
-		offset += 68;
+	//	// Manual Refresh does not work on (Apple iAd) or (BB10 Ads).
+	//	if (GUI.Button(new Rect(0, offset, 128, 64), "Manual Refresh")) ad.Refresh();
+	//	offset += 68;
 
-		// Show / Hide Ad
-		if (GUI.Button(new Rect(0, offset, 128, 64), "Show / Hide")) ad.Visible = !ad.Visible;
+	//	// Show / Hide Ad
+	//	if (GUI.Button(new Rect(0, offset, 128, 64), "Show / Hide")) ad.Visible = !ad.Visible;
 
-		// You can also manually draw GUI based Ads if you want to control GUI sort order
-		//ad.Draw();
-	}
+	//	// You can also manually draw GUI based Ads if you want to control GUI sort order
+	//	//ad.Draw();
+	//}
 
 	void Update()
 	{
