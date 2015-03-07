@@ -20,7 +20,9 @@ namespace Reign.Plugin
 {
 	public class SocialPlugin_Native : ISocialPlugin
 	{
+		#if UNITY_METRO || UNITY_WP_8_1
 		private string shareTitle, shareDesc;
+		#endif
 
 		public void Init(SocialDesc desc)
 		{
@@ -28,18 +30,6 @@ namespace Reign.Plugin
 		}
 
 		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
-		{
-			shareTitle = title;
-			shareDesc = desc;
-			StreamManager.SaveFile("ReignSharedImage.png", data, FolderLocations.Storage, imageSavedCallback);
-		}
-
-		public void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
-		{
-			Share(data, title, desc, type);
-		}
-
-		private async void imageSavedCallback(bool succeeded)
 		{
 			#if WINDOWS_PHONE
 			string filename;
@@ -52,7 +42,21 @@ namespace Reign.Plugin
 			var shareMediaTask = new ShareMediaTask();
 			shareMediaTask.FilePath = filename;
 			shareMediaTask.Show();
-			#elif UNITY_METRO || UNITY_WP_8_1
+			#else
+			shareTitle = title;
+			shareDesc = desc;
+			StreamManager.SaveFile("ReignSharedImage.png", data, FolderLocations.Storage, imageSavedCallback);
+			#endif
+		}
+
+		public void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		{
+			Share(data, title, desc, type);
+		}
+
+		#if UNITY_METRO || UNITY_WP_8_1
+		private async void imageSavedCallback(bool succeeded)
+		{
 			await WinRTPlugin.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, delegate()
 			{
 				var dataTransferManager = DataTransferManager.GetForCurrentView();
@@ -60,10 +64,8 @@ namespace Reign.Plugin
 				dataTransferManager.DataRequested += shareStorageItemsHandler;
 				DataTransferManager.ShowShareUI();
 			});
-			#endif
 		}
 
-		#if UNITY_METRO || UNITY_WP_8_1
 		private async void shareStorageItemsHandler(DataTransferManager sender, DataRequestedEventArgs e)
 		{
 			DataRequest request = e.Request;
