@@ -9,28 +9,33 @@ using Reign;
 
 public class AdsDemo : MonoBehaviour
 {
+	private static AdsDemo singleton;
 	private static bool created;
 	private static Ad ad;
 
 	public Text AdStatusText;
 	public Button RefreshButton, VisibilityButton, BackButton;
 
+	// -----------------------------------------------
+	// NOTE: You can set up multiple platforms at once and the API will use the correct desc data for each
+	// -----------------------------------------------
 	void Start()
 	{
-		// make sure we don't init the same Ad twice
-		if (created)
-		{
-			ad.Visible = true;
-			Destroy(gameObject);
-			return;
-		}
-		created = true;
-		
+		singleton = this;
+
 		// bind button events
 		RefreshButton.Select();
 		RefreshButton.onClick.AddListener(refreshClicked);
 		VisibilityButton.onClick.AddListener(visibilityClicked);
 		BackButton.onClick.AddListener(backClicked);
+
+		// make sure we don't init the same Ad twice
+		if (created)
+		{
+			ad.Visible = true;
+			return;
+		}
+		created = true;
 
 		// Ads - NOTE: You can pass in multiple "AdDesc" objects if you want more then one ad.
 		var desc = new AdDesc();
@@ -78,6 +83,7 @@ public class AdsDemo : MonoBehaviour
 		desc.BB10_BlackBerryAdvertising_AdSize = BB10_BlackBerryAdvertising_AdSize.Wide_320x53;
 
 		desc.BB10_MillennialMediaAdvertising_APID = "";
+		desc.BB10_MillennialMediaAdvertising_AdGravity = AdGravity.BottomCenter;
 		//desc.BB10_MillennialMediaAdvertising_RefreshRate = 120;
 			
 		// iOS settings
@@ -129,14 +135,14 @@ public class AdsDemo : MonoBehaviour
 		AdStatusText.text = succeeded ? "Ads Succeded" : "Ads Failed";
 	}
 
-	private void eventCallback(AdEvents adEvent, string eventMessage)
+	private static void eventCallback(AdEvents adEvent, string eventMessage)
 	{
 		// NOTE: On BB10 these events never get called!
 		switch (adEvent)
 		{
-			case AdEvents.Refreshed: AdStatusText.text = "Refreshed"; break;
-			case AdEvents.Clicked: AdStatusText.text = "Clicked"; break;
-			case AdEvents.Error: AdStatusText.text = "Error: " + eventMessage; break;
+			case AdEvents.Refreshed: singleton.AdStatusText.text = "Refreshed"; break;
+			case AdEvents.Clicked: singleton.AdStatusText.text = "Clicked"; break;
+			case AdEvents.Error: singleton.AdStatusText.text = "Error: " + eventMessage; break;
 		}
 	}
 

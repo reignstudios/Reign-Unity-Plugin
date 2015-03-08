@@ -127,7 +127,8 @@ namespace Reign.Plugin
 		
 		public void Refresh()
 		{
-			Debug.Log("Editor Ad Refreshed");	
+			Debug.Log("Editor Ad Refreshed");
+			if (desc.EventCallback != null) desc.EventCallback(AdEvents.Refreshed, null);
 		}
 		
 		public void Update()

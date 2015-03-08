@@ -431,7 +431,7 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity Editor_AdGravity = AdGravity.TopCenter;
+		public AdGravity Editor_AdGravity = AdGravity.TopCenter, Editor_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
@@ -473,7 +473,7 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity WinRT_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter;
+		public AdGravity WinRT_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WinRT_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set to your APID
@@ -540,7 +540,7 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity WP8_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WP8_AdMob_AdGravity = AdGravity.TopCenter;
+		public AdGravity WP8_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WP8_AdMob_AdGravity = AdGravity.TopCenter, WP8_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set to your APID
@@ -586,7 +586,7 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity BB10_BlackBerryAdvertising_AdGravity = AdGravity.TopCenter;
+		public AdGravity BB10_BlackBerryAdvertising_AdGravity = AdGravity.TopCenter, BB10_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
@@ -622,7 +622,7 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity iOS_iAd_AdGravity = AdGravity.TopCenter, iOS_AdMob_AdGravity = AdGravity.TopCenter, iOS_DFP_AdGravity = AdGravity.TopCenter;
+		public AdGravity iOS_iAd_AdGravity = AdGravity.TopCenter, iOS_AdMob_AdGravity = AdGravity.TopCenter, iOS_DFP_AdGravity = AdGravity.TopCenter, iOS_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set to your APID
@@ -688,7 +688,7 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity Android_AdMob_AdGravity = AdGravity.TopCenter, Android_DFP_AdGravity = AdGravity.TopCenter, Android_AmazonAds_AdGravity = AdGravity.TopCenter;
+		public AdGravity Android_AdMob_AdGravity = AdGravity.TopCenter, Android_DFP_AdGravity = AdGravity.TopCenter, Android_AmazonAds_AdGravity = AdGravity.TopCenter, Android_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set to your APID

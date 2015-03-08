@@ -168,7 +168,6 @@ namespace Reign.Plugin
 				gifImage = new TextureGIF(data, frameUpdatedCallback);
 				adImage = gifImage.CurrentFrame.Texture;
 				Debug.Log(string.Format("Ad Image Size: {0}x{1}", adImage.width, adImage.height));
-				//desc.AdImage.gameObject.SetActive(Visible);
 				if (createdCallback != null) createdCallback(true);
 				if (adEvent != null) adEvent(AdEvents.Refreshed, null);
 			}
