@@ -1,25 +1,57 @@
 ﻿#if UNITY_EDITOR
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Reign.Plugin
 {
     public class AdPlugin : IAdPlugin
     {
-		public bool Visible {get; set;}
-		private bool testing, guiOverride;
-		private int offsetX, offsetY, width, height;
+		private bool visible;
+		public bool Visible
+		{
+			get {return visible;}
+			set
+			{
+				visible = value;
+				adCanvas.SetActive(value);
+			}
+		}
+
+		private AdDesc desc;
+		private GameObject adCanvas;
+		private RectTransform adRect;
 		
 		public AdPlugin(AdDesc desc, AdCreatedCallbackMethod createdCallback)
 		{
-			guiOverride = desc.Editor_AdGUIOverrideEnabled;
 			bool pass = true;
 			try
 			{
+				this.desc = desc;
+
+				// Create Ad Canvas
+				adCanvas = new GameObject("Editor Ad");
+				GameObject.DontDestroyOnLoad(adCanvas);
+				adCanvas.AddComponent<RectTransform>();
+				var canvas = adCanvas.AddComponent<Canvas>();
+				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+				canvas.sortingOrder = 1000;
+				adCanvas.AddComponent<CanvasScaler>();
+				adCanvas.AddComponent<GraphicRaycaster>();
+
+				// Create ad
+				var ad = new GameObject("AdButtonImage");
+				ad.transform.parent = adCanvas.transform;
+				adRect = ad.AddComponent<RectTransform>();
+				var image = ad.AddComponent<Image>();
+				image.sprite = Resources.Load<Sprite>("Reign/DemoAd");
+				image.preserveAspect = true;
+				var button = ad.AddComponent<Button>();
+				button.onClick.AddListener(adClicked);
+
+				// set default visible state
 				Visible = desc.Visible;
-				testing = desc.Testing;
-				width = desc.Editor_AdWidth;
-				height = desc.Editor_AdHeight;
+
 				SetGravity(desc.Editor_AdGravity);
 			}
 			catch (Exception e)
@@ -31,78 +63,71 @@ namespace Reign.Plugin
 			if (createdCallback != null) createdCallback(pass);
 		}
 
+		private void adClicked()
+		{
+			Debug.Log("Ad Clicked!");
+		}
+
 		public void Dispose()
 		{
-			// do nothing...
+			if (adCanvas != null)
+			{
+				GameObject.Destroy(adCanvas);
+				adCanvas = null;
+			}
 		}
 
 		public void SetGravity(AdGravity gravity)
 		{
 			switch (gravity)
 			{
+				case AdGravity.CenterScreen:
+					adRect.anchorMin = new Vector2(0, .5f-(desc.UnityUI_AdMaxHeight*.5f));
+					adRect.anchorMax = new Vector2(1, .5f+(desc.UnityUI_AdMaxHeight*.5f));
+					break;
+
 				case AdGravity.BottomCenter:
-					offsetX = (Screen.width / 2) - (width / 2);
-					offsetY = Screen.height - height;
+					adRect.anchorMin = new Vector2(0, 0);
+					adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
 					break;
 
 				case AdGravity.BottomLeft:
-					offsetX = 0;
-					offsetY = Screen.height - height;
+					adRect.anchorMin = new Vector2(0, 0);
+					adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, desc.UnityUI_AdMaxHeight);
 					break;
 
 				case AdGravity.BottomRight:
-					offsetX = Screen.width - width;
-					offsetY = Screen.height - height;
+					adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 0);
+					adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
 					break;
 
 				case AdGravity.TopCenter:
-					offsetX = (Screen.width / 2) - (width / 2);
-					offsetY = 0;
+					adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
+					adRect.anchorMax = new Vector2(1, 1);
 					break;
 
 				case AdGravity.TopLeft:
-					offsetX = 0;
-					offsetY = 0;
+					adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
+					adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, 1);
 					break;
 
 				case AdGravity.TopRight:
-					offsetX = Screen.width - width;
-					offsetY = 0;
+					adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 1-desc.UnityUI_AdMaxHeight);
+					adRect.anchorMax = new Vector2(1, 1);
 					break;
 
-				case AdGravity.CenterScreen:
-					offsetX = (Screen.width / 2) - (width / 2);
-					offsetY = (Screen.height / 2) - (height / 2);
+				default:
+					Debug.LogError("Unsuported Gravity: " + gravity);
 					break;
-
-				default: throw new Exception("Unsuported Ad gravity: " + gravity);
 			}
+
+			adRect.offsetMin = Vector2.zero;
+			adRect.offsetMax = Vector2.zero;
 		}
 		
 		public void Refresh()
 		{
 			Debug.Log("Editor Ad Refreshed");	
-		}
-
-		private void onGUI()
-		{
-			if (Visible && testing)
-			{
-				if (GUI.Button(new Rect(offsetX, offsetY, width, height), "Editor Test Ad"))
-				{
-					Debug.Log("Ad Clicked!");
-				}
-			}
-		}
-
-		public void OnGUI()
-		{
-			if (!guiOverride) onGUI();
-		}
-
-		public void OnGUIOverride()
-		{
-			if (guiOverride) onGUI();
 		}
 		
 		public void Update()

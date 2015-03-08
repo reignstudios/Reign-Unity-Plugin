@@ -39,17 +39,26 @@ namespace Reign.Plugin
 {
     public class MM_AdPlugin : IAdPlugin
     {
-		public bool Visible {get; set;}
-		private bool testing, guiOverride;
+		private bool visible;
+		public bool Visible
+		{
+			get {return visible;}
+			set
+			{
+				visible = value;
+				//desc.AdImage.gameObject.SetActive(value);
+			}
+		}
+
+		private AdDesc desc;
+		private bool testing;
 		private AdEventCallbackMethod adEvent;
-		private int offsetX, offsetY, width, height, refreshRate;
-		private float refreshRateTic, adScale;
-		private AdGravity adGravity;
+		private int refreshRate;
+		private float refreshRateTic;
 		private string deviceID, externalIP, apid;
 		private Texture adImage;
 		private TextureGIF gifImage;
 		private MonoBehaviour service;
-		private GUIStyle style;
 		private Reign.MM_AdXML.Ad adMeta;
 
 		public MM_AdPlugin(AdDesc desc, AdCreatedCallbackMethod createdCallback, MonoBehaviour service)
@@ -58,66 +67,44 @@ namespace Reign.Plugin
 
 			try
 			{
-				style = new GUIStyle();
+				this.desc = desc;
 				Visible = desc.Visible;
 				testing = desc.Testing;
 				adEvent = desc.EventCallback;
+				//desc.AdImage.gameObject.SetActive(false);
+				//desc.AdImage.onClick.AddListener(adClicked);
 
 				#if UNITY_EDITOR
-				adGravity = desc.Editor_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.Editor_MillennialMediaAdvertising_RefreshRate;
-				adScale = desc.Editor_GuiAdScale;
 				apid = desc.Editor_MillennialMediaAdvertising_APID;
-				guiOverride = desc.Editor_AdGUIOverrideEnabled;
 				#elif UNITY_BLACKBERRY
-				adGravity = desc.BB10_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.BB10_MillennialMediaAdvertising_RefreshRate;
-				adScale = desc.BB10_GuiAdScale;
 				apid = desc.BB10_MillennialMediaAdvertising_APID;
-				guiOverride = desc.BB10_AdGUIOverrideEnabled;
 				#elif UNITY_WP8
-				adGravity = desc.WP8_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.WP8_MillennialMediaAdvertising_RefreshRate;
-				adScale = desc.WP8_GuiAdScale;
 				apid = desc.WP8_MillennialMediaAdvertising_APID;
-				guiOverride = desc.WP8_AdGUIOverrideEnabled;
 				#elif UNITY_METRO
-				adGravity = desc.WinRT_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.WinRT_MillennialMediaAdvertising_RefreshRate;
-				adScale = desc.WinRT_GuiAdScale;
 				apid = desc.WinRT_MillennialMediaAdvertising_APID;
-				guiOverride = desc.WinRT_AdGUIOverrideEnabled;
 				#elif UNITY_IOS
-				adGravity = desc.iOS_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.iOS_MillennialMediaAdvertising_RefreshRate;
-				adScale = desc.iOS_GuiAdScale;
 				apid = desc.iOS_MillennialMediaAdvertising_APID;
-				guiOverride = desc.iOS_AdGUIOverrideEnabled;
 				#elif UNITY_ANDROID
-				adGravity = desc.Android_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.Android_MillennialMediaAdvertising_RefreshRate;
-				adScale = desc.Android_GuiAdScale;
 				apid = desc.Android_MillennialMediaAdvertising_APID;
-				guiOverride = desc.Android_AdGUIOverrideEnabled;
 				#elif UNITY_STANDALONE_WIN
-				adGravity = desc.Win32_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.Win32_MillennialMediaAdvertising_RefreshRate;
-				adScale = desc.Win32_GuiAdScale;
 				apid = desc.Win32_MillennialMediaAdvertising_APID;
-				guiOverride = desc.Win32_AdGUIOverrideEnabled;
 				#elif UNITY_STANDALONE_OSX
-				adGravity = desc.OSX_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.OSX_MillennialMediaAdvertising_RefreshRate;
-				adScale = desc.OSX_GuiAdScale;
 				apid = desc.OSX_MillennialMediaAdvertising_APID;
-				guiOverride = desc.OSX_AdGUIOverrideEnabled;
 				#elif UNITY_STANDALONE_LINUX
-				adGravity = desc.Linux_MillennialMediaAdvertising_AdGravity;
 				refreshRate = desc.Linux_MillennialMediaAdvertising_RefreshRate;
-				adScale = desc.Linux_GuiAdScale;
 				apid = desc.Linux_MillennialMediaAdvertising_APID;
-				guiOverride = desc.Linux_AdGUIOverrideEnabled;
 				#endif
+
+				// make sure ad refresh rate doesn't go under 1 min
+				if (refreshRate < 60) refreshRate = 60;
 
 				// create or get device ID
 				if (PlayerPrefs.HasKey("Reign_MMWebAds_DeviceID"))
@@ -146,6 +133,22 @@ namespace Reign.Plugin
 			}
 		}
 
+		private void adClicked()
+		{
+			if (testing)
+			{
+				Debug.Log("Ad Clicked!");
+				Application.OpenURL("http://www.millennialmedia.com/");
+			}
+			else
+			{
+				Debug.Log("Opening Ad at URL: " + adMeta.clickUrl.Content);
+				Application.OpenURL(adMeta.clickUrl.Content);
+				Debug.Log("Ad Clicked!");
+				if (adEvent != null) adEvent(AdEvents.Clicked, null);
+			}
+		}
+
 		private IEnumerator init(AdCreatedCallbackMethod createdCallback)
 		{
 			// request Ad
@@ -164,10 +167,8 @@ namespace Reign.Plugin
 
 				gifImage = new TextureGIF(data, frameUpdatedCallback);
 				adImage = gifImage.CurrentFrame.Texture;
-				width = (int)(adImage.width * adScale);
-				height = (int)(adImage.height * adScale);
-				Debug.Log(string.Format("Ad Image Size: {0}x{1}", width, height));
-				SetGravity(adGravity);
+				Debug.Log(string.Format("Ad Image Size: {0}x{1}", adImage.width, adImage.height));
+				//desc.AdImage.gameObject.SetActive(Visible);
 				if (createdCallback != null) createdCallback(true);
 				if (adEvent != null) adEvent(AdEvents.Refreshed, null);
 			}
@@ -206,47 +207,7 @@ namespace Reign.Plugin
 
 		public void SetGravity(AdGravity gravity)
 		{
-			switch (gravity)
-			{
-				case AdGravity.BottomCenter:
-					offsetX = (Screen.width / 2) - (width / 2);
-					offsetY = Screen.height - height;
-					break;
-
-				case AdGravity.BottomLeft:
-					offsetX = 0;
-					offsetY = Screen.height - height;
-					break;
-
-				case AdGravity.BottomRight:
-					offsetX = Screen.width - width;
-					offsetY = Screen.height - height;
-					break;
-
-				case AdGravity.TopCenter:
-					offsetX = (Screen.width / 2) - (width / 2);
-					offsetY = 0;
-					break;
-
-				case AdGravity.TopLeft:
-					offsetX = 0;
-					offsetY = 0;
-					break;
-
-				case AdGravity.TopRight:
-					offsetX = Screen.width - width;
-					offsetY = 0;
-					break;
-
-				case AdGravity.CenterScreen:
-					offsetX = (Screen.width / 2) - (width / 2);
-					offsetY = (Screen.height / 2) - (height / 2);
-					break;
-
-				default: throw new Exception("Unsuported Ad gravity: " + gravity);
-			}
-
-			adGravity = gravity;
+			Debug.Log("SetGravity not supported on this platform (Use Unity UI to position instead)");
 		}
 		
 		public void Refresh()
@@ -258,6 +219,8 @@ namespace Reign.Plugin
 
 		private IEnumerator asyncRefresh(AdCreatedCallbackMethod createdCallback)
 		{
+			if (!Visible) yield break;
+
 			string url = "http://ads.mp.mydas.mobi/getAd.php5?";
 			url += "&apid=" + apid;// ID
 			url += "&auid=" + deviceID;// Device UID Hash HEX value
@@ -311,45 +274,9 @@ namespace Reign.Plugin
 			}
 			gifImage = new TextureGIF(www.bytes, frameUpdatedCallback);
 			adImage = gifImage.CurrentFrame.Texture;
-			width = (int)(adImage.width * adScale);
-			height = (int)(adImage.height * adScale);
-			Debug.Log(string.Format("Ad Image Size: {0}x{1}", width, height));
-			SetGravity(adGravity);
+			Debug.Log(string.Format("Ad Image Size: {0}x{1}", adImage.width, adImage.height));
 
 			if (adEvent != null) adEvent(AdEvents.Refreshed, null);
-		}
-
-		private void onGUI()
-		{
-			if (Visible && gifImage != null && adImage != null)
-			{
-				GUI.DrawTexture(new Rect(offsetX, offsetY, width, height), adImage);
-				if (GUI.Button(new Rect(offsetX, offsetY, width, height), "", style))
-				{
-					if (testing)
-					{
-						Debug.Log("Ad Clicked!");
-						Application.OpenURL("http://www.millennialmedia.com/");
-					}
-					else
-					{
-						Debug.Log("Opening Ad at URL: " + adMeta.clickUrl.Content);
-						Application.OpenURL(adMeta.clickUrl.Content);
-						Debug.Log("Ad Clicked!");
-						if (adEvent != null) adEvent(AdEvents.Clicked, null);
-					}
-				}
-			}
-		}
-
-		public void OnGUI()
-		{
-			if (!guiOverride) onGUI();
-		}
-
-		public void OnGUIOverride()
-		{
-			if (guiOverride) onGUI();
 		}
 		
 		public void Update()

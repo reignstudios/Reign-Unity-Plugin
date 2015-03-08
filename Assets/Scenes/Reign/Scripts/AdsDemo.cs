@@ -9,22 +9,22 @@ using Reign;
 
 public class AdsDemo : MonoBehaviour
 {
-	public static AdsDemo Singleton;
+	private static bool created;
 	private static Ad ad;
 
 	public Text AdStatusText;
 	public Button RefreshButton, VisibilityButton, BackButton;
-	public Image AdImage;// UI based ad placement
 
 	void Start()
 	{
 		// make sure we don't init the same Ad twice
-		if (Singleton != null)
+		if (created)
 		{
+			ad.Visible = true;
 			Destroy(gameObject);
 			return;
 		}
-		Singleton = this;
+		created = true;
 		
 		// bind button events
 		RefreshButton.Select();
@@ -39,17 +39,14 @@ public class AdsDemo : MonoBehaviour
 		desc.Testing = true;// NOTE: To test ads on iOS, you must enable them in iTunes Connect.
 		desc.Visible = true;
 		desc.EventCallback = eventCallback;
+		desc.UnityUI_AdMaxHeight = 0.3f;
+		desc.UnityUI_AdMaxHeight = 0.15f;
 
 		// Editor
 		desc.Editor_AdAPI = AdAPIs.EditorTestAd;
 		desc.Editor_AdGravity = AdGravity.BottomCenter;
-		desc.Editor_AdWidth = 256;
-		desc.Editor_AdHeight = 32;
-		//desc.Editor_AdGUIOverrideEnabled = true;
 
 		desc.Editor_MillennialMediaAdvertising_APID = "";
-		desc.Editor_MillennialMediaAdvertising_AdGravity = AdGravity.BottomCenter;
-		desc.Editor_GuiAdScale = 1;
 		//desc.Editor_MillennialMediaAdvertising_RefreshRate = 120,
 
 		// WinRT settings (Windows 8.0 & 8.1)
@@ -81,9 +78,6 @@ public class AdsDemo : MonoBehaviour
 		desc.BB10_BlackBerryAdvertising_AdSize = BB10_BlackBerryAdvertising_AdSize.Wide_320x53;
 
 		desc.BB10_MillennialMediaAdvertising_APID = "";
-		desc.BB10_MillennialMediaAdvertising_AdGravity = AdGravity.BottomCenter;
-		desc.BB10_GuiAdScale = 2;
-		//desc.BB10_AdGUIOverrideEnabled = true;
 		//desc.BB10_MillennialMediaAdvertising_RefreshRate = 120;
 			
 		// iOS settings
@@ -126,6 +120,7 @@ public class AdsDemo : MonoBehaviour
 
 	private void backClicked()
 	{
+		ad.Visible = false;
 		Application.LoadLevel("MainDemo");
 	}
 
@@ -144,34 +139,6 @@ public class AdsDemo : MonoBehaviour
 			case AdEvents.Error: AdStatusText.text = "Error: " + eventMessage; break;
 		}
 	}
-
-	//void OnGUI()
-	//{
-	//	GUI.matrix = Matrix4x4.identity;
-	//	GUI.color = Color.white;
-
-	//	float offset = 0;
-	//	GUI.Label(new Rect((Screen.width/2)-(256*.5f), offset, 256, 32), "<< Banner Ads Demo >>", uiStyle);
-	//	if (GUI.Button(new Rect(0, offset, 64, 32), "Back"))
-	//	{
-	//		gameObject.SetActive(false);
-	//		Application.LoadLevel("MainDemo");
-	//		return;
-	//	}
-	//	offset += 34;
-
-	//	GUI.Label(new Rect(0, Screen.height/2, 256, 64), "Ad status: " + adStatus);
-				
-	//	// Manual Refresh does not work on (Apple iAd) or (BB10 Ads).
-	//	if (GUI.Button(new Rect(0, offset, 128, 64), "Manual Refresh")) ad.Refresh();
-	//	offset += 68;
-
-	//	// Show / Hide Ad
-	//	if (GUI.Button(new Rect(0, offset, 128, 64), "Show / Hide")) ad.Visible = !ad.Visible;
-
-	//	// You can also manually draw GUI based Ads if you want to control GUI sort order
-	//	//ad.Draw();
-	//}
 
 	void Update()
 	{

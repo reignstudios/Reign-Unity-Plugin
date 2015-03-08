@@ -57,14 +57,6 @@ namespace Reign
 		{
 			plugin.Refresh();
 		}
-
-		/// <summary>
-		/// Call to manually draw your Ad
-		/// </summary>
-		public void Draw()
-		{
-			plugin.OnGUIOverride();
-		}
 	}
 
 	/// <summary>
@@ -86,16 +78,8 @@ namespace Reign
 			plugins = new List<IAdPlugin>();
 
 			#if !DISABLE_REIGN
-			ReignServices.AddService(update, onGUI, null);
+			ReignServices.AddService(update, null, null);
 			#endif
-		}
-
-		private static void onGUI()
-		{
-			foreach (var plugin in plugins)
-			{
-				plugin.OnGUI();
-			}
 		}
 
 		#if ASYNC
@@ -275,22 +259,6 @@ namespace Reign.Plugin
 		public void Refresh()
 		{
 			// do nothing...
-		}
-
-		/// <summary>
-		/// Dumy method.
-		/// </summary>
-		public void OnGUI()
-		{
-			// do nothing...
-		}
-
-		/// <summary>
-		/// Dumy method.
-		/// </summary>
-		public void OnGUIOverride()
-		{
-				// do nothing...
 		}
 
 		/// <summary>

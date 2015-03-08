@@ -7,7 +7,7 @@ using Reign;
 
 public class LeaderboardsAchievementsDemo : MonoBehaviour
 {
-	public static LeaderboardsAchievementsDemo Singleton;
+	public static bool created;
 	public GameObject ReignScores_Renderer;
 
 	private bool disableUI;
@@ -15,12 +15,12 @@ public class LeaderboardsAchievementsDemo : MonoBehaviour
 
 	void Start()
 	{
-		if (Singleton != null)
+		if (created)
 		{
 			Destroy(gameObject);
 			return;
 		}
-		Singleton = this;
+		created = true;
 		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't init the same API twice.
 
 		uiStyle = new GUIStyle()

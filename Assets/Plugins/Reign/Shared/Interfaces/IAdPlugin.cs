@@ -412,6 +412,11 @@ namespace Reign
 		/// </summary>
 		public AdEventCallbackMethod EventCallback;
 
+		/// <summary>
+		/// Used to limit the native Unity UI size
+		/// </summary>
+		public float UnityUI_AdMaxWidth = 0.3f, UnityUI_AdMaxHeight = 0.15f;
+
 		// Editor
 		/// <summary>
 		/// Ad API type.
@@ -426,27 +431,12 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity Editor_AdGravity = AdGravity.TopCenter, Editor_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
-
-		/// <summary>
-		/// Editor testing Ad size.
-		/// </summary>
-		public int Editor_AdWidth = 256, Editor_AdHeight = 32;
+		public AdGravity Editor_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
 		/// </summary>
 		public int Editor_MillennialMediaAdvertising_RefreshRate = 120;
-
-		/// <summary>
-		/// Set to scale Unity GUI based Ads.
-		/// </summary>
-		public float Editor_GuiAdScale = 1;
-
-		/// <summary>
-		/// Set true to enable GUIOverride draw calls
-		/// </summary>
-		public bool Editor_AdGUIOverrideEnabled = false;
 
 		// WinRT
 		/// <summary>
@@ -483,7 +473,7 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity WinRT_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WinRT_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
+		public AdGravity WinRT_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set to your APID
@@ -550,7 +540,7 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity WP8_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WP8_AdMob_AdGravity = AdGravity.TopCenter, WP8_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
+		public AdGravity WP8_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WP8_AdMob_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set to your APID
@@ -596,22 +586,12 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity BB10_BlackBerryAdvertising_AdGravity = AdGravity.TopCenter, BB10_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
+		public AdGravity BB10_BlackBerryAdvertising_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
 		/// </summary>
 		public int BB10_BlackBerryAdvertising_RefreshRate = 120, BB10_MillennialMediaAdvertising_RefreshRate = 120;
-
-		/// <summary>
-		/// Set to scale Unity GUI based Ads.
-		/// </summary>
-		public float BB10_GuiAdScale = 1;
-
-		/// <summary>
-		/// Set true to enable GUIOverride draw calls
-		/// </summary>
-		public bool BB10_AdGUIOverrideEnabled = false;
 		
 		// iOS
 		/// <summary>
@@ -642,7 +622,7 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity iOS_iAd_AdGravity = AdGravity.TopCenter, iOS_AdMob_AdGravity = AdGravity.TopCenter, iOS_DFP_AdGravity = AdGravity.TopCenter, iOS_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
+		public AdGravity iOS_iAd_AdGravity = AdGravity.TopCenter, iOS_AdMob_AdGravity = AdGravity.TopCenter, iOS_DFP_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set to your APID
@@ -708,7 +688,7 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity Android_AdMob_AdGravity = AdGravity.TopCenter, Android_DFP_AdGravity = AdGravity.TopCenter, Android_AmazonAds_AdGravity = AdGravity.TopCenter, Android_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
+		public AdGravity Android_AdMob_AdGravity = AdGravity.TopCenter, Android_DFP_AdGravity = AdGravity.TopCenter, Android_AmazonAds_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set to your APID
@@ -742,11 +722,6 @@ namespace Reign
 		public string Win32_MillennialMediaAdvertising_APID;
 
 		/// <summary>
-		/// Starting Ad gravity.
-		/// </summary>
-		public AdGravity Win32_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
-
-		/// <summary>
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
 		/// </summary>
 		public int Win32_MillennialMediaAdvertising_RefreshRate = 120;
@@ -773,11 +748,6 @@ namespace Reign
 		public string OSX_MillennialMediaAdvertising_APID;
 
 		/// <summary>
-		/// Starting Ad gravity.
-		/// </summary>
-		public AdGravity OSX_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
-
-		/// <summary>
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
 		/// </summary>
 		public int OSX_MillennialMediaAdvertising_RefreshRate = 120;
@@ -802,11 +772,6 @@ namespace Reign
 		/// Set to your APID
 		/// </summary>
 		public string Linux_MillennialMediaAdvertising_APID;
-
-		/// <summary>
-		/// Starting Ad gravity.
-		/// </summary>
-		public AdGravity Linux_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
@@ -865,16 +830,6 @@ namespace Reign.Plugin
 		/// Refresh Ad
 		/// </summary>
 		void Refresh();
-
-		/// <summary>
-		/// Gui operations
-		/// </summary>
-		void OnGUI();
-
-		/// <summary>
-		/// Gui override operations
-		/// </summary>
-		void OnGUIOverride();
 
 		/// <summary>
 		/// Update operations

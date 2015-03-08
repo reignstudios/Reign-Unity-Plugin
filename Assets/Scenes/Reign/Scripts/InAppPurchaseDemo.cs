@@ -8,7 +8,7 @@ using Reign;
 
 public class InAppPurchaseDemo : MonoBehaviour
 {
-	public static InAppPurchaseDemo Singleton;
+	public static bool created;
 	private bool waiting;
 	private string[] restoreInAppStatusText;
 	private string formatedPriceText;
@@ -27,12 +27,12 @@ public class InAppPurchaseDemo : MonoBehaviour
 
 	void Start()
 	{
-		if (Singleton != null)
+		if (created)
 		{
 			Destroy(gameObject);
 			return;
 		}
-		Singleton = this;
+		created = true;
 		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't init the same API twice.
 
 		uiStyle = new GUIStyle()

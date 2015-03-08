@@ -8,18 +8,18 @@ using Reign;
 
 public class InterstitialAdDemo : MonoBehaviour
 {
-	public static InterstitialAdDemo Singleton;
+	public static bool created;
 	private InterstitialAd ad;
 	GUIStyle uiStyle;
 
 	void Start()
 	{
-		if (Singleton != null)
+		if (created)
 		{
 			Destroy(gameObject);
 			return;
 		}
-		Singleton = this;
+		created = true;
 		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't create the same Ad twice.
 
 		uiStyle = new GUIStyle()
