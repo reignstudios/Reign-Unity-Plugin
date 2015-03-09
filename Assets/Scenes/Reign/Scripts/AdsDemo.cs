@@ -52,6 +52,7 @@ public class AdsDemo : MonoBehaviour
 		desc.Editor_AdGravity = AdGravity.BottomCenter;
 
 		desc.Editor_MillennialMediaAdvertising_APID = "";
+		desc.Editor_MillennialMediaAdvertising_AdGravity = AdGravity.BottomCenter;
 		//desc.Editor_MillennialMediaAdvertising_RefreshRate = 120,
 
 		// WinRT settings (Windows 8.0 & 8.1)

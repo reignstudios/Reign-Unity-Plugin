@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.IO;
 using System.Xml.Serialization;
@@ -46,17 +47,19 @@ namespace Reign.Plugin
 			set
 			{
 				visible = value;
-				//desc.AdImage.gameObject.SetActive(value);
+				adCanvas.SetActive(value);
 			}
 		}
 
 		private AdDesc desc;
+		private GameObject adCanvas;
+		private RectTransform adRect;
+		private Image adImage;
 		private bool testing;
 		private AdEventCallbackMethod adEvent;
 		private int refreshRate;
 		private float refreshRateTic;
 		private string deviceID, externalIP, apid;
-		private Texture adImage;
 		private TextureGIF gifImage;
 		private MonoBehaviour service;
 		private Reign.MM_AdXML.Ad adMeta;
@@ -68,11 +71,8 @@ namespace Reign.Plugin
 			try
 			{
 				this.desc = desc;
-				Visible = desc.Visible;
 				testing = desc.Testing;
 				adEvent = desc.EventCallback;
-				//desc.AdImage.gameObject.SetActive(false);
-				//desc.AdImage.onClick.AddListener(adClicked);
 
 				#if UNITY_EDITOR
 				refreshRate = desc.Editor_MillennialMediaAdvertising_RefreshRate;
@@ -123,6 +123,30 @@ namespace Reign.Plugin
 					PlayerPrefs.SetString("Reign_MMWebAds_DeviceID", deviceID);
 				}
 
+				// Create Ad Canvas
+				adCanvas = new GameObject("MM Ad");
+				GameObject.DontDestroyOnLoad(adCanvas);
+				adCanvas.AddComponent<RectTransform>();
+				var canvas = adCanvas.AddComponent<Canvas>();
+				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+				canvas.sortingOrder = 1000;
+				adCanvas.AddComponent<CanvasScaler>();
+				adCanvas.AddComponent<GraphicRaycaster>();
+
+				// Create ad
+				var ad = new GameObject("AdButtonImage");
+				ad.transform.parent = adCanvas.transform;
+				adRect = ad.AddComponent<RectTransform>();
+				adImage = ad.AddComponent<Image>();
+				adImage.sprite = Resources.Load<Sprite>("Reign/Ads/AdLoading");
+				adImage.preserveAspect = true;
+				var button = ad.AddComponent<Button>();
+				button.onClick.AddListener(adClicked);
+
+				// set default visible state
+				Visible = desc.Visible;
+				SetGravity(desc.Editor_AdGravity);
+
 				// load ad
 				service.StartCoroutine(init(createdCallback));
 			}
@@ -166,8 +190,9 @@ namespace Reign.Plugin
 				}
 
 				gifImage = new TextureGIF(data, frameUpdatedCallback);
-				adImage = gifImage.CurrentFrame.Texture;
-				Debug.Log(string.Format("Ad Image Size: {0}x{1}", adImage.width, adImage.height));
+				adImage.sprite = gifImage.CurrentFrame.Sprite;
+				var texture = gifImage.CurrentFrame.Texture;
+				Debug.Log(string.Format("Ad Image Size: {0}x{1}", texture.width, texture.height));
 				if (createdCallback != null) createdCallback(true);
 				if (adEvent != null) adEvent(AdEvents.Refreshed, null);
 			}
@@ -192,7 +217,7 @@ namespace Reign.Plugin
 
 		private void frameUpdatedCallback(TextureGIFFrame frame)
 		{
-			adImage = frame.Texture;
+			adImage.sprite = frame.Sprite;
 		}
 
 		public void Dispose()
@@ -206,7 +231,50 @@ namespace Reign.Plugin
 
 		public void SetGravity(AdGravity gravity)
 		{
-			Debug.Log("SetGravity not supported on this platform (Use Unity UI to position instead)");
+			switch (gravity)
+			{
+				case AdGravity.CenterScreen:
+					adRect.anchorMin = new Vector2(0, .5f-(desc.UnityUI_AdMaxHeight*.5f));
+					adRect.anchorMax = new Vector2(1, .5f+(desc.UnityUI_AdMaxHeight*.5f));
+					break;
+
+				case AdGravity.BottomCenter:
+					adRect.anchorMin = new Vector2(0, 0);
+					adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
+					break;
+
+				case AdGravity.BottomLeft:
+					adRect.anchorMin = new Vector2(0, 0);
+					adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, desc.UnityUI_AdMaxHeight);
+					break;
+
+				case AdGravity.BottomRight:
+					adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 0);
+					adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
+					break;
+
+				case AdGravity.TopCenter:
+					adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
+					adRect.anchorMax = new Vector2(1, 1);
+					break;
+
+				case AdGravity.TopLeft:
+					adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
+					adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, 1);
+					break;
+
+				case AdGravity.TopRight:
+					adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 1-desc.UnityUI_AdMaxHeight);
+					adRect.anchorMax = new Vector2(1, 1);
+					break;
+
+				default:
+					Debug.LogError("Unsuported Gravity: " + gravity);
+					break;
+			}
+
+			adRect.offsetMin = Vector2.zero;
+			adRect.offsetMax = Vector2.zero;
 		}
 		
 		public void Refresh()
@@ -272,8 +340,9 @@ namespace Reign.Plugin
 				gifImage = null;
 			}
 			gifImage = new TextureGIF(www.bytes, frameUpdatedCallback);
-			adImage = gifImage.CurrentFrame.Texture;
-			Debug.Log(string.Format("Ad Image Size: {0}x{1}", adImage.width, adImage.height));
+			adImage.sprite = gifImage.CurrentFrame.Sprite;
+			var texture = gifImage.CurrentFrame.Texture;
+			Debug.Log(string.Format("Ad Image Size: {0}x{1}", texture.width, texture.height));
 
 			if (adEvent != null) adEvent(AdEvents.Refreshed, null);
 		}

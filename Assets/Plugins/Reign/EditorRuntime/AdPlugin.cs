@@ -44,14 +44,13 @@ namespace Reign.Plugin
 				ad.transform.parent = adCanvas.transform;
 				adRect = ad.AddComponent<RectTransform>();
 				var image = ad.AddComponent<Image>();
-				image.sprite = Resources.Load<Sprite>("Reign/DemoAd");
+				image.sprite = Resources.Load<Sprite>("Reign/Ads/DemoAd");
 				image.preserveAspect = true;
 				var button = ad.AddComponent<Button>();
 				button.onClick.AddListener(adClicked);
 
-				// set default visible state
+				// set default visible state and gravity
 				Visible = desc.Visible;
-
 				SetGravity(desc.Editor_AdGravity);
 			}
 			catch (Exception e)

@@ -26,6 +26,11 @@ namespace Reign
 		public Texture2D Texture {get; private set;}
 
 		/// <summary>
+		/// The frame sprite
+		/// </summary>
+		public Sprite Sprite {get; private set;}
+
+		/// <summary>
 		/// The next frame after this one
 		/// </summary>
 		public TextureGIFFrame NextFrame {get{return nextFrame;}}
@@ -44,6 +49,7 @@ namespace Reign
 		public TextureGIFFrame(Texture2D texture, TimeSpan timeSpan)
 		{
 			this.Texture = texture;
+			this.Sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
 			this.FrameTime = timeSpan;
 		}
 
