@@ -5,9 +5,9 @@
 using UnityEngine;
 using Reign;
 
-public class LeaderboardsAchievementsDemo : MonoBehaviour
+public class ScoresDemo : MonoBehaviour
 {
-	public static bool created;
+	private static bool created;
 	public GameObject ReignScores_Renderer;
 
 	private bool disableUI;

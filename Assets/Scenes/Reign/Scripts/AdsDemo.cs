@@ -32,7 +32,7 @@ public class AdsDemo : MonoBehaviour
 		// make sure we don't init the same Ad twice
 		if (created)
 		{
-			ad.Visible = true;
+			if (ad != null) ad.Visible = true;
 			return;
 		}
 		created = true;
