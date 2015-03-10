@@ -174,11 +174,6 @@ namespace Reign.Plugin
 		void Dispose();
 
 		/// <summary>
-		/// Used to handle UI events
-		/// </summary>
-		void OnGUI();
-
-		/// <summary>
 		/// Used to handle Ad events
 		/// </summary>
 		void Update();

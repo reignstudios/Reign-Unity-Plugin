@@ -4,6 +4,7 @@ using System.Collections;
 
 public class MainDemo : MonoBehaviour
 {
+	public Button ResetPrefsButton;
 	public Button MessageBoxesButton, EmailButton, StreamsButton, MarketingButton, AdsButton, InterstitialAdsButton, IAPButton, ScoresButton, InputExButton, SocialButton;
 
 	void Start ()
@@ -15,6 +16,7 @@ public class MainDemo : MonoBehaviour
 
 		// bind button events
 		MessageBoxesButton.Select();
+		ResetPrefsButton.onClick.AddListener(resetPrefsClicked);
 		MessageBoxesButton.onClick.AddListener(messageBoxesClicked);
 		EmailButton.onClick.AddListener(emailClicked);
 		StreamsButton.onClick.AddListener(streamsClicked);
@@ -28,6 +30,12 @@ public class MainDemo : MonoBehaviour
 
 		// helpful utility to get screen size changed events!
 		ReignServices.ScreenSizeChangedCallback += ReignServices_ScreenSizeChangedCallback;
+	}
+
+	private void resetPrefsClicked()
+	{
+		PlayerPrefs.DeleteAll();
+		Debug.Log("Player Prefs Reset!");
 	}
 
 	void ReignServices_ScreenSizeChangedCallback(int oldWidth, int oldHeight, int newWidth, int newHeight)

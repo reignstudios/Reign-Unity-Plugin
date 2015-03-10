@@ -68,16 +68,8 @@ namespace Reign
 			plugins = new List<IInterstitialAdPlugin>();
 
 			#if !DISABLE_REIGN
-			ReignServices.AddService(update, onGUI, null);
+			ReignServices.AddService(update, null, null);
 			#endif
-		}
-
-		private static void onGUI()
-		{
-			foreach (var plugin in plugins)
-			{
-				plugin.OnGUI();
-			}
 		}
 
 		#if ASYNC
@@ -251,14 +243,6 @@ namespace Reign.Plugin
 		/// Dumy method.
 		/// </summary>
 		public void Dispose()
-		{
-			// do nothing...
-		}
-
-		/// <summary>
-		/// Dumy method.
-		/// </summary>
-		public void OnGUI()
 		{
 			// do nothing...
 		}

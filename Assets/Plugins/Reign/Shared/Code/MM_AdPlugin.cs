@@ -74,33 +74,45 @@ namespace Reign.Plugin
 				testing = desc.Testing;
 				adEvent = desc.EventCallback;
 
+				AdGravity gravity;
+				#if !DISABLE_REIGN
 				#if UNITY_EDITOR
 				refreshRate = desc.Editor_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Editor_MillennialMediaAdvertising_APID;
+				gravity = desc.Editor_MillennialMediaAdvertising_AdGravity;
 				#elif UNITY_BLACKBERRY
 				refreshRate = desc.BB10_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.BB10_MillennialMediaAdvertising_APID;
+				gravity = desc.BB10_MillennialMediaAdvertising_AdGravity;
 				#elif UNITY_WP8
 				refreshRate = desc.WP8_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.WP8_MillennialMediaAdvertising_APID;
+				gravity = desc.WP8_MillennialMediaAdvertising_AdGravity;
 				#elif UNITY_METRO
 				refreshRate = desc.WinRT_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.WinRT_MillennialMediaAdvertising_APID;
+				gravity = desc.WinRT_MillennialMediaAdvertising_AdGravity;
 				#elif UNITY_IOS
 				refreshRate = desc.iOS_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.iOS_MillennialMediaAdvertising_APID;
+				gravity = desc.iOS_MillennialMediaAdvertising_AdGravity;
 				#elif UNITY_ANDROID
 				refreshRate = desc.Android_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Android_MillennialMediaAdvertising_APID;
+				gravity = desc.Android_MillennialMediaAdvertising_AdGravity;
 				#elif UNITY_STANDALONE_WIN
 				refreshRate = desc.Win32_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Win32_MillennialMediaAdvertising_APID;
+				gravity = desc.Win32_MillennialMediaAdvertising_AdGravity;
 				#elif UNITY_STANDALONE_OSX
 				refreshRate = desc.OSX_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.OSX_MillennialMediaAdvertising_APID;
+				gravity = desc.OSX_MillennialMediaAdvertising_AdGravity;
 				#elif UNITY_STANDALONE_LINUX
 				refreshRate = desc.Linux_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Linux_MillennialMediaAdvertising_APID;
+				gravity = desc.Linux_MillennialMediaAdvertising_AdGravity;
+				#endif
 				#endif
 
 				// make sure ad refresh rate doesn't go under 1 min
@@ -145,7 +157,7 @@ namespace Reign.Plugin
 
 				// set default visible state
 				Visible = desc.Visible;
-				SetGravity(desc.Editor_AdGravity);
+				SetGravity(gravity);
 
 				// load ad
 				service.StartCoroutine(init(createdCallback));

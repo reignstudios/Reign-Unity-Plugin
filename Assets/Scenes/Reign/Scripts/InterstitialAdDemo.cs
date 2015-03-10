@@ -3,32 +3,31 @@
 // -----------------------------------------------
 
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using Reign;
 
 public class InterstitialAdDemo : MonoBehaviour
 {
-	public static bool created;
-	private InterstitialAd ad;
-	GUIStyle uiStyle;
+	private static InterstitialAdDemo singleton;
+	private static bool created;
+	private static InterstitialAd ad;
+	public Button ShowAdButton, BackButton;
 
 	void Start()
 	{
-		if (created)
-		{
-			Destroy(gameObject);
-			return;
-		}
+		singleton = this;
+
+		// bind button events
+		ShowAdButton.Select();
+		ShowAdButton.onClick.AddListener(showAdClicked);
+		BackButton.onClick.AddListener(backClicked);
+
+		// make sure we don't init the same Ad twice
+		if (created) return;
 		created = true;
-		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't create the same Ad twice.
 
-		uiStyle = new GUIStyle()
-		{
-			alignment = TextAnchor.MiddleCenter,
-			fontSize = 32,
-			normal = new GUIStyleState() {textColor = Color.white},
-		};
-
+		// create add
 		var desc = new InterstitialAdDesc();
 
 		// Global
@@ -42,7 +41,7 @@ public class InterstitialAdDemo : MonoBehaviour
 		// iOS
 		desc.iOS_AdAPI = InterstitialAdAPIs.AdMob;
 		desc.iOS_AdMob_UnitID = "";// NOTE: Must set event for testing
-			
+		
 		// Android
 		#if AMAZON
 		desc.Android_AdAPI = InterstitialAdAPIs.Amazon;
@@ -56,38 +55,28 @@ public class InterstitialAdDemo : MonoBehaviour
 		ad = InterstitialAdManager.CreateAd(desc, createdCallback);
 	}
 
+	private void showAdClicked()
+	{
+		// its a good idea to cache ads when the level starts, then show it when the level ends
+		ad.Cache();
+	}
+
+	private void backClicked()
+	{
+		Application.LoadLevel("MainDemo");
+	}
+
 	private void createdCallback(bool success)
 	{
 		Debug.Log(success);
 		if (!success) Debug.LogError("Failed to create InterstitialAd!");
 	}
 
-	private void eventCallback(InterstitialAdEvents adEvent, string eventMessage)
+	private static void eventCallback(InterstitialAdEvents adEvent, string eventMessage)
 	{
 		Debug.Log(adEvent);
 		if (adEvent == InterstitialAdEvents.Error) Debug.LogError(eventMessage);
 		if (adEvent == InterstitialAdEvents.Cached) ad.Show();
-	}
-
-	void OnGUI()
-	{
-		GUI.matrix = Matrix4x4.identity;
-		GUI.color = Color.white;
-
-		float offset = 0;
-		GUI.Label(new Rect((Screen.width/2)-(256*.5f), offset, 256, 32), "<< Interstitial Ads Demo >>", uiStyle);
-		if (GUI.Button(new Rect(0, offset, 64, 32), "Back"))
-		{
-			gameObject.SetActive(false);
-			Application.LoadLevel("MainDemo");
-			return;
-		}
-		offset += 34;
-
-		if (GUI.Button(new Rect(0, offset, 128, 64), "Show Ad"))
-		{
-			ad.Cache();
-		}
 	}
 
 	void Update()
