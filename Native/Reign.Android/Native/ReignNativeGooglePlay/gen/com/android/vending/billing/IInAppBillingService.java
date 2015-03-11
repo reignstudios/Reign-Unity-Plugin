@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /Users/andrewwitte/Reign/Reign-Unity-Plugin/Native/Reign.Android/Native/ReignNativeGooglePlay/src/com/android/vending/billing/IInAppBillingService.aidl
+ * Original file: /Users/andrewwitte/Reign/Reign-Unity-Plugin-Unity4/Native/Reign.Android/Native/ReignNativeGooglePlay/src/com/android/vending/billing/IInAppBillingService.aidl
  */
 package com.android.vending.billing;
 /**

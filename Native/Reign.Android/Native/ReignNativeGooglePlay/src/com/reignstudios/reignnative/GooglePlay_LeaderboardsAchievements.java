@@ -110,7 +110,11 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 			{
 				try
 				{
-					if (client.isConnected()) client.disconnect();
+					if (client.isConnected())
+					{
+						client.disconnect();
+						Games.signOut(client);
+					}
 				}
 				catch (Exception e)
 				{

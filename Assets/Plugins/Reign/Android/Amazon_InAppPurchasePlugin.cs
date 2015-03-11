@@ -136,7 +136,7 @@ namespace Reign.Plugin
 			// check buy callbacks
 			if (native.CallStatic<bool>("CheckBuyDone"))
 			{
-				if (purchasedCallback != null) purchasedCallback(buyInAppID, native.CallStatic<bool>("CheckBuySuccess"));
+				if (purchasedCallback != null) purchasedCallback(buyInAppID, null, native.CallStatic<bool>("CheckBuySuccess"));
 			}
 		}
 	}
