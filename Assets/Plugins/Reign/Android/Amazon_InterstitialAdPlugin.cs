@@ -56,11 +56,6 @@ namespace Reign.Plugin
 		{
 			native.CallStatic("Show", id);
 		}
-		
-		public void OnGUI ()
-		{
-			// do nothing...	
-		}
 
 		public void Update ()
 		{

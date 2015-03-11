@@ -175,16 +175,6 @@ namespace Reign.Plugin
 			}
 		}
 
-		public void OnGUI()
-		{
-			// do nothing...
-		}
-
-		public void OnGUIOverride()
-		{
-			// do nothing...
-		}
-
 		public void Update()
 		{
 			// do nothing...
@@ -225,16 +215,6 @@ namespace Reign.Plugin
 		public void Refresh()
 		{
 			Native.Refresh();
-		}
-
-		public void OnGUI()
-		{
-			Native.OnGUI();
-		}
-
-		public void OnGUIOverride()
-		{
-			Native.OnGUIOverride();
 		}
 
 		public void Update()

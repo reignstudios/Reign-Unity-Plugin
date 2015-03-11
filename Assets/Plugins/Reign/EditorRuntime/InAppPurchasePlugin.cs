@@ -49,7 +49,7 @@ namespace Reign.Plugin
 		public void BuyInApp(string inAppID, InAppPurchaseBuyCallbackMethod purchasedCallback)
 		{
 			PlayerPrefs.SetInt("ReignIAP_PurchasedAwarded_" + inAppID, 0);
-			if (purchasedCallback != null) purchasedCallback(inAppID, true);
+			if (purchasedCallback != null) purchasedCallback(inAppID, null, true);
 		}
 		
 		public void Update()

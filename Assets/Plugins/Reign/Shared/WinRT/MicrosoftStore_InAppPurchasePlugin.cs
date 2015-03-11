@@ -404,12 +404,12 @@ namespace Reign.Plugin
 				{
 					try
 					{
+						string receipt = null;
 						#if WINDOWS_PHONE
 						string productID = null;
 						if (testing) productID = wp8TestListingInformation.ProductListings[inAppID].ProductId;
 						else productID = licenseInformation.ProductLicenses[inAppID].ProductId;
 						#elif UNITY_METRO_8_0
-						string results;
 						string productID = licenseInformation.ProductLicenses[inAppID].ProductId;
 						#else
 						PurchaseResults results;
@@ -419,34 +419,36 @@ namespace Reign.Plugin
 						if (testing)
 						{
 							#if WINDOWS_PHONE
-							await CurrentAppSimulator.RequestProductPurchaseAsync(productID, false);
+							receipt = await CurrentAppSimulator.RequestProductPurchaseAsync(productID, true);
 							if (wp8TestLicenseInformation.ProductLicenses[inAppID].IsActive)
 							{
 								PlayerPrefsEx.SetIntAsync("ReignIAP_PurchasedAwarded_" + inAppID, 0, true);
 							}
 							#elif UNITY_METRO_8_0
-							results = await CurrentAppSimulator.RequestProductPurchaseAsync(productID, true);
+							receipt = await CurrentAppSimulator.RequestProductPurchaseAsync(productID, true);
 							#else
 							results = await CurrentAppSimulator.RequestProductPurchaseAsync(productID);
+							receipt = results.ReceiptXml;
 							#endif
 						}
 						else
 						{
 							#if WINDOWS_PHONE
-							await CurrentApp.RequestProductPurchaseAsync(productID, false);
+							receipt = await CurrentApp.RequestProductPurchaseAsync(productID, true);
 							if (licenseInformation.ProductLicenses[inAppID].IsActive)
 							{
 								PlayerPrefsEx.SetIntAsync("ReignIAP_PurchasedAwarded_" + inAppID, 0, true);
 							}
 							#elif UNITY_METRO_8_0
-							results = await CurrentApp.RequestProductPurchaseAsync(productID, true);
+							receipt = await CurrentApp.RequestProductPurchaseAsync(productID, true);
 							#else
 							results = await CurrentApp.RequestProductPurchaseAsync(productID);
+							receipt = results.ReceiptXml;
 							#endif
 						}
 						
 						#if UNITY_METRO_8_0
-						if (!string.IsNullOrEmpty(results) || licenseInformation.ProductLicenses[inAppID].IsActive)
+						if (!string.IsNullOrEmpty(receipt) || licenseInformation.ProductLicenses[inAppID].IsActive)
 						{
 							PlayerPrefsEx.SetIntAsync("ReignIAP_PurchasedAwarded_" + inAppID, 0, true);
 						}
@@ -462,22 +464,22 @@ namespace Reign.Plugin
 							#if WINDOWS_PHONE
 							if (testing)
 							{
-								purchasedCallback(inAppID, wp8TestLicenseInformation.ProductLicenses[inAppID].IsActive);
+								purchasedCallback(inAppID, receipt, wp8TestLicenseInformation.ProductLicenses[inAppID].IsActive);
 								if (wp8TestLicenseInformation.ProductLicenses[inAppID].IsConsumable) CurrentAppSimulator.ReportProductFulfillment(productID);
 							}
 							else
 							{
-								purchasedCallback(inAppID, licenseInformation.ProductLicenses[inAppID].IsActive);
+								purchasedCallback(inAppID, receipt, licenseInformation.ProductLicenses[inAppID].IsActive);
 								if (licenseInformation.ProductLicenses[inAppID].IsConsumable) CurrentApp.ReportProductFulfillment(productID);
 							}
 							#elif UNITY_METRO_8_0
-							purchasedCallback(inAppID, !string.IsNullOrEmpty(results) || licenseInformation.ProductLicenses[inAppID].IsActive);
+							purchasedCallback(inAppID, receipt, !string.IsNullOrEmpty(receipt) || licenseInformation.ProductLicenses[inAppID].IsActive);
 							if (isConsumbable(inAppID))
 							{
 								Debug.LogError("NOTE: Consumable IAP not supported in 8.0");
 							}
 							#else
-							purchasedCallback(inAppID, results.Status == ProductPurchaseStatus.Succeeded || results.Status == ProductPurchaseStatus.AlreadyPurchased || licenseInformation.ProductLicenses[inAppID].IsActive);
+							purchasedCallback(inAppID, receipt, results.Status == ProductPurchaseStatus.Succeeded || results.Status == ProductPurchaseStatus.AlreadyPurchased || licenseInformation.ProductLicenses[inAppID].IsActive);
 							if (isConsumbable(inAppID))
 							{
 								if (testing) await CurrentAppSimulator.ReportConsumableFulfillmentAsync(productID, results.TransactionId);
@@ -489,12 +491,12 @@ namespace Reign.Plugin
 					catch (Exception e)
 					{
 						Debug.LogError(e.Message);
-						if (purchasedCallback != null) purchasedCallback(inAppID, false);
+						if (purchasedCallback != null) purchasedCallback(inAppID, null, false);
 					}
 				}
 				else
 				{
-					if (purchasedCallback != null) purchasedCallback(inAppID, true);
+					if (purchasedCallback != null) purchasedCallback(inAppID, null, true);
 				}
 			});
 		}

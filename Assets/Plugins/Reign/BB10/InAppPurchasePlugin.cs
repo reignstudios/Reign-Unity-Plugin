@@ -205,7 +205,7 @@ namespace Reign.Plugin
 			uint reqID = 0;
 			if (paymentservice_purchase_request(inAppID, inAppID, inAppID, inAppID, "Payment Service", "http://www.rim.com/products/appworld_3col.jpg", windowGroup, ref reqID) != 0)
 			{
-				purchasedCallback(inAppID, false);
+				purchasedCallback(inAppID, null, false);
 				return;
 			}
 			
@@ -223,13 +223,13 @@ namespace Reign.Plugin
 							if (Common.bps_event_get_code(_event) == 0)
 							{
 								// purchased
-								purchasedCallback(inAppID, true);
+								purchasedCallback(inAppID, null, true);
 								return;
 							}
 							else
 							{
 								// already purchased
-								purchasedCallback(inAppID, true);
+								purchasedCallback(inAppID, null, true);
 								return;
 							}
 						}
@@ -237,7 +237,7 @@ namespace Reign.Plugin
 						{
 							IntPtr errorPtr = paymentservice_event_get_error_text(_event);
 							Debug.LogError(Marshal.PtrToStringAnsi(errorPtr));
-							purchasedCallback(inAppID, false);
+							purchasedCallback(inAppID, null, false);
 							return;
 						}
 					}

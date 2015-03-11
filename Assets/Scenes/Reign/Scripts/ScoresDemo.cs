@@ -198,7 +198,7 @@ public class ScoresDemo : MonoBehaviour
 		// init
 		ScoreManager.Init(desc, createdCallback);
 
-		// <<< ReignScores manual methods >>>
+		// <<< Reign-Scores manual methods >>>
 		//ScoreManager.RequestScores(...);
 		//ScoreManager.RequestAchievements(...);
 		//ScoreManager.ManualLogin(...);

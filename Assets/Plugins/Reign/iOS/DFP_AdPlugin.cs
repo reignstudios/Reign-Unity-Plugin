@@ -119,16 +119,6 @@ namespace Reign.Plugin
 			DFP_Refresh(native);
 		}
 
-		public void OnGUI()
-		{
-			// do nothing...
-		}
-
-		public void OnGUIOverride()
-		{
-			// do nothing...
-		}
-
 		public void Update()
 		{
 			if (eventCallback != null && DFP_AdHasEvents(native))

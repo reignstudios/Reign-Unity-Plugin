@@ -91,16 +91,6 @@ namespace Reign.Plugin
 			// do nothing...
 		}
 		
-		public void OnGUI()
-		{
-			// do nothing...
-		}
-
-		public void OnGUIOverride()
-		{
-			// do nothing...
-		}
-		
 		public void Update()
 		{
 			if (eventCallback != null && iAd_AdHasEvents(native))

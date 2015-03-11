@@ -71,11 +71,6 @@ namespace Reign.Plugin
 			AdMob_Interstitial_Show(native);
 		}
 		
-		public void OnGUI()
-		{
-			// do nothing...
-		}
-		
 		public void Update()
 		{
 			if (eventCallback != null && AdMob_Interstitial_AdHasEvents(native))

@@ -99,16 +99,6 @@ namespace Reign.Plugin
 			return gravityIndex;
 		}
 
-		public void OnGUI()
-		{
-			// do nothing...
-		}
-
-		public void OnGUIOverride()
-		{
-			// do nothing...
-		}
-
 		public void Update()
 		{
 			if (eventCallback != null && native.CallStatic<bool>("HasEvents"))

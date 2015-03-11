@@ -241,7 +241,7 @@ namespace Reign
 	/// </summary>
 	/// <param name="inAppID">IAP ID</param>
 	/// <param name="succeeded">Tells if the IAP was successful or not.</param>
-	public delegate void InAppPurchaseBuyCallbackMethod(string inAppID, bool succeeded);
+	public delegate void InAppPurchaseBuyCallbackMethod(string inAppID, string receipt, bool succeeded);
 
 	/// <summary>
 	/// Used for restoring all IAPs

@@ -88,11 +88,6 @@ namespace Reign.Plugin
 			}
 		}
 
-		public void OnGUI()
-		{
-			// do nothing...
-		}
-
 		public void Update()
 		{
 			// do nothing...
@@ -127,11 +122,6 @@ namespace Reign.Plugin
 		public void Dispose()
 		{
 			Native.Dispose();
-		}
-
-		public void OnGUI()
-		{
-			Native.OnGUI();
 		}
 
 		public void Update()

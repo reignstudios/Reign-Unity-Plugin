@@ -32,7 +32,7 @@ namespace Reign
 		private InAppPurchaseBuyCallbackMethod buyCallback;
 
 		#if ASYNC
-		private string asyncBuyAppID;
+		private string asyncBuyAppID, asyncBuyReceipt;
 		private bool asyncRestoreDone, asyncBuyDone, asyncBuySucceeded;
 		private bool[] asyncRestoreDoneItems, asyncRestoreSucceededItems;
 		#endif
@@ -84,7 +84,7 @@ namespace Reign
 				buyingProduct = false;
 				asyncBuyDone = false;
 				saveBuyToPrefs(asyncBuyAppID, asyncBuySucceeded);
-				if (buyCallback != null) buyCallback(asyncBuyAppID, asyncBuySucceeded);
+				if (buyCallback != null) buyCallback(asyncBuyAppID, asyncBuyReceipt, asyncBuySucceeded);
 			}
 		}
 
@@ -110,9 +110,10 @@ namespace Reign
 			asyncRestoreDone = true;
 		}
 
-		private void async_BuyCallback(string inAppID, bool succeeded)
+		private void async_BuyCallback(string inAppID, string receipt, bool succeeded)
 		{
 			asyncBuyAppID = inAppID;
+			asyncBuyReceipt = receipt;
 			asyncBuySucceeded = succeeded;
 			asyncBuyDone = true;
 		}
@@ -129,11 +130,11 @@ namespace Reign
 			if (restoreCallback != null) restoreCallback(inAppID, succeeded);
 		}
 		
-		private void noAsync_BuyCallback(string inAppID, bool succeeded)
+		private void noAsync_BuyCallback(string inAppID, string receipt, bool succeeded)
 		{
 			buyingProduct = false;
 			saveBuyToPrefs(inAppID, succeeded);
-			if (buyCallback != null) buyCallback(inAppID, succeeded);
+			if (buyCallback != null) buyCallback(inAppID, receipt, succeeded);
 		}
 		#endif
 
@@ -299,7 +300,7 @@ namespace Reign
 			if (buyingProduct || restoringProducts)
 			{
 				Debug.LogError("You must wait for the last buy, restore or consume to finish!");
-				if (buyCallback != null) buyCallback(inAppID, false);
+				if (buyCallback != null) buyCallback(inAppID, null, false);
 				return;
 			}
 			buyingProduct = true;
@@ -310,7 +311,7 @@ namespace Reign
 			{
 				Debug.Log("InApp already puchased: " + inAppID);
 				buyingProduct = false;
-				if (buyCallback != null) buyCallback(inAppID, true);
+				if (buyCallback != null) buyCallback(inAppID, null, true);
 				return;
 			}
 		
@@ -502,7 +503,7 @@ namespace Reign.Plugin
 		/// <param name="purchasedCallback"></param>
 		public void BuyInApp(string inAppID, InAppPurchaseBuyCallbackMethod purchasedCallback)
 		{
-			if (purchasedCallback != null) purchasedCallback(inAppID, false); 
+			if (purchasedCallback != null) purchasedCallback(inAppID, null, false); 
 		}
 
 		/// <summary>

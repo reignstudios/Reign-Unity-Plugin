@@ -313,16 +313,6 @@ namespace Reign.Plugin
 			if (bbads_banner_set_position(banner, x, y) != 0) Debug.LogError("FAILED: bbads_banner_set_position");
 		}
 		
-		public void OnGUI()
-		{
-			// do nothing...
-		}
-
-		public void OnGUIOverride()
-		{
-			// do nothing...
-		}
-		
 		public void Update()
 		{
 			// to bad we can't get events

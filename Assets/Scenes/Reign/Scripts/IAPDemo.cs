@@ -148,10 +148,18 @@ public class IAPDemo : MonoBehaviour
 		}
 	}
 
-	void buyAppCallback(string inAppID, bool succeeded)
+	void buyAppCallback(string inAppID, string receipt, bool succeeded)
 	{
 		int appIndex = InAppPurchaseManager.MainInAppAPI.GetAppIndexForAppID(inAppID);
-		if (appIndex != -1) StatusText.text += "Buy Status: " + inAppID + ": " + succeeded + " Index: " + appIndex;
+		if (appIndex != -1)
+		{
+			StatusText.text += "Buy Status: " + inAppID + ": " + succeeded + " Index: " + appIndex;
+			if (!string.IsNullOrEmpty(receipt))
+			{
+				StatusText.text += System.Environment.NewLine + System.Environment.NewLine;
+				StatusText.text += receipt;
+			}
+		}
 	}
 
 	void restoreAppsCallback(string inAppID, bool succeeded)
