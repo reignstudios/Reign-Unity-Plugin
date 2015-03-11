@@ -122,7 +122,7 @@ public class IAPDemo : MonoBehaviour
 	
 	private void createdCallback(bool succeeded)
 	{
-		StatusText.text = "";
+		StatusText.text = "Init: " + succeeded + System.Environment.NewLine + System.Environment.NewLine;
 		InAppPurchaseManager.MainInAppAPI.AwardInterruptedPurchases(awardInterruptedPurchases);
 	}
 
@@ -146,6 +146,10 @@ public class IAPDemo : MonoBehaviour
 				if (info.ID == item1) StatusText.text += string.Format("ID: {0} Price: {1}", info.ID, info.FormattedPrice);
 			}
 		}
+		else
+		{
+			StatusText.text += "Get Price Info Failed!";
+		}
 	}
 
 	void buyAppCallback(string inAppID, string receipt, bool succeeded)
@@ -160,6 +164,10 @@ public class IAPDemo : MonoBehaviour
 				StatusText.text += receipt;
 			}
 		}
+		else
+		{
+			StatusText.text += "Failed: " + inAppID + System.Environment.NewLine;
+		}
 	}
 
 	void restoreAppsCallback(string inAppID, bool succeeded)
@@ -169,6 +177,10 @@ public class IAPDemo : MonoBehaviour
 		{
 			StatusText.text += "Restore Status: " + inAppID + ": " + succeeded + " Index: " + appIndex;
 			StatusText.text += System.Environment.NewLine + System.Environment.NewLine;
+		}
+		else
+		{
+			StatusText.text += "Failed: " + inAppID + System.Environment.NewLine;
 		}
 	}
 

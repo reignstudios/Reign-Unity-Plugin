@@ -15,7 +15,7 @@
     
 @public
     bool buyProductDone, buyProductSucceeded, restoreProductsDone, testing;
-    NSString* buyProductID;
+    NSString* buyProductID, *receipt;
     NSMutableArray* restoreProductPruductIDs;
     NSString* sharedSecretKey;
 }

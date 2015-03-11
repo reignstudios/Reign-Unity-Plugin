@@ -6,6 +6,7 @@
 #import "InAppPurchaseNative.h"
 #import "UnityTypes.h"
 #import "VerificationController.h"
+#import "NSData+Base64.h"
 
 @implementation InAppPurchaseNative
 - (id)init
@@ -217,6 +218,7 @@ bool restoreDone = true;
                 
 			case SKPaymentTransactionStatePurchased:
                 NSLog(@"StoreKit: Validating Purchased");
+                receipt = [[NSString alloc] initWithString:transaction.transactionReceipt.base64EncodedString];
                 if (false)//[[UIDevice currentDevice] respondsToSelector:NSSelectorFromString(@"identifierForVendor")])
                 {
                     // iOS 6+ Validate
@@ -395,5 +397,21 @@ extern "C"
     {
         *succeeded = native->buyProductSucceeded;
         return [native->buyProductID cStringUsingEncoding:NSUTF8StringEncoding];
+    }
+    
+    const char* GetBuyInAppPurchaseReceipt(InAppPurchaseNative* native)
+    {
+        if (native->receipt != nil)
+        {
+            const char* value = [native->receipt cStringUsingEncoding:NSUTF8StringEncoding];
+            #if !UNITY_5_0_0
+            [native->receipt release];
+            #endif
+            return value;
+        }
+        else
+        {
+            return 0;
+        }
     }
 }

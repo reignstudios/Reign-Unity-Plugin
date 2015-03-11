@@ -43,6 +43,9 @@ namespace Reign.Plugin
 		[DllImport("__Internal", EntryPoint="GetBuyInAppPurchaseStatusID")]
 		private unsafe static extern IntPtr GetBuyInAppPurchaseStatusID(IntPtr native, bool* succeeded);
 
+		[DllImport("__Internal", EntryPoint="GetBuyInAppPurchaseReceipt")]
+		private unsafe static extern IntPtr GetBuyInAppPurchaseReceipt(IntPtr native);
+
 		[DllImport("__Internal", EntryPoint="GetInAppPurchaseProductInfo")]
 		private unsafe static extern byte** GetInAppPurchaseProductInfo(IntPtr native);
 
@@ -169,15 +172,23 @@ namespace Reign.Plugin
 			{
 				if (purchasedCallback != null)
 				{
-					string id = null;
+					string id = null, receipt = null;
 					bool succeeded = false;
 					unsafe
 					{
 						IntPtr idPtr = GetBuyInAppPurchaseStatusID(native, &succeeded);
 						if (idPtr != IntPtr.Zero) id = Marshal.PtrToStringAnsi(idPtr);
+
+						IntPtr receiptPtr = GetBuyInAppPurchaseReceipt(native);
+						if (receiptPtr != IntPtr.Zero)
+						{
+							receipt = Marshal.PtrToStringAnsi(receiptPtr);
+							byte[] data = Convert.FromBase64String(receipt);
+							receipt = Encoding.UTF8.GetString(data);
+						}
 					}
 					
-					purchasedCallback(id, succeeded);
+					purchasedCallback(id, receipt, succeeded);
 				}
 			}
 		}
