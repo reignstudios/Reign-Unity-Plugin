@@ -231,29 +231,44 @@ namespace Reign.Plugin
 		#if WINDOWS_PHONE
 		void adControl_IsEngagedChanged(object sender, EventArgs e)
 		{
-			if (adControl.IsEngaged && eventCallback != null) eventCallback(AdEvents.Clicked, null);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (adControl.IsEngaged && eventCallback != null) eventCallback(AdEvents.Clicked, null);
+			});
 		}
 
 		void adControl_AdRefreshed(object sender, EventArgs e)
 		{
-			if (eventCallback != null) eventCallback(AdEvents.Refreshed, null);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (eventCallback != null) eventCallback(AdEvents.Refreshed, null);
+			});
 		}
 		#else
 		void adControl_IsEngagedChanged(object sender, RoutedEventArgs e)
 		{
-			if (adControl.IsEngaged && eventCallback != null) eventCallback(AdEvents.Clicked, null);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (adControl.IsEngaged && eventCallback != null) eventCallback(AdEvents.Clicked, null);
+			});
 		}
 
 		void adControl_AdRefreshed(object sender, RoutedEventArgs e)
 		{
-			if (eventCallback != null) eventCallback(AdEvents.Refreshed, null);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (eventCallback != null) eventCallback(AdEvents.Refreshed, null);
+			});
 		}
 		#endif
 
 		void adControl_ErrorOccurred(object sender, AdErrorEventArgs e)
 		{
-			Debug.LogError(e.Error.Message);
-			if (eventCallback != null) eventCallback(AdEvents.Error, e.Error.Message);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				Debug.LogError(e.Error.Message);
+				if (eventCallback != null) eventCallback(AdEvents.Error, e.Error.Message);
+			});
 		}
 
 		public void Dispose()

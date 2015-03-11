@@ -32,27 +32,42 @@ namespace Reign.Plugin
 
 		void ad_LeavingApplication(object sender, AdEventArgs e)
 		{
-			if (eventCallback != null) eventCallback(InterstitialAdEvents.Clicked, null);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (eventCallback != null) eventCallback(InterstitialAdEvents.Clicked, null);
+			});
 		}
 
 		void ad_DismissingOverlay(object sender, AdEventArgs e)
 		{
-			if (eventCallback != null) eventCallback(InterstitialAdEvents.Canceled, null);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (eventCallback != null) eventCallback(InterstitialAdEvents.Canceled, null);
+			});
 		}
 
 		void ad_ShowingOverlay(object sender, AdEventArgs e)
 		{
-			if (eventCallback != null) eventCallback(InterstitialAdEvents.Shown, null);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (eventCallback != null) eventCallback(InterstitialAdEvents.Shown, null);
+			});
 		}
 
 		void ad_FailedToReceiveAd(object sender, AdErrorEventArgs e)
 		{
-			if (eventCallback != null) eventCallback(InterstitialAdEvents.Error, "Error Code: " + e.ErrorCode);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (eventCallback != null) eventCallback(InterstitialAdEvents.Error, "Error Code: " + e.ErrorCode);
+			});
 		}
 
 		private void adReceived(object sender, AdEventArgs e)
 		{
-			if (eventCallback != null) eventCallback(InterstitialAdEvents.Cached, null);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (eventCallback != null) eventCallback(InterstitialAdEvents.Cached, null);
+			});
 		}
 
 		public void Cache()

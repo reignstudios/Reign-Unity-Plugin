@@ -29,6 +29,8 @@ public class ReignServices : MonoBehaviour
 	/// </summary>
 	public delegate void ServiceMethod();
 	private static event ServiceMethod updateService, onguiService, destroyService;
+	private static List<ServiceMethod>[] invokeOnUnityThreadCallbacks;
+	private static int invokeSwap;
 
 	/// <summary>
 	/// Used to add service callbacks.
@@ -70,6 +72,14 @@ public class ReignServices : MonoBehaviour
 		if (destroy != null) destroyService -= destroy;
 	}
 
+	public static void InvokeOnUnityThread(ServiceMethod callback)
+	{
+		lock (Singleton)
+		{
+			invokeOnUnityThreadCallbacks[invokeSwap].Add(callback);
+		}
+	}
+
 	static ReignServices()
 	{
 		#if DISABLE_REIGN
@@ -78,6 +88,10 @@ public class ReignServices : MonoBehaviour
 
 		lastScreenWidth = Screen.width;
 		lastScreenHeight = Screen.height;
+
+		invokeOnUnityThreadCallbacks = new List<ServiceMethod>[2];
+		invokeOnUnityThreadCallbacks[0] = new List<ServiceMethod>();
+		invokeOnUnityThreadCallbacks[1] = new List<ServiceMethod>();
 	}
 	
 	/// <summary>
@@ -117,14 +131,17 @@ public class ReignServices : MonoBehaviour
 
 	void Update()
 	{
+		// invoke update server delegates
 		if (updateService != null) updateService();
 
+		// if end of frame wait requested
 		if (requestFrameDone)
 		{
 			requestFrameDone = false;
 			StartCoroutine(frameSync());
 		}
 
+		// screen size changed callback helper
 		int newScreenWidth = Screen.width;
 		int newScreenHeight = Screen.height;
 		if (newScreenWidth != lastScreenWidth || newScreenHeight != lastScreenHeight)
@@ -133,6 +150,18 @@ public class ReignServices : MonoBehaviour
 		}
 		lastScreenWidth = Screen.width;
 		lastScreenHeight = Screen.height;
+
+		// unity thread delegates
+		if (invokeOnUnityThreadCallbacks != null && invokeOnUnityThreadCallbacks[invokeSwap].Count != 0)
+		{
+			invokeSwap = 1 - invokeSwap;
+			foreach (var callback in invokeOnUnityThreadCallbacks[1 - invokeSwap])
+			{
+				callback();
+			}
+
+			invokeOnUnityThreadCallbacks[1 - invokeSwap].Clear();
+		}
 	}
 
 	private IEnumerator frameSync()

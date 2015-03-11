@@ -83,12 +83,18 @@ namespace Reign.Plugin
 
 		void adView_FailedToReceiveAd(object sender, AdErrorEventArgs e)
 		{
-			if (eventCallback != null) eventCallback(AdEvents.Error, e.ErrorCode.ToString());
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (eventCallback != null) eventCallback(AdEvents.Error, e.ErrorCode.ToString());
+			});
 		}
 
 		void adView_ReceivedAd(object sender, AdEventArgs e)
 		{
-			if (eventCallback != null) eventCallback(AdEvents.Refreshed, null);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (eventCallback != null) eventCallback(AdEvents.Refreshed, null);
+			});
 		}
 
 		public void Dispose()

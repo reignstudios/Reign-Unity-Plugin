@@ -62,12 +62,6 @@ namespace Reign
 		private static StreamSavedCallbackMethod streamSavedCallback;
 		private static StreamLoadedCallbackMethod streamLoadedCallback;
 
-		#if ASYNC
-		private static bool asyncExistsDone, asyncDeleteDone, asyncExistsSucceeded, asyncDeleteSucceeded;
-		private static bool asyncSaveDone, asyncLoadDone, asyncSaveSucceeded, asyncLoadSucceeded;
-		private static Stream asyncLoadStream;
-		#endif
-
 		static StreamManager()
 		{
 			ReignServices.CheckStatus();
@@ -94,99 +88,67 @@ namespace Reign
 			#endif
 		}
 
-		#if ASYNC
 		private static void update()
 		{
 			plugin.Update();
-
-			if (asyncExistsDone)
-			{
-				checkingIfFileExists = false;
-				asyncExistsDone = false;
-				if (streamExistsCallback != null) streamExistsCallback(asyncExistsSucceeded);
-			}
-
-			if (asyncDeleteDone)
-			{
-				deletingFile = false;
-				asyncDeleteDone = false;
-				if (streamDeleteCallback != null) streamDeleteCallback(asyncDeleteSucceeded);
-			}
-		
-			if (asyncSaveDone)
-			{
-				savingStream = false;
-				asyncSaveDone = false;
-				if (streamSavedCallback != null) streamSavedCallback(asyncSaveSucceeded);
-			}
-
-			if (asyncLoadDone)
-			{
-				loadingStream = false;
-				asyncLoadDone = false;
-				var stream = asyncLoadStream;
-				asyncLoadStream = null;
-				if (streamLoadedCallback != null) streamLoadedCallback(stream, asyncLoadSucceeded);
-			}
-
 			updateQues();
 		}
 
 		private static void async_streamExistsCallback(bool exists)
 		{
-			asyncExistsSucceeded = exists;
-			asyncExistsDone = true;
+			#if ASYNC
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				checkingIfFileExists = false;
+				if (streamExistsCallback != null) streamExistsCallback(exists);
+			});
+			#else
+			checkingIfFileExists = false;
+			if (streamExistsCallback != null) streamExistsCallback(exists);
+			#endif
 		}
 
 		private static void async_streamDeleteCallback(bool succeeded)
 		{
-			asyncDeleteSucceeded = succeeded;
-			asyncDeleteDone = true;
-		}
-
-		private static void async_streamSavedCallback(bool succeeded)
-		{
-			asyncSaveSucceeded = succeeded;
-			asyncSaveDone = true;
-		}
-
-		private static void async_streamLoadedCallback(Stream stream, bool succeeded)
-		{
-			asyncLoadStream = stream;
-			asyncLoadSucceeded = succeeded;
-			asyncLoadDone = true;
-		}
-		#else
-		private static void update()
-		{
-			plugin.Update();
-			updateQues();
-		}
-
-		private static void noAsync_streamExistsCallback(bool exists)
-		{
-			checkingIfFileExists = false;
-			if (streamExistsCallback != null) streamExistsCallback(exists);
-		}
-
-		private static void noAsync_streamDeleteCallback(bool succeeded)
-		{
+			#if ASYNC
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				deletingFile = false;
+				if (streamDeleteCallback != null) streamDeleteCallback(succeeded);
+			});
+			#else
 			deletingFile = false;
 			if (streamDeleteCallback != null) streamDeleteCallback(succeeded);
+			#endif
 		}
 		
-		private static void noAsync_streamSavedCallback(bool succeeded)
+		private static void async_streamSavedCallback(bool succeeded)
 		{
+			#if ASYNC
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				savingStream = false;
+				if (streamSavedCallback != null) streamSavedCallback(succeeded);
+			});
+			#else
 			savingStream = false;
 			if (streamSavedCallback != null) streamSavedCallback(succeeded);
+			#endif
 		}
 		
-		private static void noAsync_streamLoadedCallback(Stream stream, bool succeeded)
+		private static void async_streamLoadedCallback(Stream stream, bool succeeded)
 		{
+			#if ASYNC
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				loadingStream = false;
+				if (streamLoadedCallback != null) streamLoadedCallback(stream, succeeded);
+			});
+			#else
 			loadingStream = false;
 			if (streamLoadedCallback != null) streamLoadedCallback(stream, succeeded);
+			#endif
 		}
-		#endif
 
 		private static void updateQues()
 		{
@@ -315,13 +277,7 @@ namespace Reign
 
 			checkingIfFileExists = true;
 			StreamManager.streamExistsCallback = streamExistsCallback;
-		
-			#if ASYNC
-			asyncExistsDone = false;
-			plugin.FileExists(fileName, folderLocation, async_streamExistsCallback);
-			#else
-			plugin.FileExists(getCorrectUnityPath(fileName, folderLocation), folderLocation, noAsync_streamExistsCallback);
-			#endif
+			plugin.FileExists(getCorrectUnityPath(fileName, folderLocation), folderLocation, async_streamExistsCallback);
 		}
 
 		/// <summary>
@@ -344,13 +300,7 @@ namespace Reign
 
 			deletingFile = true;
 			StreamManager.streamDeleteCallback = streamDeleteCallback;
-		
-			#if ASYNC
-			asyncDeleteDone = false;
-			plugin.DeleteFile(fileName, folderLocation, async_streamDeleteCallback);
-			#else
-			plugin.DeleteFile(getCorrectUnityPath(fileName, folderLocation), folderLocation, noAsync_streamDeleteCallback);
-			#endif
+			plugin.DeleteFile(getCorrectUnityPath(fileName, folderLocation), folderLocation, async_streamDeleteCallback);
 		}
 
 		/// <summary>
@@ -375,13 +325,7 @@ namespace Reign
 
 			savingStream = true;
 			StreamManager.streamSavedCallback = streamSavedCallback;
-		
-			#if ASYNC
-			asyncSaveDone = false;
-			plugin.SaveFile(fileName, stream, folderLocation, async_streamSavedCallback);
-			#else
-			plugin.SaveFile(getCorrectUnityPath(fileName, folderLocation), stream, folderLocation, noAsync_streamSavedCallback);
-			#endif
+			plugin.SaveFile(getCorrectUnityPath(fileName, folderLocation), stream, folderLocation, async_streamSavedCallback);
 		}
 
 		/// <summary>
@@ -406,13 +350,7 @@ namespace Reign
 
 			savingStream = true;
 			StreamManager.streamSavedCallback = streamSavedCallback;
-		
-			#if ASYNC
-			asyncSaveDone = false;
-			plugin.SaveFile(fileName, data, folderLocation, async_streamSavedCallback);
-			#else
-			plugin.SaveFile(getCorrectUnityPath(fileName, folderLocation), data, folderLocation, noAsync_streamSavedCallback);
-			#endif
+			plugin.SaveFile(getCorrectUnityPath(fileName, folderLocation), data, folderLocation, async_streamSavedCallback);
 		}
 
 		/// <summary>
@@ -435,13 +373,7 @@ namespace Reign
 
 			loadingStream = true;
 			StreamManager.streamLoadedCallback = streamLoadedCallback;
-		
-			#if ASYNC
-			asyncLoadDone = false;
-			plugin.LoadFile(fileName, folderLocation, async_streamLoadedCallback);
-			#else
-			plugin.LoadFile(getCorrectUnityPath(fileName, folderLocation), folderLocation, noAsync_streamLoadedCallback);
-			#endif
+			plugin.LoadFile(getCorrectUnityPath(fileName, folderLocation), folderLocation, async_streamLoadedCallback);
 		}
 
 		/// <summary>
@@ -467,13 +399,7 @@ namespace Reign
 
 			savingStream = true;
 			StreamManager.streamSavedCallback = streamSavedCallback;
-		
-			#if ASYNC
-			asyncSaveDone = false;
 			plugin.SaveFileDialog(stream, folderLocation, fileTypes, async_streamSavedCallback);
-			#else
-			plugin.SaveFileDialog(stream, folderLocation, fileTypes, noAsync_streamSavedCallback);
-			#endif
 		}
 
 		/// <summary>
@@ -499,13 +425,7 @@ namespace Reign
 
 			savingStream = true;
 			StreamManager.streamSavedCallback = streamSavedCallback;
-		
-			#if ASYNC
-			asyncSaveDone = false;
 			plugin.SaveFileDialog(data, folderLocation, fileTypes, async_streamSavedCallback);
-			#else
-			plugin.SaveFileDialog(data, folderLocation, fileTypes, noAsync_streamSavedCallback);
-			#endif
 		}
 
 		/// <summary>
@@ -575,13 +495,7 @@ namespace Reign
 
 			loadingStream = true;
 			StreamManager.streamLoadedCallback = streamLoadedCallback;
-		
-			#if ASYNC
-			asyncLoadDone = false;
 			plugin.LoadFileDialog(folderLocation, maxWidth, maxHeight, x, y, width, height, fileTypes, async_streamLoadedCallback);
-			#else
-			plugin.LoadFileDialog(folderLocation, maxWidth, maxHeight, x, y, width, height, fileTypes, noAsync_streamLoadedCallback);
-			#endif
 		}
 
 		/// <summary>
@@ -616,13 +530,7 @@ namespace Reign
 
 			loadingStream = true;
 			StreamManager.streamLoadedCallback = streamLoadedCallback;
-
-			#if ASYNC
-			asyncLoadDone = false;
 			plugin.LoadCameraPicker(quality, maxWidth, maxHeight, async_streamLoadedCallback);
-			#else
-			plugin.LoadCameraPicker(quality, maxWidth, maxHeight, noAsync_streamLoadedCallback);
-			#endif
 		}
 
 		/// <summary>

@@ -28,14 +28,9 @@ namespace Reign
 		private IInAppPurchasePlugin plugin;
 		private InAppPurchaseAPIs pluginAPI;
 		private bool restoringProducts, buyingProduct;
+		private InAppPurchaseCreatedCallbackMethod createdCallback;
 		private InAppPurchaseRestoreCallbackMethod restoreCallback;
 		private InAppPurchaseBuyCallbackMethod buyCallback;
-
-		#if ASYNC
-		private string asyncBuyAppID, asyncBuyReceipt;
-		private bool asyncRestoreDone, asyncBuyDone, asyncBuySucceeded;
-		private bool[] asyncRestoreDoneItems, asyncRestoreSucceededItems;
-		#endif
 
 		internal void init(InAppPurchaseDesc desc, InAppPurchaseCreatedCallbackMethod createdCallback)
 		{
@@ -55,88 +50,65 @@ namespace Reign
 			pluginAPI = InAppPurchaseAPIs.None;
 			#endif
 
-			plugin = InAppPurchaseAPI.New(desc, createdCallback);
+			this.createdCallback = createdCallback;
+			plugin = InAppPurchaseAPI.New(desc, async_CreatedCallback);
+		}
 
+		internal void update()
+		{
+			plugin.Update();
+		}
+
+		private void async_CreatedCallback(bool succeeded)
+		{
 			#if ASYNC
-			asyncRestoreDoneItems = new bool[plugin.InAppIDs.Length];
-			asyncRestoreSucceededItems = new bool[plugin.InAppIDs.Length];
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				ReignServices.Singleton.StartCoroutine(createdCallbackDelay(succeeded));
+			});
+			#else
+			ReignServices.Singleton.StartCoroutine(createdCallbackDelay(succeeded));
 			#endif
 		}
 
-		#if ASYNC
-		internal void update()
+		private IEnumerator createdCallbackDelay(bool succeeded)
 		{
-			plugin.Update();
-		
-			if (asyncRestoreDone)
-			{
-				restoringProducts = false;
-				asyncRestoreDone = false;
-				for (int i = 0; i != plugin.InAppIDs.Length; ++i)
-				{
-					saveBuyToPrefs(plugin.InAppIDs[i].ID, asyncRestoreSucceededItems[i]);
-					if (restoreCallback != null) restoreCallback(plugin.InAppIDs[i].ID, asyncRestoreSucceededItems[i]);
-				}
-			}
-
-			if (asyncBuyDone)
-			{
-				buyingProduct = false;
-				asyncBuyDone = false;
-				saveBuyToPrefs(asyncBuyAppID, asyncBuySucceeded);
-				if (buyCallback != null) buyCallback(asyncBuyAppID, asyncBuyReceipt, asyncBuySucceeded);
-			}
+			// delay object callback so .NET instance is guaranteed to be created
+			yield return null;
+			if (createdCallback != null) createdCallback(succeeded);
 		}
-
+		
 		private void async_RestoreCallback(string inAppID, bool succeeded)
 		{
-			// find done item
-			for (int i = 0; i != plugin.InAppIDs.Length; ++i)
+			#if ASYNC
+			ReignServices.InvokeOnUnityThread(delegate
 			{
-				if (plugin.InAppIDs[i].ID == inAppID)
-				{
-					asyncRestoreSucceededItems[i] = succeeded;
-					asyncRestoreDoneItems[i] = true;
-					break;
-				}
-			}
-
-			// check to see if all items are done
-			foreach (var done in asyncRestoreDoneItems)
-			{
-				if (!done) return;
-			}
-
-			asyncRestoreDone = true;
-		}
-
-		private void async_BuyCallback(string inAppID, string receipt, bool succeeded)
-		{
-			asyncBuyAppID = inAppID;
-			asyncBuyReceipt = receipt;
-			asyncBuySucceeded = succeeded;
-			asyncBuyDone = true;
-		}
-		#else
-		internal void update()
-		{
-			plugin.Update();
-		}
-		
-		private void noAsync_RestoreCallback(string inAppID, bool succeeded)
-		{
+				restoringProducts = false;
+				saveBuyToPrefs(inAppID, succeeded);
+				if (restoreCallback != null) restoreCallback(inAppID, succeeded);
+			});
+			#else
 			restoringProducts = false;
 			saveBuyToPrefs(inAppID, succeeded);
 			if (restoreCallback != null) restoreCallback(inAppID, succeeded);
+			#endif
 		}
 		
-		private void noAsync_BuyCallback(string inAppID, string receipt, bool succeeded)
+		private void async_BuyCallback(string inAppID, string receipt, bool succeeded)
 		{
+			#if ASYNC
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				buyingProduct = false;
+				saveBuyToPrefs(inAppID, succeeded);
+				if (buyCallback != null) buyCallback(inAppID, receipt, succeeded);
+			});
+			#else
 			buyingProduct = false;
 			saveBuyToPrefs(inAppID, succeeded);
 			if (buyCallback != null) buyCallback(inAppID, receipt, succeeded);
+			#endif
 		}
-		#endif
 
 		private void saveBuyToPrefs(string inAppID, bool succeeded)
 		{
@@ -248,26 +220,7 @@ namespace Reign
 			}
 			restoringProducts = true;
 			this.restoreCallback = restoreCallback;
-			
-			#if ASYNC
-			asyncRestoreDone = false;
-			for (int i = 0; i != plugin.InAppIDs.Length; ++i)
-			{
-				asyncRestoreDoneItems[i] = false;
-			}
 			plugin.Restore(async_RestoreCallback);
-			#elif UNITY_EDITOR
-			restoringProducts = false;
-			if (restoreCallback != null)
-			{
-				for (int i = 0; i != plugin.InAppIDs.Length; ++i)
-				{
-					restoreCallback(plugin.InAppIDs[i].ID, IsPurchased(i));
-				}
-			}
-			#else
-			plugin.Restore(noAsync_RestoreCallback);
-			#endif
 		}
 		
 		/// <summary>
@@ -314,16 +267,8 @@ namespace Reign
 				if (buyCallback != null) buyCallback(inAppID, null, true);
 				return;
 			}
-		
-			#if ASYNC
-			asyncBuyDone = false;
+
 			plugin.BuyInApp(inAppID, async_BuyCallback);
-			#else
-			#if UNITY_EDITOR
-			buyingProduct = false;
-			#endif
-			plugin.BuyInApp(inAppID, noAsync_BuyCallback);
-			#endif
 		}
 
 		/// <summary>
@@ -362,9 +307,6 @@ namespace Reign
 		/// </summary>
 		public static InAppAPI[] InAppAPIs {get; private set;}
 
-		private static InAppPurchaseCreatedCallbackMethod createdCallback;
-		private static bool createdDone, createdSucceeded;
-
 		static InAppPurchaseManager()
 		{
 			ReignServices.CheckStatus();
@@ -378,22 +320,10 @@ namespace Reign
 		{
 			if (InAppAPIs == null) return;
 
-			if (createdDone)
-			{
-				createdDone = false;
-				if (createdCallback != null) createdCallback(createdSucceeded);
-			}
-
 			foreach (var app in InAppAPIs)
 			{
 				app.update();
 			}
-		}
-
-		private static void createdCallbackAsync(bool succeeded)
-		{
-			createdSucceeded = succeeded;
-			createdDone = true;
 		}
 
 		/// <summary>
@@ -421,10 +351,9 @@ namespace Reign
 		/// <returns>Returns IAP API object</returns>
 		public static InAppAPI Init(InAppPurchaseDesc desc, InAppPurchaseCreatedCallbackMethod createdCallback)
 		{
-			InAppPurchaseManager.createdCallback = createdCallback;
 			InAppAPIs = new InAppAPI[1];
 			InAppAPIs[0] = new InAppAPI();
-			InAppAPIs[0].init(desc, createdCallbackAsync);
+			InAppAPIs[0].init(desc, createdCallback);
 			return InAppAPIs[0];
 		}
 
@@ -436,12 +365,11 @@ namespace Reign
 		/// <returns>Returns array of IAP API objects</returns>
 		public static InAppAPI[] Init(InAppPurchaseDesc[] descs, InAppPurchaseCreatedCallbackMethod createdCallback)
 		{
-			InAppPurchaseManager.createdCallback = createdCallback;
 			var inAppAPIs = new InAppAPI[descs.Length];
 			for (int i = 0; i != descs.Length; ++i)
 			{
 				inAppAPIs[i] = new InAppAPI();
-				inAppAPIs[i].init(descs[i], createdCallbackAsync);
+				inAppAPIs[i].init(descs[i], createdCallback);
 			}
 
 			return inAppAPIs;

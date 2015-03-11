@@ -50,13 +50,21 @@ namespace Reign
 		private static CreatedScoreAPICallbackMethod createdCallback;
 		private static ResetUserAchievementsCallbackMethod resetUserAchievementsCallback;
 
-		private static void createdCallbackAsyncStatic(bool succeeded, string errorMessage)
+		private static void async_CreatedCallback(bool succeeded, string errorMessage)
 		{
+			#if ASYNC
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				ReignServices.Singleton.StartCoroutine(createdCallbackDelay(succeeded, errorMessage));
+			});
+			#else
 			ReignServices.Singleton.StartCoroutine(createdCallbackDelay(succeeded, errorMessage));
+			#endif
 		}
 
 		private static IEnumerator createdCallbackDelay(bool succeeded, string errorMessage)
 		{
+			// delay object callback so .NET instance is guaranteed to be created
 			yield return null;
 			if (createdCallback != null) createdCallback(succeeded, errorMessage);
 		}
@@ -69,7 +77,7 @@ namespace Reign
 		{
 			ScoreManager.createdCallback = callback;
 			ReignServices.CheckStatus();
-			plugin = ScorePluginAPI.New(desc, createdCallbackAsyncStatic);
+			plugin = ScorePluginAPI.New(desc, async_CreatedCallback);
 			ReignServices.AddService(update, null, null);
 		}
 

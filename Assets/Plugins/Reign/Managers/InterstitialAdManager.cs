@@ -58,10 +58,6 @@ namespace Reign
 		private static bool creatingAds;
 		private static InterstitialAdCreatedCallbackMethod createdCallback;
 
-		#if ASYNC
-		private static bool asyncDone, asyncSucceeded;
-		#endif
-
 		static InterstitialAdManager()
 		{
 			ReignServices.CheckStatus();
@@ -72,48 +68,34 @@ namespace Reign
 			#endif
 		}
 
-		#if ASYNC
 		private static void update()
 		{
 			foreach (var plugin in plugins)
 			{
 				plugin.Update();
 			}
-		
-			if (asyncDone)
-			{
-				creatingAds = false;
-				asyncDone = false;
-				if (createdCallback != null) createdCallback(asyncSucceeded);
-			}
 		}
-
+		
 		private static void async_CreatedCallback(bool succeeded)
 		{
-			asyncSucceeded = succeeded;
-			asyncDone = true;
-		}
-		#else
-		private static void update()
-		{
-			foreach (var plugin in plugins)
+			#if ASYNC
+			ReignServices.InvokeOnUnityThread(delegate
 			{
-				plugin.Update();
-			}
-		}
-		
-		private static void noAsync_CreatedCallback(bool succeeded)
-		{
+				creatingAds = false;
+				ReignServices.Singleton.StartCoroutine(createdCallbackDelay(succeeded));
+			});
+			#else
 			creatingAds = false;
 			ReignServices.Singleton.StartCoroutine(createdCallbackDelay(succeeded));
+			#endif
 		}
 
 		private static IEnumerator createdCallbackDelay(bool succeeded)
 		{
+			// delay object callback so .NET instance is guaranteed to be created
 			yield return null;
 			if (createdCallback != null) createdCallback(succeeded);
 		}
-		#endif
 
 		/// <summary>
 		/// Use to create a single Ad.
@@ -131,13 +113,7 @@ namespace Reign
 			}
 			creatingAds = true;
 			InterstitialAdManager.createdCallback = createdCallback;
-
-			#if ASYNC
-			asyncDone = false;
 			plugins.Add(InterstitialAdPluginAPI.New(desc, async_CreatedCallback));
-			#else
-			plugins.Add(InterstitialAdPluginAPI.New(desc, noAsync_CreatedCallback));
-			#endif
 			
 			return new InterstitialAd(plugins[plugins.Count-1]);
 		}
@@ -160,12 +136,7 @@ namespace Reign
 			InterstitialAdManager.createdCallback = createdCallback;
 
 			int startLength = plugins.Count;
-			#if ASYNC
-			asyncDone = false;
 			for (int i = 0; i != descs.Length; ++i) plugins.Add(InterstitialAdPluginAPI.New(descs[i], async_CreatedCallback));
-			#else
-			for (int i = 0; i != descs.Length; ++i) plugins.Add(InterstitialAdPluginAPI.New(descs[i], noAsync_CreatedCallback));
-			#endif
 			
 			var ads = new InterstitialAd[descs.Length];
 			for (int i = 0, i2 = startLength; i != descs.Length; ++i, ++i2) ads[i] = new InterstitialAd(plugins[i2]);
