@@ -27,7 +27,7 @@ public class Samsung_InAppPurchaseNative implements OnPaymentListener, OnGetInbo
 	//private static String[] skus, types;
 	private static boolean restoreDone, buyDone, buySuccess, productInfoDone;
 	private static List<String> restoreItems, productInfoItems;
-	private static String itemGroupID;
+	private static String itemGroupID, buyReceipt;
 	
 	public static void Init(final String itemGroupID, String itemSKUs, String itemTypes, final boolean testing)
 	{
@@ -177,6 +177,7 @@ public class Samsung_InAppPurchaseNative implements OnPaymentListener, OnGetInbo
     {
         if(_errorVo != null && _errorVo.getErrorCode() == SamsungIapHelper.IAP_ERROR_NONE)
         {
+        	buyReceipt = _purchaseVo.getJsonString();
         	buySuccess = true;
         	buyDone = true;
         }
@@ -232,4 +233,9 @@ public class Samsung_InAppPurchaseNative implements OnPaymentListener, OnGetInbo
     {
     	return buySuccess;
     }
+	
+	public static String GetBuyReceipt()
+	{
+		return buyReceipt;
+	}
 }

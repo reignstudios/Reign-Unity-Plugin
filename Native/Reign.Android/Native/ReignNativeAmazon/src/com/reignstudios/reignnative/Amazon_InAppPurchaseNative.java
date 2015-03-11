@@ -35,6 +35,7 @@ public class Amazon_InAppPurchaseNative implements PurchasingListener, ReignActi
 	private static List<String> restoreItems, productInfoItems;
 	private static Set<String> skuSet;
 	private static int initStatus;
+	private static String buyReceipt;
 	
 	public static void Init(String itemSKUs, String itemTypes, boolean testing)
 	{
@@ -129,6 +130,11 @@ public class Amazon_InAppPurchaseNative implements PurchasingListener, ReignActi
 	public static boolean CheckBuySuccess()
 	{
 		return buySuccess;
+	}
+	
+	public static String GetBuyReceipt()
+	{
+		return buyReceipt;
 	}
 	
 	public static void Restore()
@@ -303,7 +309,7 @@ public class Amazon_InAppPurchaseNative implements PurchasingListener, ReignActi
                 	Product i = items.get(key);
                     Log.v(logTag, String.format("Item: %s\n Type: %s\n SKU: %s\n Price: %s\n Description: %s\n", i.getTitle(), i.getProductType(), i.getSku(), i.getPrice(), i.getDescription()));
                     productInfoItems.add(key);
-                    String price = items.get(key).getPrice();
+                    String price = i.getPrice();
                     productInfoItems.add(price);
                 }
                 productInfoDone = true;
@@ -372,7 +378,9 @@ public class Amazon_InAppPurchaseNative implements PurchasingListener, ReignActi
                 }*/
 
                 //printReceipt(purchaseResponse.getReceipt());
-            	PurchasingService.notifyFulfillment(purchaseResponse.getReceipt().getReceiptId(), FulfillmentResult.FULFILLED);
+            	Receipt receipt = purchaseResponse.getReceipt();
+            	buyReceipt = receipt.toJSON().toString();
+            	PurchasingService.notifyFulfillment(receipt.getReceiptId(), FulfillmentResult.FULFILLED);
             	Log.d(logTag, "Successful purchase.");
                 buySuccess = true;
             	buyDone = true;
