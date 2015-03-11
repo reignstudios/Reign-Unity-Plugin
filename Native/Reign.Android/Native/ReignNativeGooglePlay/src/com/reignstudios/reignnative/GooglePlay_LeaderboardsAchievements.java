@@ -57,7 +57,9 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 			           .addScope(Plus.SCOPE_PLUS_LOGIN)
 			           .addScope(AppStateManager.SCOPE_APP_STATE);
 					
+					builder.setViewForPopups(ReignUnityActivity.ContentView);
 					client = builder.build();
+					
 					initStatus = 1;
 				}
 				catch (Exception e)
@@ -112,8 +114,8 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 				{
 					if (client.isConnected())
 					{
-						client.disconnect();
 						Games.signOut(client);
+						client.disconnect();
 					}
 				}
 				catch (Exception e)
