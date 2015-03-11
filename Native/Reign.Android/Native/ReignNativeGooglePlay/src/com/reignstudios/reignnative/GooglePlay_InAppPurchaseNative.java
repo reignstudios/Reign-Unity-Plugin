@@ -20,13 +20,13 @@ public class GooglePlay_InAppPurchaseNative implements ReignActivityCallbacks
 	public static int BuyIntentID = 1234;
 	private static boolean restoreDone, buyDone, buySuccess, productInfoDone;
 	private static List<String> restoreItems, productInfoItems;
-	private static String buyItem, base64Key;
+	private static String buyItem, base64Key, buyReceipt;
 	private static String[] skus, types;
 	private static List<String> skuList;
 	private static IabHelper helper;
 	private static int initStatus;
 	
-	public static void Init(final String base64Key, String itemSKUs, String itemTypes, final boolean testing)
+	public static void Init(final String base64Key, String itemSKUs, String itemTypes, final boolean testing, final boolean clearCache)
 	{
 		// attached callbacks
 		singleton = new GooglePlay_InAppPurchaseNative();
@@ -50,17 +50,22 @@ public class GooglePlay_InAppPurchaseNative implements ReignActivityCallbacks
 				{
 		            public void onIabSetupFinished(IabResult result)
 		            {
-		            	initStatus = result.isSuccess() ? 1 : 2;
-		            	
 		            	// we consume apps to reset the buy menu for testing
-		            	/*try
+		            	if (result.isSuccess() && clearCache && testing)
 		            	{
-		            		if (testing) helper.queryInventoryAsync(testResetInventoryListener);
+			            	try
+			            	{
+			            		helper.queryInventoryAsync(testResetInventoryListener);
+			            	}
+			            	catch (Exception e)
+			            	{
+			            		Log.d(logTag, "Reset Apps for testing Error: " + e.getMessage());
+			            	}
 		            	}
-		            	catch (Exception e)
+		            	else
 		            	{
-		            		Log.d(logTag, "Reset Apps for testing Error: " + e.getMessage());
-		            	}*/
+		            		initStatus = result.isSuccess() ? 1 : 2;
+		            	}
 		            }
 		        });
 			}
@@ -86,13 +91,15 @@ public class GooglePlay_InAppPurchaseNative implements ReignActivityCallbacks
 		});
 	}
 	
-	/*static IabHelper.QueryInventoryFinishedListener testResetInventoryListener = new IabHelper.QueryInventoryFinishedListener()
+	// for clearing cache when testing the IAP plugin
+	static IabHelper.QueryInventoryFinishedListener testResetInventoryListener = new IabHelper.QueryInventoryFinishedListener()
 	{
         public void onQueryInventoryFinished(IabResult result, Inventory inventory)
         {
             if (result.isFailure())
             {
             	Log.d(logTag, "Test Consume Failed: " + result.getMessage());
+            	initStatus = 1;
                 return;
             }
             
@@ -101,8 +108,10 @@ public class GooglePlay_InAppPurchaseNative implements ReignActivityCallbacks
 	            Purchase premiumPurchase = inventory.getPurchase(skus[i]);
 	            if (premiumPurchase != null) helper.consumeAsync(inventory.getPurchase(skus[i]), null);
             }
+            
+            initStatus = 1;
         }
-    };*/
+    };
     
     public static void GetProductInfo()
 	{
@@ -225,6 +234,7 @@ public class GooglePlay_InAppPurchaseNative implements ReignActivityCallbacks
 	            return;
 	        }
 	
+	        buyReceipt = purchase.getOriginalJson();
 	        if (purchase.getSku().equals(buyItem) && Security.verifyPurchase(base64Key, purchase.getOriginalJson(), purchase.getSignature()))
 	        {
 	        	boolean isConsumable = false;
@@ -288,6 +298,11 @@ public class GooglePlay_InAppPurchaseNative implements ReignActivityCallbacks
     {
     	return buySuccess;
     }
+	
+	public static String GetBuyReceipt()
+	{
+		return buyReceipt;
+	}
 	
 	@Override
 	public boolean onActivityResult(int requestCode, int resultcode, Intent intent)

@@ -130,6 +130,11 @@ namespace Reign
 		/// </summary>
 		public bool TestTrialMode;
 
+		/// <summary>
+		/// Clears native IAP purchase cache if possible for testing IAP
+		/// </summary>
+		public bool ClearNativeCache;
+
 		// Editor
 		/// <summary>
 		/// IAP IDs

@@ -39,7 +39,7 @@ namespace Reign.Plugin
 					skus += app.ID;
 					types += app.Type == InAppPurchaseTypes.NonConsumable ? "NonConsumable" : "Consumable";
 				}
-				native.CallStatic("Init", desc.Android_GooglePlay_Base64Key, skus, types, desc.Testing);
+				native.CallStatic("Init", desc.Android_GooglePlay_Base64Key, skus, types, desc.Testing, desc.ClearNativeCache);
 			}
 			catch (Exception e)
 			{
@@ -146,7 +146,7 @@ namespace Reign.Plugin
 			// check buy callbacks
 			if (native.CallStatic<bool>("CheckBuyDone"))
 			{
-				if (purchasedCallback != null) purchasedCallback(buyInAppID, null, native.CallStatic<bool>("CheckBuySuccess"));
+				if (purchasedCallback != null) purchasedCallback(buyInAppID, native.CallStatic<string>("GetBuyReceipt"), native.CallStatic<bool>("CheckBuySuccess"));
 			}
 		}
 	}

@@ -49,6 +49,7 @@ public class IAPDemo : MonoBehaviour
 
 		// Global
 		desc.Testing = true;
+		desc.ClearNativeCache = false;
 			
 		// Editor
 		desc.Editor_InAppIDs = inAppIDs;
