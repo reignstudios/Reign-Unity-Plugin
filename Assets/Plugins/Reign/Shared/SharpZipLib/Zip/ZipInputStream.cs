@@ -664,7 +664,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 		/// Closes the zip input stream
 		/// </summary>
 		#if UNITY_METRO && !UNITY_EDITOR
-		public void Close()
+		public new void Close()
 		#else
 		public override void Close()
 		#endif
