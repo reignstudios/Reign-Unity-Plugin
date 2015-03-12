@@ -244,7 +244,11 @@ namespace Reign.EditorTools
 			if (target == BuildTarget.MetroPlayer || target == BuildTarget.WP8Player)
 			#endif
 			{
+				#if UNITY_WP8
 				var productName = PlayerSettings.productName.Replace(" ", "").Replace("_", "");
+				#else
+				var productName = PlayerSettings.productName;
+				#endif
 				
 				#if UNITY_5
 				if (EditorUserBuildSettings.wsaSDK == WSASDK.UniversalSDK81 && EditorUserBuildSettings.activeBuildTarget != BuildTarget.WP8Player)

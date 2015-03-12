@@ -9,15 +9,12 @@ using Reign;
 
 public class InterstitialAdDemo : MonoBehaviour
 {
-	private static InterstitialAdDemo singleton;
 	private static bool created;
 	private static InterstitialAd ad;
 	public Button ShowAdButton, BackButton;
 
 	void Start()
 	{
-		singleton = this;
-
 		// bind button events
 		ShowAdButton.Select();
 		ShowAdButton.onClick.AddListener(showAdClicked);
