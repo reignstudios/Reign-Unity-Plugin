@@ -55,9 +55,9 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 			           .addApi(AppStateManager.API)
 			           .addScope(Games.SCOPE_GAMES)
 			           .addScope(Plus.SCOPE_PLUS_LOGIN)
-			           .addScope(AppStateManager.SCOPE_APP_STATE);
+			           .addScope(AppStateManager.SCOPE_APP_STATE)
+			           .setViewForPopups(ReignUnityActivity.ContentView);
 					
-					builder.setViewForPopups(ReignUnityActivity.ContentView);
 					client = builder.build();
 					
 					initStatus = 1;
