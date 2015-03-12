@@ -253,19 +253,19 @@ namespace Reign.EditorTools
 				#endif
 				{
 					var projPath = string.Format("{0}/{1}/{1}.Shared/{1}.Shared.projItems", pathToBuiltProject, productName);
-					Debug.Log("Modifing Proj: " + projPath);
+					Debug.Log("Modifying Proj: " + projPath);
 					var doc = XDocument.Load(projPath);
 					addPostProjectReferences(doc, pathToBuiltProject, string.Format("/{0}.Shared", productName), productName, "$(MSBuildThisFileDirectory)");
 					doc.Save(projPath);
 
 					projPath = string.Format("{0}/{1}/{1}.Windows/{1}.Windows.csproj", pathToBuiltProject, productName);
-					Debug.Log("Modifing Proj: " + projPath);
+					Debug.Log("Modifying Proj: " + projPath);
 					doc = XDocument.Load(projPath);
 					addPostProjectCompilerDirectives(doc);
 					doc.Save(projPath);
 
 					projPath = string.Format("{0}/{1}/{1}.WindowsPhone/{1}.WindowsPhone.csproj", pathToBuiltProject, productName);
-					Debug.Log("Modifing Proj: " + projPath);
+					Debug.Log("Modifying Proj: " + projPath);
 					doc = XDocument.Load(projPath);
 					addPostProjectCompilerDirectives(doc);
 					doc.Save(projPath);
@@ -273,7 +273,7 @@ namespace Reign.EditorTools
 				else
 				{
 					var projPath = string.Format("{0}/{1}/{1}.csproj", pathToBuiltProject, productName);
-					Debug.Log("Modifing Proj: " + projPath);
+					Debug.Log("Modifying Proj: " + projPath);
 
 					var doc = XDocument.Load(projPath);
 					addPostProjectCompilerDirectives(doc);
