@@ -44,7 +44,7 @@ public class AdsDemo : MonoBehaviour
 		desc.Testing = true;// NOTE: To test ads on iOS, you must enable them in iTunes Connect.
 		desc.Visible = true;
 		desc.EventCallback = eventCallback;
-		desc.UnityUI_AdMaxHeight = 0.3f;
+		desc.UnityUI_AdMaxWidth = 0.3f;
 		desc.UnityUI_AdMaxHeight = 0.15f;
 
 		// Editor
