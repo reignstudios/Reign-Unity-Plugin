@@ -8,9 +8,16 @@ namespace Reign
 	{
 		private static IPushNotificationPlugin plugin;
 
-		public static void Init()
+		static PushNotificationManager()
 		{
-			
+			#if UNITY_WINRT
+			plugin = new PushNotificationPlugin_WinRT();
+			#endif
+		}
+
+		public static void Init(PushNotificationsDesc desc)
+		{
+			plugin.Init(desc);
 		}
 	}
 }
