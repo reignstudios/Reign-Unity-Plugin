@@ -74,7 +74,7 @@ namespace Reign.Plugin
 				testing = desc.Testing;
 				adEvent = desc.EventCallback;
 
-				AdGravity gravity;
+				AdGravity gravity = AdGravity.CenterScreen;
 				#if !DISABLE_REIGN
 				#if UNITY_EDITOR
 				refreshRate = desc.Editor_MillennialMediaAdvertising_RefreshRate;

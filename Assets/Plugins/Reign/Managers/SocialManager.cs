@@ -13,6 +13,7 @@ namespace Reign
 
 		static SocialManager()
 		{
+			#if !DISABLE_REIGN
 			#if UNITY_EDITOR
 			plugin = new SocialPlugin_Dumy();
 			#elif UNITY_WINRT
@@ -25,6 +26,7 @@ namespace Reign
 			plugin = new SocialPlugin_BB10();
 			#else
 			plugin = new SocialPlugin_Dumy();
+			#endif
 			#endif
 		}
 
