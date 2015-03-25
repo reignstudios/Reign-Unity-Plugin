@@ -59,7 +59,7 @@ namespace Reign.Plugin
 				
 				unsafe
 				{
-					byte** dataPtr = (byte**)Marshal.AllocHGlobal(desc.iOS_AppleStore_InAppIDs.Length).ToPointer();
+					byte** dataPtr = (byte**)Marshal.AllocHGlobal(desc.iOS_AppleStore_InAppIDs.Length * IntPtr.Size).ToPointer();
 					int i = 0;
 					foreach (var id in desc.iOS_AppleStore_InAppIDs)
 					{
