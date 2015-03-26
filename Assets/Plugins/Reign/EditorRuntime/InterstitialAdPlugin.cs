@@ -109,6 +109,11 @@ namespace Reign.Plugin
 		{
 			// do nothing...
 		}
+
+		public void OnGUI()
+		{
+			// do nothing...
+		}
 	}
 }
 #endif

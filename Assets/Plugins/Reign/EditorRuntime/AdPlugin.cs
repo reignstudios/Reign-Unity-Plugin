@@ -185,6 +185,16 @@ namespace Reign.Plugin
 
 		public void OnGUI()
 		{
+			if (!desc.GUIOverrideEnabled) onGUI();
+		}
+
+		public void OverrideOnGUI()
+		{
+			if (desc.UseClassicGUI) onGUI();
+		}
+
+		private void onGUI()
+		{
 			if (desc.UseClassicGUI && visible)
 			{
 				SetGravity(desc.Editor_AdGravity);

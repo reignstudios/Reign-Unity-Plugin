@@ -64,7 +64,7 @@ namespace Reign
 			plugins = new List<IInterstitialAdPlugin>();
 
 			#if !DISABLE_REIGN
-			ReignServices.AddService(update, null, null);
+			ReignServices.AddService(update, onGui, null);
 			#endif
 		}
 
@@ -76,6 +76,14 @@ namespace Reign
 			}
 		}
 		
+		private static void onGui()
+		{
+			foreach (var plugin in plugins)
+			{
+				plugin.OnGUI();
+			}
+		}
+
 		private static void async_CreatedCallback(bool succeeded)
 		{
 			#if ASYNC

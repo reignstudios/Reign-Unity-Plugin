@@ -422,6 +422,11 @@ namespace Reign
 		/// </summary>
 		public bool UseClassicGUI;
 
+		/// <summary>
+		/// Set true to enable GUIOverride draw calls
+		/// </summary>
+		public bool GUIOverrideEnabled;
+
 		// Editor
 		/// <summary>
 		/// Ad API type.
@@ -447,11 +452,6 @@ namespace Reign
 		/// Set to scale Unity GUI based Ads.
 		/// </summary>
 		public float Editor_GuiAdScale = 1;
-
-		/// <summary>
-		/// Set true to enable GUIOverride draw calls
-		/// </summary>
-		public bool Editor_AdGUIOverrideEnabled = false;
 
 		// WinRT
 		/// <summary>
@@ -504,11 +504,6 @@ namespace Reign
 		/// Set to scale Unity GUI based Ads.
 		/// </summary>
 		public float WinRT_GuiAdScale = 1;
-
-		/// <summary>
-		/// Set true to enable GUIOverride draw calls
-		/// </summary>
-		public bool WinRT_AdGUIOverrideEnabled = false;
 
 		// WP8
 		/// <summary>
@@ -571,11 +566,6 @@ namespace Reign
 		/// Set to scale Unity GUI based Ads.
 		/// </summary>
 		public float WP8_GuiAdScale = 1;
-
-		/// <summary>
-		/// Set true to enable GUIOverride draw calls
-		/// </summary>
-		public bool WP8_AdGUIOverrideEnabled = false;
 		
 		// BB10
 		/// <summary>
@@ -612,11 +602,6 @@ namespace Reign
 		/// Set to scale Unity GUI based Ads.
 		/// </summary>
 		public float BB10_GuiAdScale = 1;
-
-		/// <summary>
-		/// Set true to enable GUIOverride draw calls
-		/// </summary>
-		public bool BB10_AdGUIOverrideEnabled = false;
 		
 		// iOS
 		/// <summary>
@@ -663,11 +648,6 @@ namespace Reign
 		/// Set to scale Unity GUI based Ads.
 		/// </summary>
 		public float iOS_GuiAdScale = 1;
-
-		/// <summary>
-		/// Set true to enable GUIOverride draw calls
-		/// </summary>
-		public bool iOS_AdGUIOverrideEnabled = false;
 		
 		// Android
 		/// <summary>
@@ -730,11 +710,6 @@ namespace Reign
 		/// </summary>
 		public float Android_GuiAdScale = 1;
 
-		/// <summary>
-		/// Set true to enable GUIOverride draw calls
-		/// </summary>
-		public bool Android_AdGUIOverrideEnabled = false;
-
 		// Win32
 		/// <summary>
 		/// Ad API type.
@@ -755,11 +730,6 @@ namespace Reign
 		/// Set to scale Unity GUI based Ads.
 		/// </summary>
 		public float Win32_GuiAdScale = 1;
-
-		/// <summary>
-		/// Set true to enable GUIOverride draw calls
-		/// </summary>
-		public bool Win32_AdGUIOverrideEnabled = false;
 
 		// OSX
 		/// <summary>
@@ -782,11 +752,6 @@ namespace Reign
 		/// </summary>
 		public float OSX_GuiAdScale = 1;
 
-		/// <summary>
-		/// Set true to enable GUIOverride draw calls
-		/// </summary>
-		public bool OSX_AdGUIOverrideEnabled = false;
-
 		// Linux
 		/// <summary>
 		/// Ad API type.
@@ -807,11 +772,6 @@ namespace Reign
 		/// Set to scale Unity GUI based Ads.
 		/// </summary>
 		public float Linux_GuiAdScale = 1;
-
-		/// <summary>
-		/// Set true to enable GUIOverride draw calls
-		/// </summary>
-		public bool Linux_AdGUIOverrideEnabled = false;
 	}
 
 	/// <summary>
@@ -865,5 +825,10 @@ namespace Reign.Plugin
 		/// Classic gui operations
 		/// </summary>
 		void OnGUI();
+
+		/// <summary>
+		/// Used to manually render gui operations
+		/// </summary>
+		void OverrideOnGUI();
     }
 }

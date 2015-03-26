@@ -57,6 +57,14 @@ namespace Reign
 		{
 			plugin.Refresh();
 		}
+
+		/// <summary>
+		/// Use if you are using classic GUI mode and manually rendering
+		/// </summary>
+		public void Draw()
+		{
+			plugin.OverrideOnGUI();
+		}
 	}
 
 	/// <summary>

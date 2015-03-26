@@ -177,5 +177,10 @@ namespace Reign.Plugin
 		/// Used to handle Ad events
 		/// </summary>
 		void Update();
+
+		/// <summary>
+		/// Used to render classic gui
+		/// </summary>
+		void OnGUI();
     }
 }

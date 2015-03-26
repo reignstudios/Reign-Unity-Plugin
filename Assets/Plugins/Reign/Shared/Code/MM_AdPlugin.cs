@@ -449,6 +449,16 @@ namespace Reign.Plugin
 
 		public void OnGUI()
 		{
+			if (!desc.GUIOverrideEnabled) onGUI();
+		}
+
+		public void OverrideOnGUI()
+		{
+			if (desc.UseClassicGUI) onGUI();
+		}
+
+		private void onGUI()
+		{
 			if (desc.UseClassicGUI && visible && guiTexture != null)
 			{
 				SetGravity(gravity);
@@ -456,5 +466,6 @@ namespace Reign.Plugin
 				if (GUI.Button(guiRect, "", guiSytle)) adClicked();
 			}
 		}
+
     }
 }
