@@ -47,7 +47,7 @@ namespace Reign.Plugin
 			set
 			{
 				visible = value;
-				adCanvas.SetActive(value);
+				if (!desc.UseClassicGUI) adCanvas.SetActive(value);
 			}
 		}
 
@@ -55,6 +55,9 @@ namespace Reign.Plugin
 		private GameObject adCanvas;
 		private RectTransform adRect;
 		private Image adImage;
+		private Texture2D guiTexture;
+		private Rect guiRect;
+		private float guiScale;
 		private bool testing;
 		private AdEventCallbackMethod adEvent;
 		private int refreshRate;
@@ -63,6 +66,8 @@ namespace Reign.Plugin
 		private TextureGIF gifImage;
 		private MonoBehaviour service;
 		private Reign.MM_AdXML.Ad adMeta;
+		private AdGravity gravity;
+		private GUIStyle guiSytle;
 
 		public MM_AdPlugin(AdDesc desc, AdCreatedCallbackMethod createdCallback, MonoBehaviour service)
 		{
@@ -74,44 +79,53 @@ namespace Reign.Plugin
 				testing = desc.Testing;
 				adEvent = desc.EventCallback;
 
-				AdGravity gravity = AdGravity.CenterScreen;
+				gravity = AdGravity.CenterScreen;
 				#if !DISABLE_REIGN
 				#if UNITY_EDITOR
 				refreshRate = desc.Editor_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Editor_MillennialMediaAdvertising_APID;
 				gravity = desc.Editor_MillennialMediaAdvertising_AdGravity;
+				guiScale = desc.Editor_GuiAdScale;
 				#elif UNITY_BLACKBERRY
 				refreshRate = desc.BB10_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.BB10_MillennialMediaAdvertising_APID;
 				gravity = desc.BB10_MillennialMediaAdvertising_AdGravity;
+				guiScale = desc.BB10_GuiAdScale;
 				#elif UNITY_WP8
 				refreshRate = desc.WP8_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.WP8_MillennialMediaAdvertising_APID;
 				gravity = desc.WP8_MillennialMediaAdvertising_AdGravity;
+				guiScale = desc.WP8_GuiAdScale;
 				#elif UNITY_METRO
 				refreshRate = desc.WinRT_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.WinRT_MillennialMediaAdvertising_APID;
 				gravity = desc.WinRT_MillennialMediaAdvertising_AdGravity;
+				guiScale = desc.WinRT_GuiAdScale;
 				#elif UNITY_IOS
 				refreshRate = desc.iOS_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.iOS_MillennialMediaAdvertising_APID;
 				gravity = desc.iOS_MillennialMediaAdvertising_AdGravity;
+				guiScale = desc.iOS_GuiAdScale;
 				#elif UNITY_ANDROID
 				refreshRate = desc.Android_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Android_MillennialMediaAdvertising_APID;
 				gravity = desc.Android_MillennialMediaAdvertising_AdGravity;
+				guiScale = desc.Android_GuiAdScale;
 				#elif UNITY_STANDALONE_WIN
 				refreshRate = desc.Win32_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Win32_MillennialMediaAdvertising_APID;
 				gravity = desc.Win32_MillennialMediaAdvertising_AdGravity;
+				guiScale = desc.Win32_GuiAdScale;
 				#elif UNITY_STANDALONE_OSX
 				refreshRate = desc.OSX_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.OSX_MillennialMediaAdvertising_APID;
 				gravity = desc.OSX_MillennialMediaAdvertising_AdGravity;
+				guiScale = desc.OSX_GuiAdScale;
 				#elif UNITY_STANDALONE_LINUX
 				refreshRate = desc.Linux_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Linux_MillennialMediaAdvertising_APID;
 				gravity = desc.Linux_MillennialMediaAdvertising_AdGravity;
+				guiScale = desc.Linux_GuiAdScale;
 				#endif
 				#endif
 
@@ -135,25 +149,36 @@ namespace Reign.Plugin
 					PlayerPrefs.SetString("Reign_MMWebAds_DeviceID", deviceID);
 				}
 
-				// Create Ad Canvas
-				adCanvas = new GameObject("MM Ad");
-				GameObject.DontDestroyOnLoad(adCanvas);
-				adCanvas.AddComponent<RectTransform>();
-				var canvas = adCanvas.AddComponent<Canvas>();
-				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-				canvas.sortingOrder = 1000;
-				adCanvas.AddComponent<CanvasScaler>();
-				adCanvas.AddComponent<GraphicRaycaster>();
+				if (desc.UseClassicGUI)
+				{
+					guiSytle = new GUIStyle()
+					{
+						stretchWidth = true,
+						stretchHeight = true
+					};
+				}
+				else
+				{
+					// Create Ad Canvas
+					adCanvas = new GameObject("MM Ad");
+					GameObject.DontDestroyOnLoad(adCanvas);
+					adCanvas.AddComponent<RectTransform>();
+					var canvas = adCanvas.AddComponent<Canvas>();
+					canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+					canvas.sortingOrder = 1000;
+					adCanvas.AddComponent<CanvasScaler>();
+					adCanvas.AddComponent<GraphicRaycaster>();
 
-				// Create ad
-				var ad = new GameObject("AdButtonImage");
-				ad.transform.parent = adCanvas.transform;
-				adRect = ad.AddComponent<RectTransform>();
-				adImage = ad.AddComponent<Image>();
-				adImage.sprite = Resources.Load<Sprite>("Reign/Ads/AdLoading");
-				adImage.preserveAspect = true;
-				var button = ad.AddComponent<Button>();
-				button.onClick.AddListener(adClicked);
+					// Create ad
+					var ad = new GameObject("AdButtonImage");
+					ad.transform.parent = adCanvas.transform;
+					adRect = ad.AddComponent<RectTransform>();
+					adImage = ad.AddComponent<Image>();
+					adImage.sprite = Resources.Load<Sprite>("Reign/Ads/AdLoading");
+					adImage.preserveAspect = true;
+					var button = ad.AddComponent<Button>();
+					button.onClick.AddListener(adClicked);
+				}
 
 				// set default visible state
 				Visible = desc.Visible;
@@ -181,8 +206,9 @@ namespace Reign.Plugin
 				Debug.Log("Opening Ad at URL: " + adMeta.clickUrl.Content);
 				Application.OpenURL(adMeta.clickUrl.Content);
 				Debug.Log("Ad Clicked!");
-				if (adEvent != null) adEvent(AdEvents.Clicked, null);
 			}
+
+			if (adEvent != null) adEvent(AdEvents.Clicked, null);
 		}
 
 		private IEnumerator init(AdCreatedCallbackMethod createdCallback)
@@ -202,7 +228,9 @@ namespace Reign.Plugin
 				}
 
 				gifImage = new TextureGIF(data, frameUpdatedCallback);
-				adImage.sprite = gifImage.CurrentFrame.Sprite;
+				if (desc.UseClassicGUI) guiTexture = gifImage.CurrentFrame.Texture;
+				else adImage.sprite = gifImage.CurrentFrame.Sprite;
+				SetGravity(gravity);
 				var texture = gifImage.CurrentFrame.Texture;
 				Debug.Log(string.Format("Ad Image Size: {0}x{1}", texture.width, texture.height));
 				if (createdCallback != null) createdCallback(true);
@@ -229,7 +257,8 @@ namespace Reign.Plugin
 
 		private void frameUpdatedCallback(TextureGIFFrame frame)
 		{
-			adImage.sprite = frame.Sprite;
+			if (desc.UseClassicGUI) guiTexture = frame.Texture;
+			else adImage.sprite = frame.Sprite;
 		}
 
 		public void Dispose()
@@ -243,50 +272,96 @@ namespace Reign.Plugin
 
 		public void SetGravity(AdGravity gravity)
 		{
-			switch (gravity)
+			if (desc.UseClassicGUI)
 			{
-				case AdGravity.CenterScreen:
-					adRect.anchorMin = new Vector2(0, .5f-(desc.UnityUI_AdMaxHeight*.5f));
-					adRect.anchorMax = new Vector2(1, .5f+(desc.UnityUI_AdMaxHeight*.5f));
-					break;
+				if (guiTexture == null) return;
+				
+				float screenWidth = Screen.width, screenHeight = Screen.height;
+				float scale = (new Vector2(screenWidth, screenHeight).magnitude / new Vector2(1280, 720).magnitude) * guiScale;
+				float adWidth = guiTexture.width * scale, adHeight = guiTexture.height * scale;
+				Debug.Log(adWidth);
+				switch (gravity)
+				{
+					case AdGravity.CenterScreen:
+						guiRect = new Rect((screenWidth/2)-(adWidth/2), (screenHeight/2)-(adHeight/2), adWidth, adHeight);
+						break;
 
-				case AdGravity.BottomCenter:
-					adRect.anchorMin = new Vector2(0, 0);
-					adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
-					break;
+					case AdGravity.BottomCenter:
+						guiRect = new Rect((screenWidth/2)-(adWidth/2), screenHeight-adHeight, adWidth, adHeight);
+						break;
 
-				case AdGravity.BottomLeft:
-					adRect.anchorMin = new Vector2(0, 0);
-					adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, desc.UnityUI_AdMaxHeight);
-					break;
+					case AdGravity.BottomLeft:
+						guiRect = new Rect(0, screenHeight-adHeight, adWidth, adHeight);
+						break;
 
-				case AdGravity.BottomRight:
-					adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 0);
-					adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
-					break;
+					case AdGravity.BottomRight:
+						guiRect = new Rect(screenWidth-adWidth, screenHeight-adHeight, adWidth, adHeight);
+						break;
 
-				case AdGravity.TopCenter:
-					adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
-					adRect.anchorMax = new Vector2(1, 1);
-					break;
+					case AdGravity.TopCenter:
+						guiRect = new Rect((screenWidth/2)-(adWidth/2), 0, adWidth, adHeight);
+						break;
 
-				case AdGravity.TopLeft:
-					adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
-					adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, 1);
-					break;
+					case AdGravity.TopLeft:
+						guiRect = new Rect(0, 0, adWidth, adHeight);
+						break;
 
-				case AdGravity.TopRight:
-					adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 1-desc.UnityUI_AdMaxHeight);
-					adRect.anchorMax = new Vector2(1, 1);
-					break;
+					case AdGravity.TopRight:
+						guiRect = new Rect(screenWidth-adWidth, 0, adWidth, adHeight);
+						break;
 
-				default:
-					Debug.LogError("Unsuported Gravity: " + gravity);
-					break;
+					default:
+						Debug.LogError("Unsuported Gravity: " + gravity);
+						break;
+				}
 			}
+			else
+			{
+				switch (gravity)
+				{
+					case AdGravity.CenterScreen:
+						adRect.anchorMin = new Vector2(0, .5f-(desc.UnityUI_AdMaxHeight*.5f));
+						adRect.anchorMax = new Vector2(1, .5f+(desc.UnityUI_AdMaxHeight*.5f));
+						break;
 
-			adRect.offsetMin = Vector2.zero;
-			adRect.offsetMax = Vector2.zero;
+					case AdGravity.BottomCenter:
+						adRect.anchorMin = new Vector2(0, 0);
+						adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
+						break;
+
+					case AdGravity.BottomLeft:
+						adRect.anchorMin = new Vector2(0, 0);
+						adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, desc.UnityUI_AdMaxHeight);
+						break;
+
+					case AdGravity.BottomRight:
+						adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 0);
+						adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
+						break;
+
+					case AdGravity.TopCenter:
+						adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
+						adRect.anchorMax = new Vector2(1, 1);
+						break;
+
+					case AdGravity.TopLeft:
+						adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
+						adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, 1);
+						break;
+
+					case AdGravity.TopRight:
+						adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 1-desc.UnityUI_AdMaxHeight);
+						adRect.anchorMax = new Vector2(1, 1);
+						break;
+
+					default:
+						Debug.LogError("Unsuported Gravity: " + gravity);
+						break;
+				}
+
+				adRect.offsetMin = Vector2.zero;
+				adRect.offsetMax = Vector2.zero;
+			}
 		}
 		
 		public void Refresh()
@@ -352,7 +427,8 @@ namespace Reign.Plugin
 				gifImage = null;
 			}
 			gifImage = new TextureGIF(www.bytes, frameUpdatedCallback);
-			adImage.sprite = gifImage.CurrentFrame.Sprite;
+			if (desc.UseClassicGUI) guiTexture = gifImage.CurrentFrame.Texture;
+			else adImage.sprite = gifImage.CurrentFrame.Sprite;
 			var texture = gifImage.CurrentFrame.Texture;
 			Debug.Log(string.Format("Ad Image Size: {0}x{1}", texture.width, texture.height));
 
@@ -368,6 +444,16 @@ namespace Reign.Plugin
 			{
 				refreshRateTic = 0;
 				Refresh();
+			}
+		}
+
+		public void OnGUI()
+		{
+			if (desc.UseClassicGUI && visible && guiTexture != null)
+			{
+				SetGravity(gravity);
+				GUI.DrawTexture(guiRect, guiTexture, ScaleMode.StretchToFill);
+				if (GUI.Button(guiRect, "", guiSytle)) adClicked();
 			}
 		}
     }

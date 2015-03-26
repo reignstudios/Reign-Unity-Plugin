@@ -388,6 +388,11 @@ namespace Reign.Plugin
 		{
 			// do nothing...
 		}
+
+		public void OnGUI()
+		{
+			// do nothing...
+		}
     }
 }
 #elif UNITY_WINRT
@@ -429,6 +434,11 @@ namespace Reign.Plugin
 		public void Update()
 		{
 			Native.Update();
+		}
+
+		public void OnGUI()
+		{
+			Native.OnGUI();
 		}
 	}
 }

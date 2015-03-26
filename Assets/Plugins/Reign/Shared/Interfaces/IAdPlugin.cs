@@ -417,6 +417,11 @@ namespace Reign
 		/// </summary>
 		public float UnityUI_AdMaxWidth = 0.3f, UnityUI_AdMaxHeight = 0.15f;
 
+		/// <summary>
+		/// Set to enable the use of classic GUI Ads
+		/// </summary>
+		public bool UseClassicGUI;
+
 		// Editor
 		/// <summary>
 		/// Ad API type.
@@ -437,6 +442,16 @@ namespace Reign
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
 		/// </summary>
 		public int Editor_MillennialMediaAdvertising_RefreshRate = 120;
+
+		/// <summary>
+		/// Set to scale Unity GUI based Ads.
+		/// </summary>
+		public float Editor_GuiAdScale = 1;
+
+		/// <summary>
+		/// Set true to enable GUIOverride draw calls
+		/// </summary>
+		public bool Editor_AdGUIOverrideEnabled = false;
 
 		// WinRT
 		/// <summary>
@@ -592,6 +607,16 @@ namespace Reign
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
 		/// </summary>
 		public int BB10_BlackBerryAdvertising_RefreshRate = 120, BB10_MillennialMediaAdvertising_RefreshRate = 120;
+
+		/// <summary>
+		/// Set to scale Unity GUI based Ads.
+		/// </summary>
+		public float BB10_GuiAdScale = 1;
+
+		/// <summary>
+		/// Set true to enable GUIOverride draw calls
+		/// </summary>
+		public bool BB10_AdGUIOverrideEnabled = false;
 		
 		// iOS
 		/// <summary>
@@ -835,5 +860,10 @@ namespace Reign.Plugin
 		/// Update operations
 		/// </summary>
 		void Update();
+
+		/// <summary>
+		/// Classic gui operations
+		/// </summary>
+		void OnGUI();
     }
 }

@@ -74,7 +74,7 @@ namespace Reign
 			plugins = new List<IAdPlugin>();
 
 			#if !DISABLE_REIGN
-			ReignServices.AddService(update, null, null);
+			ReignServices.AddService(update, onGui, null);
 			#endif
 		}
 
@@ -83,6 +83,14 @@ namespace Reign
 			foreach (var plugin in plugins)
 			{
 				plugin.Update();
+			}
+		}
+
+		private static void onGui()
+		{
+			foreach (var plugin in plugins)
+			{
+				plugin.OnGUI();
 			}
 		}
 		
@@ -236,6 +244,14 @@ namespace Reign.Plugin
 		/// Dumy method.
 		/// </summary>
 		public void Update()
+		{
+			// do nothing...
+		}
+
+		/// <summary>
+		/// Dumy method.
+		/// </summary>
+		public void OnGUI()
 		{
 			// do nothing...
 		}

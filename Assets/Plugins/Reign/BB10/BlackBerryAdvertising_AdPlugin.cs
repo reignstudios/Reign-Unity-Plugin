@@ -317,6 +317,11 @@ namespace Reign.Plugin
 		{
 			// to bad we can't get events
 		}
+
+		public void OnGUI()
+		{
+			// do nothing...
+		}
     }
 }
 #endif

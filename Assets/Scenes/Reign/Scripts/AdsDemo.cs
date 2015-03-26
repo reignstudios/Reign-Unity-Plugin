@@ -46,10 +46,13 @@ public class AdsDemo : MonoBehaviour
 		desc.EventCallback = eventCallback;
 		desc.UnityUI_AdMaxWidth = 0.3f;
 		desc.UnityUI_AdMaxHeight = 0.15f;
+		desc.UseClassicGUI = false;
 
 		// Editor
-		desc.Editor_AdAPI = AdAPIs.EditorTestAd;
+		desc.Editor_AdAPI = AdAPIs.MillennialMediaAdvertising;
 		desc.Editor_AdGravity = AdGravity.BottomCenter;
+		desc.Editor_GuiAdScale = 2;
+		//desc.Editor_AdGUIOverrideEnabled = false;
 
 		desc.Editor_MillennialMediaAdvertising_APID = "";
 		desc.Editor_MillennialMediaAdvertising_AdGravity = AdGravity.BottomCenter;
@@ -86,6 +89,8 @@ public class AdsDemo : MonoBehaviour
 		desc.BB10_MillennialMediaAdvertising_APID = "";
 		desc.BB10_MillennialMediaAdvertising_AdGravity = AdGravity.BottomCenter;
 		//desc.BB10_MillennialMediaAdvertising_RefreshRate = 120;
+		desc.BB10_GuiAdScale = 2;
+		//desc.BB10_AdGUIOverrideEnabled = false;
 			
 		// iOS settings
 		desc.iOS_AdAPI = AdAPIs.iAd;

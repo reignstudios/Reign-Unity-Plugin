@@ -115,6 +115,11 @@ namespace Reign.Plugin
 				}
 			}
 		}
+
+		public void OnGUI()
+		{
+			// do nothing...
+		}
     }
 }
 #endif
