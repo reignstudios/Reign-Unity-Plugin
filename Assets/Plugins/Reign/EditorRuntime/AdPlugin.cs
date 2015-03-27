@@ -21,6 +21,7 @@ namespace Reign.Plugin
 		private AdDesc desc;
 		private GameObject adCanvas;
 		private RectTransform adRect;
+		private Image adImage;
 		private Rect guiRect;
 		
 		public AdPlugin(AdDesc desc, AdCreatedCallbackMethod createdCallback)
@@ -38,7 +39,7 @@ namespace Reign.Plugin
 					adCanvas.AddComponent<RectTransform>();
 					var canvas = adCanvas.AddComponent<Canvas>();
 					canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-					canvas.sortingOrder = 1000;
+					canvas.sortingOrder = desc.UnityUI_SortIndex;
 					adCanvas.AddComponent<CanvasScaler>();
 					adCanvas.AddComponent<GraphicRaycaster>();
 
@@ -46,9 +47,9 @@ namespace Reign.Plugin
 					var ad = new GameObject("AdButtonImage");
 					ad.transform.parent = adCanvas.transform;
 					adRect = ad.AddComponent<RectTransform>();
-					var image = ad.AddComponent<Image>();
-					image.sprite = Resources.Load<Sprite>("Reign/Ads/DemoAd");
-					image.preserveAspect = true;
+					adImage = ad.AddComponent<Image>();
+					adImage.sprite = Resources.Load<Sprite>("Reign/Ads/DemoAd");
+					adImage.preserveAspect = true;
 					var button = ad.AddComponent<Button>();
 					button.onClick.AddListener(adClicked);
 				}
@@ -56,6 +57,9 @@ namespace Reign.Plugin
 				// set default visible state and gravity
 				Visible = desc.Visible;
 				SetGravity(desc.Editor_AdGravity);
+
+				// set screen size changed callback
+				ReignServices.ScreenSizeChangedCallback += ReignServices_ScreenSizeChangedCallback;
 			}
 			catch (Exception e)
 			{
@@ -66,6 +70,11 @@ namespace Reign.Plugin
 			if (createdCallback != null) createdCallback(pass);
 		}
 
+		private void ReignServices_ScreenSizeChangedCallback(int oldWidth, int oldHeight, int newWidth, int newHeight)
+		{
+			SetGravity(desc.Editor_AdGravity);
+		}
+
 		private void adClicked()
 		{
 			Debug.Log("Ad Clicked!");
@@ -74,6 +83,7 @@ namespace Reign.Plugin
 
 		public void Dispose()
 		{
+			ReignServices.ScreenSizeChangedCallback -= ReignServices_ScreenSizeChangedCallback;
 			if (!desc.UseClassicGUI && adCanvas != null)
 			{
 				GameObject.Destroy(adCanvas);
@@ -87,7 +97,7 @@ namespace Reign.Plugin
 			{
 				float screenWidth = Screen.width, screenHeight = Screen.height;
 				float scale = new Vector2(screenWidth, screenHeight).magnitude / new Vector2(1280, 720).magnitude;
-				float adWidth = 320 * desc.Editor_GuiAdScale * scale, adHeight = 53 * desc.Editor_GuiAdScale * scale;
+				float adWidth = 320 * desc.Editor_AdScale * scale, adHeight = 53 * desc.Editor_AdScale * scale;
 				switch (gravity)
 				{
 					case AdGravity.CenterScreen:
@@ -125,40 +135,46 @@ namespace Reign.Plugin
 			}
 			else
 			{
+				if (adImage.sprite == null) return;
+
+				float screenWidth = Screen.width, screenHeight = Screen.height;
+				float scale = (new Vector2(screenWidth, screenHeight).magnitude / new Vector2(1280, 720).magnitude) * desc.Editor_AdScale;
+				var texture = adImage.sprite.texture;
+				float adWidth = (texture.width / screenWidth) * scale, adHeight = (texture.height / screenHeight) * scale;
 				switch (gravity)
 				{
 					case AdGravity.CenterScreen:
-						adRect.anchorMin = new Vector2(0, .5f-(desc.UnityUI_AdMaxHeight*.5f));
-						adRect.anchorMax = new Vector2(1, .5f+(desc.UnityUI_AdMaxHeight*.5f));
+						adRect.anchorMin = new Vector2(-(adWidth*.5f) + .5f, -(adHeight*.5f) + .5f);
+						adRect.anchorMax = new Vector2(-(adWidth*.5f) + .5f + adWidth, -(adHeight*.5f) + .5f + adHeight);
 						break;
 
 					case AdGravity.BottomCenter:
-						adRect.anchorMin = new Vector2(0, 0);
-						adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
+						adRect.anchorMin = new Vector2(-(adWidth*.5f) + .5f, 0);
+						adRect.anchorMax = new Vector2(-(adWidth*.5f) + .5f + adWidth, adHeight);
 						break;
 
 					case AdGravity.BottomLeft:
 						adRect.anchorMin = new Vector2(0, 0);
-						adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, desc.UnityUI_AdMaxHeight);
+						adRect.anchorMax = new Vector2(adWidth, adHeight);
 						break;
 
 					case AdGravity.BottomRight:
-						adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 0);
-						adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
+						adRect.anchorMin = new Vector2(1 - adWidth, 0);
+						adRect.anchorMax = new Vector2(1, adHeight);
 						break;
 
 					case AdGravity.TopCenter:
-						adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
-						adRect.anchorMax = new Vector2(1, 1);
+						adRect.anchorMin = new Vector2(-(adWidth*.5f) + .5f, 1 - adHeight);
+						adRect.anchorMax = new Vector2(-(adWidth*.5f) + .5f + adWidth, 1);
 						break;
 
 					case AdGravity.TopLeft:
-						adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
-						adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, 1);
+						adRect.anchorMin = new Vector2(0, 1 - adHeight);
+						adRect.anchorMax = new Vector2(adWidth, 1);
 						break;
 
 					case AdGravity.TopRight:
-						adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 1-desc.UnityUI_AdMaxHeight);
+						adRect.anchorMin = new Vector2(1 - adWidth, 1 - adHeight);
 						adRect.anchorMax = new Vector2(1, 1);
 						break;
 
@@ -190,16 +206,12 @@ namespace Reign.Plugin
 
 		public void OverrideOnGUI()
 		{
-			if (desc.UseClassicGUI) onGUI();
+			if (desc.GUIOverrideEnabled) onGUI();
 		}
 
 		private void onGUI()
 		{
-			if (desc.UseClassicGUI && visible)
-			{
-				SetGravity(desc.Editor_AdGravity);
-				if (GUI.Button(guiRect, "Reign Test Ad")) adClicked();
-			}
+			if (desc.UseClassicGUI && visible && GUI.Button(guiRect, "Reign Test Ad")) adClicked();
 		}
     }
 }

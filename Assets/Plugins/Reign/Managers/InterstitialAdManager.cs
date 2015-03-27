@@ -47,6 +47,14 @@ namespace Reign
 		{
 			plugin.Show();
 		}
+
+		/// <summary>
+		/// Use if you are using classic GUI mode and manually rendering
+		/// </summary>
+		public void Draw()
+		{
+			plugin.OverrideOnGUI();
+		}
 	}
 
 	/// <summary>
@@ -230,6 +238,22 @@ namespace Reign.Plugin
 		/// Dumy method.
 		/// </summary>
 		public void Update()
+		{
+			// do nothing...
+		}
+
+		/// <summary>
+		/// Dumy method.
+		/// </summary>
+		public void OnGUI()
+		{
+			// do nothing...
+		}
+
+		/// <summary>
+		/// Dumy method.
+		/// </summary>
+		public void OverrideOnGUI()
 		{
 			// do nothing...
 		}

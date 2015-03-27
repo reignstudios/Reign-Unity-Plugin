@@ -107,6 +107,16 @@ namespace Reign.Plugin
 		{
 			// do nothing...
 		}
+
+		public void OnGUI()
+		{
+			// do nothing...
+		}
+
+		public void OverrideOnGUI()
+		{
+			// do nothing...
+		}
 	}
 }
 #elif UNITY_WP8
@@ -142,6 +152,16 @@ namespace Reign.Plugin
 		public void Update()
 		{
 			Native.Update();
+		}
+
+		public void OnGUI()
+		{
+			Native.OnGUI();
+		}
+
+		public void OverrideOnGUI()
+		{
+			Native.OverrideOnGUI();
 		}
 	}
 }

@@ -57,12 +57,12 @@ namespace Reign.Plugin
 		private Image adImage;
 		private Texture2D guiTexture;
 		private Rect guiRect;
-		private float guiScale;
+		private float uiScale;
 		private bool testing;
 		private AdEventCallbackMethod adEvent;
 		private int refreshRate;
 		private float refreshRateTic;
-		private string deviceID, externalIP, apid;
+		private string deviceID, externalIP, apid, userAgent;
 		private TextureGIF gifImage;
 		private MonoBehaviour service;
 		private Reign.MM_AdXML.Ad adMeta;
@@ -84,48 +84,57 @@ namespace Reign.Plugin
 				#if UNITY_EDITOR
 				refreshRate = desc.Editor_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Editor_MillennialMediaAdvertising_APID;
+				userAgent = "";
 				gravity = desc.Editor_MillennialMediaAdvertising_AdGravity;
-				guiScale = desc.Editor_GuiAdScale;
+				uiScale = desc.Editor_AdScale;
 				#elif UNITY_BLACKBERRY
 				refreshRate = desc.BB10_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.BB10_MillennialMediaAdvertising_APID;
+				userAgent = "";
 				gravity = desc.BB10_MillennialMediaAdvertising_AdGravity;
-				guiScale = desc.BB10_GuiAdScale;
+				uiScale = desc.BB10_AdScale;
 				#elif UNITY_WP8
 				refreshRate = desc.WP8_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.WP8_MillennialMediaAdvertising_APID;
+				userAgent = "";
 				gravity = desc.WP8_MillennialMediaAdvertising_AdGravity;
-				guiScale = desc.WP8_GuiAdScale;
+				uiScale = desc.WP8_AdScale;
 				#elif UNITY_METRO
 				refreshRate = desc.WinRT_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.WinRT_MillennialMediaAdvertising_APID;
+				userAgent = "";
 				gravity = desc.WinRT_MillennialMediaAdvertising_AdGravity;
-				guiScale = desc.WinRT_GuiAdScale;
+				uiScale = desc.WinRT_AdScale;
 				#elif UNITY_IOS
 				refreshRate = desc.iOS_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.iOS_MillennialMediaAdvertising_APID;
+				userAgent = "";
 				gravity = desc.iOS_MillennialMediaAdvertising_AdGravity;
-				guiScale = desc.iOS_GuiAdScale;
+				uiScale = desc.iOS_AdScale;
 				#elif UNITY_ANDROID
 				refreshRate = desc.Android_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Android_MillennialMediaAdvertising_APID;
+				userAgent = "";
 				gravity = desc.Android_MillennialMediaAdvertising_AdGravity;
-				guiScale = desc.Android_GuiAdScale;
+				uiScale = desc.Android_AdScale;
 				#elif UNITY_STANDALONE_WIN
 				refreshRate = desc.Win32_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Win32_MillennialMediaAdvertising_APID;
+				userAgent = "";
 				gravity = desc.Win32_MillennialMediaAdvertising_AdGravity;
-				guiScale = desc.Win32_GuiAdScale;
+				uiScale = desc.Win32_AdScale;
 				#elif UNITY_STANDALONE_OSX
 				refreshRate = desc.OSX_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.OSX_MillennialMediaAdvertising_APID;
+				userAgent = "";
 				gravity = desc.OSX_MillennialMediaAdvertising_AdGravity;
-				guiScale = desc.OSX_GuiAdScale;
+				uiScale = desc.OSX_AdScale;
 				#elif UNITY_STANDALONE_LINUX
 				refreshRate = desc.Linux_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.Linux_MillennialMediaAdvertising_APID;
+				userAgent = "";
 				gravity = desc.Linux_MillennialMediaAdvertising_AdGravity;
-				guiScale = desc.Linux_GuiAdScale;
+				uiScale = desc.Linux_AdScale;
 				#endif
 				#endif
 
@@ -186,12 +195,20 @@ namespace Reign.Plugin
 
 				// load ad
 				service.StartCoroutine(init(createdCallback));
+
+				// set screen size changed callback
+				ReignServices.ScreenSizeChangedCallback += ReignServices_ScreenSizeChangedCallback;
 			}
 			catch (Exception e)
 			{
 				Debug.LogError(e.Message);
 				if (createdCallback != null) createdCallback(false);
 			}
+		}
+
+		private void ReignServices_ScreenSizeChangedCallback(int oldWidth, int oldHeight, int newWidth, int newHeight)
+		{
+			SetGravity(gravity);
 		}
 
 		private void adClicked()
@@ -204,7 +221,7 @@ namespace Reign.Plugin
 			else
 			{
 				Debug.Log("Opening Ad at URL: " + adMeta.clickUrl.Content);
-				Application.OpenURL(adMeta.clickUrl.Content);
+				if (adMeta != null) Application.OpenURL(adMeta.clickUrl.Content);
 				Debug.Log("Ad Clicked!");
 			}
 
@@ -263,6 +280,7 @@ namespace Reign.Plugin
 
 		public void Dispose()
 		{
+			ReignServices.ScreenSizeChangedCallback -= ReignServices_ScreenSizeChangedCallback;
 			if (gifImage != null)
 			{
 				gifImage.Dispose();
@@ -277,9 +295,8 @@ namespace Reign.Plugin
 				if (guiTexture == null) return;
 				
 				float screenWidth = Screen.width, screenHeight = Screen.height;
-				float scale = (new Vector2(screenWidth, screenHeight).magnitude / new Vector2(1280, 720).magnitude) * guiScale;
+				float scale = (new Vector2(screenWidth, screenHeight).magnitude / new Vector2(1280, 720).magnitude) * uiScale;
 				float adWidth = guiTexture.width * scale, adHeight = guiTexture.height * scale;
-				Debug.Log(adWidth);
 				switch (gravity)
 				{
 					case AdGravity.CenterScreen:
@@ -317,40 +334,46 @@ namespace Reign.Plugin
 			}
 			else
 			{
+				if (adImage.sprite == null) return;
+
+				float screenWidth = Screen.width, screenHeight = Screen.height;
+				float scale = (new Vector2(screenWidth, screenHeight).magnitude / new Vector2(1280, 720).magnitude) * uiScale;
+				var texture = adImage.sprite.texture;
+				float adWidth = (texture.width / screenWidth) * scale, adHeight = (texture.height / screenHeight) * scale;
 				switch (gravity)
 				{
 					case AdGravity.CenterScreen:
-						adRect.anchorMin = new Vector2(0, .5f-(desc.UnityUI_AdMaxHeight*.5f));
-						adRect.anchorMax = new Vector2(1, .5f+(desc.UnityUI_AdMaxHeight*.5f));
+						adRect.anchorMin = new Vector2(-(adWidth*.5f) + .5f, -(adHeight*.5f) + .5f);
+						adRect.anchorMax = new Vector2(-(adWidth*.5f) + .5f + adWidth, -(adHeight*.5f) + .5f + adHeight);
 						break;
 
 					case AdGravity.BottomCenter:
-						adRect.anchorMin = new Vector2(0, 0);
-						adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
+						adRect.anchorMin = new Vector2(-(adWidth*.5f) + .5f, 0);
+						adRect.anchorMax = new Vector2(-(adWidth*.5f) + .5f + adWidth, adHeight);
 						break;
 
 					case AdGravity.BottomLeft:
 						adRect.anchorMin = new Vector2(0, 0);
-						adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, desc.UnityUI_AdMaxHeight);
+						adRect.anchorMax = new Vector2(adWidth, adHeight);
 						break;
 
 					case AdGravity.BottomRight:
-						adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 0);
-						adRect.anchorMax = new Vector2(1, desc.UnityUI_AdMaxHeight);
+						adRect.anchorMin = new Vector2(1 - adWidth, 0);
+						adRect.anchorMax = new Vector2(1, adHeight);
 						break;
 
 					case AdGravity.TopCenter:
-						adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
-						adRect.anchorMax = new Vector2(1, 1);
+						adRect.anchorMin = new Vector2(-(adWidth*.5f) + .5f, 1 - adHeight);
+						adRect.anchorMax = new Vector2(-(adWidth*.5f) + .5f + adWidth, 1);
 						break;
 
 					case AdGravity.TopLeft:
-						adRect.anchorMin = new Vector2(0, 1-desc.UnityUI_AdMaxHeight);
-						adRect.anchorMax = new Vector2(desc.UnityUI_AdMaxWidth, 1);
+						adRect.anchorMin = new Vector2(0, 1 - adHeight);
+						adRect.anchorMax = new Vector2(adWidth, 1);
 						break;
 
 					case AdGravity.TopRight:
-						adRect.anchorMin = new Vector2(1-desc.UnityUI_AdMaxWidth, 1-desc.UnityUI_AdMaxHeight);
+						adRect.anchorMin = new Vector2(1 - adWidth, 1 - adHeight);
 						adRect.anchorMax = new Vector2(1, 1);
 						break;
 
@@ -375,12 +398,19 @@ namespace Reign.Plugin
 		{
 			if (!Visible) yield break;
 
-			string url = "http://ads.mp.mydas.mobi/getAd.php5?";
+			//string url = "http://ads.mp.mydas.mobi/getAd.php5?";
+			string url = "http://ads.mp.mydas.mobi/getAd?";
 			url += "&apid=" + apid;// ID
 			url += "&auid=" + deviceID;// Device UID Hash HEX value
-			//url += "&ua=" + "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/537.36";
-			url += "&ua=";
+			//url += "&ua=" + "Mozilla/5.0 (BB10; <Device Type>) AppleWebKit/537.10+ (KHTML, like Gecko) Version/<BB Version #> Mobile Safari/537.10+";
+			string deviceType = "Touch";
+			string osVersion = " 10.3.1.2243";
+			url += "&ua=" + WWW.EscapeURL("Mozilla/5.0 (BB10; " + deviceType + ") AppleWebKit/537.10+ (KHTML, like Gecko) Version/" + osVersion + " Mobile Safari/537.10+");
+			// Touch - Kbd
+			//SystemInfo.operatingSystem
+			//System.Net.HttpWebRequest.
 			url += "&uip=" + externalIP;
+			Debug.Log("Ad Request URL: " + url);
 			var www = new WWW(url);
 			yield return www;
 
@@ -431,7 +461,6 @@ namespace Reign.Plugin
 			else adImage.sprite = gifImage.CurrentFrame.Sprite;
 			var texture = gifImage.CurrentFrame.Texture;
 			Debug.Log(string.Format("Ad Image Size: {0}x{1}", texture.width, texture.height));
-
 			if (adEvent != null) adEvent(AdEvents.Refreshed, null);
 		}
 		
@@ -454,14 +483,13 @@ namespace Reign.Plugin
 
 		public void OverrideOnGUI()
 		{
-			if (desc.UseClassicGUI) onGUI();
+			if (desc.GUIOverrideEnabled) onGUI();
 		}
 
 		private void onGUI()
 		{
 			if (desc.UseClassicGUI && visible && guiTexture != null)
 			{
-				SetGravity(gravity);
 				GUI.DrawTexture(guiRect, guiTexture, ScaleMode.StretchToFill);
 				if (GUI.Button(guiRect, "", guiSytle)) adClicked();
 			}

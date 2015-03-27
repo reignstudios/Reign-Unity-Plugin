@@ -76,6 +76,21 @@ namespace Reign
 		/// </summary>
 		public InterstitialAdEventCallbackMethod EventCallback;
 
+		/// <summary>
+		/// Set to enable the use of classic GUI Ads
+		/// </summary>
+		public bool UseClassicGUI;
+
+		/// <summary>
+		/// Set true to enable GUIOverride draw calls
+		/// </summary>
+		public bool GUIOverrideEnabled;
+
+		/// <summary>
+		/// Used to set the UI layer order of the Ad
+		/// </summary>
+		public int UnityUI_SortIndex = 1001;
+
 		// WinRT
 		// TODO...
 
@@ -182,5 +197,10 @@ namespace Reign.Plugin
 		/// Used to render classic gui
 		/// </summary>
 		void OnGUI();
+
+		/// <summary>
+		/// Used to manually render gui operations
+		/// </summary>
+		void OverrideOnGUI();
     }
 }

@@ -30,6 +30,9 @@ public class InterstitialAdDemo : MonoBehaviour
 		// Global
 		desc.Testing = true;
 		desc.EventCallback = eventCallback;
+		desc.UseClassicGUI = false;
+		desc.GUIOverrideEnabled = false;
+		desc.UnityUI_SortIndex = 1001;
 
 		// WP8
 		desc.WP8_AdAPI = InterstitialAdAPIs.AdMob;

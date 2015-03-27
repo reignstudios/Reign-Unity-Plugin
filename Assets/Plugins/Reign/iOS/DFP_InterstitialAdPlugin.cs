@@ -93,6 +93,11 @@ namespace Reign.Plugin
 		{
 			// do nothing...
 		}
+
+		public void OverrideOnGUI()
+		{
+			// do nothing...
+		}
 	}
 }
 #endif

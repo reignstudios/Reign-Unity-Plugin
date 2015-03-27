@@ -263,6 +263,14 @@ namespace Reign.Plugin
 		{
 			// do nothing...
 		}
+
+		/// <summary>
+		/// Dumy method.
+		/// </summary>
+		public void OverrideOnGUI()
+		{
+			// do nothing...
+		}
     }
 
 	/// <summary>

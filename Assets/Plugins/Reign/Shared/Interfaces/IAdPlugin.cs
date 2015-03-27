@@ -418,6 +418,11 @@ namespace Reign
 		public float UnityUI_AdMaxWidth = 0.3f, UnityUI_AdMaxHeight = 0.15f;
 
 		/// <summary>
+		/// Used to set the UI layer order of the Ad
+		/// </summary>
+		public int UnityUI_SortIndex = 1000;
+
+		/// <summary>
 		/// Set to enable the use of classic GUI Ads
 		/// </summary>
 		public bool UseClassicGUI;
@@ -449,9 +454,9 @@ namespace Reign
 		public int Editor_MillennialMediaAdvertising_RefreshRate = 120;
 
 		/// <summary>
-		/// Set to scale Unity GUI based Ads.
+		/// Set to scale Unity UI/GUI based Ads.
 		/// </summary>
-		public float Editor_GuiAdScale = 1;
+		public float Editor_AdScale = 1;
 
 		// WinRT
 		/// <summary>
@@ -501,9 +506,9 @@ namespace Reign
 		public int WinRT_MillennialMediaAdvertising_RefreshRate = 120;
 
 		/// <summary>
-		/// Set to scale Unity GUI based Ads.
+		/// Set to scale Unity UI/GUI based Ads.
 		/// </summary>
-		public float WinRT_GuiAdScale = 1;
+		public float WinRT_AdScale = 1;
 
 		// WP8
 		/// <summary>
@@ -563,9 +568,9 @@ namespace Reign
 		public int WP8_MillennialMediaAdvertising_RefreshRate = 120;
 
 		/// <summary>
-		/// Set to scale Unity GUI based Ads.
+		/// Set to scale Unity UI/GUI based Ads.
 		/// </summary>
-		public float WP8_GuiAdScale = 1;
+		public float WP8_AdScale = 1;
 		
 		// BB10
 		/// <summary>
@@ -599,9 +604,9 @@ namespace Reign
 		public int BB10_BlackBerryAdvertising_RefreshRate = 120, BB10_MillennialMediaAdvertising_RefreshRate = 120;
 
 		/// <summary>
-		/// Set to scale Unity GUI based Ads.
+		/// Set to scale Unity UI/GUI based Ads.
 		/// </summary>
-		public float BB10_GuiAdScale = 1;
+		public float BB10_AdScale = 1;
 		
 		// iOS
 		/// <summary>
@@ -645,9 +650,9 @@ namespace Reign
 		public int iOS_MillennialMediaAdvertising_RefreshRate = 120;
 
 		/// <summary>
-		/// Set to scale Unity GUI based Ads.
+		/// Set to scale Unity UI/GUI based Ads.
 		/// </summary>
-		public float iOS_GuiAdScale = 1;
+		public float iOS_AdScale = 1;
 		
 		// Android
 		/// <summary>
@@ -706,9 +711,9 @@ namespace Reign
 		public int Android_MillennialMediaAdvertising_RefreshRate = 120;
 
 		/// <summary>
-		/// Set to scale Unity GUI based Ads.
+		/// Set to scale Unity UI/GUI based Ads.
 		/// </summary>
-		public float Android_GuiAdScale = 1;
+		public float Android_AdScale = 1;
 
 		// Win32
 		/// <summary>
@@ -727,9 +732,9 @@ namespace Reign
 		public int Win32_MillennialMediaAdvertising_RefreshRate = 120;
 
 		/// <summary>
-		/// Set to scale Unity GUI based Ads.
+		/// Set to scale Unity UI/GUI based Ads.
 		/// </summary>
-		public float Win32_GuiAdScale = 1;
+		public float Win32_AdScale = 1;
 
 		// OSX
 		/// <summary>
@@ -748,9 +753,9 @@ namespace Reign
 		public int OSX_MillennialMediaAdvertising_RefreshRate = 120;
 
 		/// <summary>
-		/// Set to scale Unity GUI based Ads.
+		/// Set to scale Unity UI/GUI based Ads.
 		/// </summary>
-		public float OSX_GuiAdScale = 1;
+		public float OSX_AdScale = 1;
 
 		// Linux
 		/// <summary>
@@ -769,9 +774,9 @@ namespace Reign
 		public int Linux_MillennialMediaAdvertising_RefreshRate = 120;
 
 		/// <summary>
-		/// Set to scale Unity GUI based Ads.
+		/// Set to scale Unity UI/GUI based Ads.
 		/// </summary>
-		public float Linux_GuiAdScale = 1;
+		public float Linux_AdScale = 1;
 	}
 
 	/// <summary>
