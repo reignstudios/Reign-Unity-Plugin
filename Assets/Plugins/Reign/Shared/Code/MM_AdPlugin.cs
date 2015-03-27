@@ -90,7 +90,11 @@ namespace Reign.Plugin
 				#elif UNITY_BLACKBERRY
 				refreshRate = desc.BB10_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.BB10_MillennialMediaAdvertising_APID;
-				userAgent = "";
+
+				string deviceType = "Touch";
+				string osVersion = System.Text.RegularExpressions.Regex.Match(SystemInfo.operatingSystem, @"\d*\.\d*\.\d*\.\d*").Groups[0].Value;
+				userAgent = WWW.EscapeURL("Mozilla/5.0 (BB10; " + deviceType + ") AppleWebKit/537.10+ (KHTML, like Gecko) Version/" + osVersion + " Mobile Safari/537.10+");
+
 				gravity = desc.BB10_MillennialMediaAdvertising_AdGravity;
 				uiScale = desc.BB10_AdScale;
 				#elif UNITY_WP8
@@ -402,13 +406,7 @@ namespace Reign.Plugin
 			string url = "http://ads.mp.mydas.mobi/getAd?";
 			url += "&apid=" + apid;// ID
 			url += "&auid=" + deviceID;// Device UID Hash HEX value
-			//url += "&ua=" + "Mozilla/5.0 (BB10; <Device Type>) AppleWebKit/537.10+ (KHTML, like Gecko) Version/<BB Version #> Mobile Safari/537.10+";
-			string deviceType = "Touch";
-			string osVersion = " 10.3.1.2243";
-			url += "&ua=" + WWW.EscapeURL("Mozilla/5.0 (BB10; " + deviceType + ") AppleWebKit/537.10+ (KHTML, like Gecko) Version/" + osVersion + " Mobile Safari/537.10+");
-			// Touch - Kbd
-			//SystemInfo.operatingSystem
-			//System.Net.HttpWebRequest.
+			url += "&ua=" + userAgent;
 			url += "&uip=" + externalIP;
 			Debug.Log("Ad Request URL: " + url);
 			var www = new WWW(url);
@@ -461,6 +459,8 @@ namespace Reign.Plugin
 			else adImage.sprite = gifImage.CurrentFrame.Sprite;
 			var texture = gifImage.CurrentFrame.Texture;
 			Debug.Log(string.Format("Ad Image Size: {0}x{1}", texture.width, texture.height));
+
+			SetGravity(gravity);
 			if (adEvent != null) adEvent(AdEvents.Refreshed, null);
 		}
 		
