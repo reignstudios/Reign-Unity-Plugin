@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Reign
+namespace Reign.Plugin
 {
 	static class Common
 	{
@@ -23,6 +23,16 @@ namespace Reign
 		
 		[DllImport("libc", EntryPoint="dlsym")]
 		public static extern IntPtr dlsym(IntPtr handle, string name);
+
+		// device info
+		[DllImport("libbps", EntryPoint="deviceinfo_get_details")]
+		public static extern int deviceinfo_get_details(ref IntPtr details);
+
+		[DllImport("libbps", EntryPoint="deviceinfo_free_details")]
+		public static extern void deviceinfo_free_details(ref IntPtr details);
+
+		[DllImport("libbps", EntryPoint="deviceinfo_details_get_keyboard")]
+		public static extern int deviceinfo_details_get_keyboard(IntPtr details);
 	
 		// system events
 		[DllImport("libbps", EntryPoint="bps_get_event")]

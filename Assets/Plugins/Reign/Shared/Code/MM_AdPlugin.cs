@@ -91,7 +91,10 @@ namespace Reign.Plugin
 				refreshRate = desc.BB10_MillennialMediaAdvertising_RefreshRate;
 				apid = desc.BB10_MillennialMediaAdvertising_APID;
 
-				string deviceType = "Touch";
+				IntPtr handle = IntPtr.Zero;
+				if (Common.deviceinfo_get_details(ref handle) != 0) throw new Exception("Failed: deviceinfo_get_details");
+				string deviceType = Common.deviceinfo_details_get_keyboard(handle) == 0 ? "Touch" : "Kbd";
+				Common.deviceinfo_free_details(ref handle);
 				string osVersion = System.Text.RegularExpressions.Regex.Match(SystemInfo.operatingSystem, @"\d*\.\d*\.\d*\.\d*").Groups[0].Value;
 				userAgent = WWW.EscapeURL("Mozilla/5.0 (BB10; " + deviceType + ") AppleWebKit/537.10+ (KHTML, like Gecko) Version/" + osVersion + " Mobile Safari/537.10+");
 
@@ -402,7 +405,6 @@ namespace Reign.Plugin
 		{
 			if (!Visible) yield break;
 
-			//string url = "http://ads.mp.mydas.mobi/getAd.php5?";
 			string url = "http://ads.mp.mydas.mobi/getAd?";
 			url += "&apid=" + apid;// ID
 			url += "&auid=" + deviceID;// Device UID Hash HEX value
