@@ -223,12 +223,12 @@ namespace Reign.Plugin
 			if (testing)
 			{
 				Debug.Log("Ad Clicked!");
-				Application.OpenURL("http://www.millennialmedia.com/");
+				if (gifImage != null) Application.OpenURL("http://www.millennialmedia.com/");
 			}
 			else
 			{
 				Debug.Log("Opening Ad at URL: " + adMeta.clickUrl.Content);
-				if (adMeta != null) Application.OpenURL(adMeta.clickUrl.Content);
+				if (adMeta != null && adMeta.clickUrl != null && !string.IsNullOrEmpty(adMeta.clickUrl.Content)) Application.OpenURL(adMeta.clickUrl.Content);
 				Debug.Log("Ad Clicked!");
 			}
 
