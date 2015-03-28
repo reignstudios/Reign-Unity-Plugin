@@ -795,7 +795,7 @@
 /Plugins/Android/Samsung_iap2.0_lib.jar
 /Plugins/Reign/Android/AdMob_AdPlugin.cs
 /Plugins/Reign/Android/AdMob_InterstitialAdPlugin.cs
-/Plugins/Reign/Android/AmazonAds_AdPlugin.cs
+/Plugins/Reign/Android/Amazon_AdPlugin.cs
 /Plugins/Reign/Android/Amazon_GameCircle_ScorePlugin.cs
 /Plugins/Reign/Android/Amazon_InAppPurchasePlugin.cs
 /Plugins/Reign/Android/Amazon_InterstitialAdPlugin.cs
