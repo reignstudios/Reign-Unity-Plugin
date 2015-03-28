@@ -203,7 +203,7 @@ namespace Reign.Plugin
 			int id = Common.getpid();
 			string windowGroup = id.ToString();
 			uint reqID = 0;
-			if (paymentservice_purchase_request(inAppID, inAppID, inAppID, inAppID, "Payment Service", "http://www.rim.com/products/appworld_3col.jpg", windowGroup, ref reqID) != 0)
+			if (paymentservice_purchase_request(inAppID, null, null, null, null, null, windowGroup, ref reqID) != 0)
 			{
 				purchasedCallback(inAppID, null, false);
 				return;
