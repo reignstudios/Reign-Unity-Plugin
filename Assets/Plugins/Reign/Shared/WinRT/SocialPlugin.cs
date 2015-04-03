@@ -33,22 +33,25 @@ namespace Reign.Plugin
 		public void Share(byte[] data, string text, string title, string desc, SocialShareTypes type)
 		{
 			#if WINDOWS_PHONE
-			if (data == null)
+			if (data != null)
 			{
-				UnityEngine.Debug.LogError("Data must be set on WP 8.0");
-				return;
-			}
+				string filename;
+				using (var m = new MediaLibrary())
+				using (var image = m.SavePicture("ReignSharedImage.png", data))
+				{
+					filename = MediaLibraryExtensions.GetPath(image);
+				}
 
-			string filename;
-			using (var m = new MediaLibrary())
-			using (var image = m.SavePicture("ReignSharedImage.png", data))
+				var shareTask = new ShareMediaTask();
+				shareTask.FilePath = filename;
+				shareTask.Show();
+			}
+			else if (!string.IsNullOrEmpty(text))
 			{
-				filename = MediaLibraryExtensions.GetPath(image);
+				var shareTask = new ShareStatusTask();
+				shareTask.Status = text;
+				shareTask.Show();
 			}
-
-			var shareMediaTask = new ShareMediaTask();
-			shareMediaTask.FilePath = filename;
-			shareMediaTask.Show();
 			#else
 			shareText = text;
 			shareTitle = title;
