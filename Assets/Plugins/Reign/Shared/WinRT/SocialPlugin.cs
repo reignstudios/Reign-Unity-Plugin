@@ -21,7 +21,8 @@ namespace Reign.Plugin
 	public class SocialPlugin_Native : ISocialPlugin
 	{
 		#if UNITY_METRO || UNITY_WP_8_1
-		private string shareTitle, shareDesc;
+		private bool shareImage;
+		private string shareText, shareTitle, shareDesc;
 		#endif
 
 		public void Init(SocialDesc desc)
@@ -29,9 +30,15 @@ namespace Reign.Plugin
 			// do nothing...
 		}
 
-		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, SocialShareTypes type)
 		{
 			#if WINDOWS_PHONE
+			if (data == null)
+			{
+				UnityEngine.Debug.LogError("Data must be set on WP 8.0");
+				return;
+			}
+
 			string filename;
 			using (var m = new MediaLibrary())
 			using (var image = m.SavePicture("ReignSharedImage.png", data))
@@ -43,15 +50,24 @@ namespace Reign.Plugin
 			shareMediaTask.FilePath = filename;
 			shareMediaTask.Show();
 			#else
+			shareText = text;
 			shareTitle = title;
 			shareDesc = desc;
-			StreamManager.SaveFile("ReignSharedImage.png", data, FolderLocations.Storage, imageSavedCallback);
+			if (data != null)
+			{
+				shareImage = true;
+				StreamManager.SaveFile("ReignSharedImage.png", data, FolderLocations.Storage, imageSavedCallback);
+			}
+			else
+			{
+				imageSavedCallback(true);
+			}
 			#endif
 		}
 
-		public void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
 		{
-			Share(data, title, desc, type);
+			Share(data, text, title, desc, type);
 		}
 
 		#if UNITY_METRO || UNITY_WP_8_1
@@ -74,10 +90,14 @@ namespace Reign.Plugin
 			DataRequestDeferral deferral = request.GetDeferral();
 			try
 			{
-				StorageFile shareFile = await ApplicationData.Current.LocalFolder.GetFileAsync("ReignSharedImage.png");
-				var storageItems = new List<IStorageItem>();
-				storageItems.Add(shareFile);
-				request.Data.SetStorageItems(storageItems);       
+				if (!string.IsNullOrEmpty(shareText)) request.Data.SetText(shareText);  
+				if (shareImage)
+				{
+					StorageFile shareFile = await ApplicationData.Current.LocalFolder.GetFileAsync("ReignSharedImage.png");
+					var storageItems = new List<IStorageItem>();
+					storageItems.Add(shareFile);
+					request.Data.SetStorageItems(storageItems);
+				}   
 			}
 			catch (Exception ex)
 			{
@@ -113,14 +133,14 @@ namespace Reign.Plugin
 			Native.Init(desc);
 		}
 
-		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, SocialShareTypes type)
 		{
-			Native.Share(data, title, desc, type);
+			Native.Share(data, text, title, desc, type);
 		}
 
-		public void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
 		{
-			Native.Share(data, title, desc, x, y, width, height, type);
+			Native.Share(data, text, title, desc, x, y, width, height, type);
 		}
 	}
 }

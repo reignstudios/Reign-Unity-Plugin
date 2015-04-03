@@ -43,18 +43,20 @@ namespace Reign
 		/// Invokes the native share view (BlackBerry uses Unity UI)
 		/// </summary>
 		/// <param name="data">Data you wish to share</param>
+		/// <param name="text">Text you wish to share (Not supported on WP 8.0)</param>
 		/// <param name="title">Title for native view</param>
 		/// <param name="desc">Description for native view</param>
 		/// <param name="type">Type of data sharing</param>
-		public static void Share(byte[] data, string title, string desc, SocialShareTypes type)
+		public static void Share(byte[] data, string text, string title, string desc, SocialShareTypes type)
 		{
-			plugin.Share(data, title, desc, type);
+			plugin.Share(data, text, title, desc, type);
 		}
 
 		/// <summary>
 		/// Invokes the native share view (BlackBerry uses Unity UI)
 		/// </summary>
 		/// <param name="data">Data you wish to share</param>
+		/// <param name="text">Text you wish to share (Not supported on WP 8.0)</param>
 		/// <param name="title">Title for native view</param>
 		/// <param name="desc">Description for native view</param>
 		/// <param name="x">iOS view position X</param>
@@ -62,9 +64,9 @@ namespace Reign
 		/// <param name="width">iOS view Width</param>
 		/// <param name="height">iOS view Height</param>
 		/// <param name="type">Type of data sharing</param>
-		public static void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		public static void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
 		{
-			plugin.Share(data, title, desc, x, y, width, height, type);
+			plugin.Share(data, text, title, desc, x, y, width, height, type);
 		}
 	}
 
@@ -75,12 +77,12 @@ namespace Reign
 			Debug.Log("Share not supported in this environment!");
 		}
 
-		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, SocialShareTypes type)
 		{
 			Debug.Log("Share not supported in this environment!");
 		}
 
-		public void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
 		{
 			Debug.Log("Share not supported in this environment!");
 		}

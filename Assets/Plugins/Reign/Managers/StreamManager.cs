@@ -223,8 +223,12 @@ namespace Reign
 		
 		private static string getCorrectUnityPath(string fileName, FolderLocations folderLocation)
 		{
+			#if UNITY_WINRT
+			return ConvertToPlatformSlash(fileName);
+			#else
 			if (folderLocation == FolderLocations.Storage) return ConvertToPlatformSlash(Application.persistentDataPath + "/" + fileName);
 			else return ConvertToPlatformSlash(fileName);
+			#endif
 		}
 
 		/// <summary>
