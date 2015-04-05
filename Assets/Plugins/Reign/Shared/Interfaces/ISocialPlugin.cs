@@ -7,7 +7,7 @@ namespace Reign
 	/// <summary>
 	/// Social Share Types
 	/// </summary>
-	public enum SocialShareTypes
+	public enum SocialShareDataTypes
 	{
 		/// <summary>
 		/// PNG data type
@@ -47,7 +47,7 @@ namespace Reign.Plugin
 	public interface ISocialPlugin
 	{
 		void Init(SocialDesc desc);
-		void Share(byte[] data, string text, string title, string desc, SocialShareTypes type);
-		void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareTypes type);
+		void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type);
+		void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type);
 	}
 }

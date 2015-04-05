@@ -35,7 +35,7 @@ public class SocialDemo : MonoBehaviour
 	private void shareClicked()
 	{
 		var data = ReignLogo.texture.EncodeToPNG();
-		SocialManager.Share(data, "Demo Text", "Reign Demo", "Reign Demo Desc", SocialShareTypes.Image_PNG);
+		SocialManager.Share(data, "Demo Text", "Reign Demo", "Reign Demo Desc", SocialShareDataTypes.Image_PNG);
 	}
 
 	private void backClicked()

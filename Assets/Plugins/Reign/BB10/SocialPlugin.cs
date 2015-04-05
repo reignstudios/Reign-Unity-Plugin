@@ -12,8 +12,9 @@ namespace Reign.Plugin
 		private IntPtr invoke;
 		private SocialDesc desc;
 
+		private string shareText;
 		private byte[] shareData;
-		private SocialShareTypes shareType;
+		private SocialShareDataTypes shareType;
 
 		public void Init(SocialDesc desc)
 		{
@@ -47,14 +48,15 @@ namespace Reign.Plugin
 			share(2);
 		}
 
-		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type)
 		{
-			Share(data, title, desc, 0, 0, 10, 10, type);
+			Share(data, text, title, desc, 0, 0, 10, 10, type);
 		}
 
-		public void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
 		{
 			this.desc.BB10_ShareSelectorTitle.text = title;
+			shareText = text;
 			shareData = data;
 			shareType = type;
 			this.desc.BB10_ShareSelectorUI.SetActive(true);
@@ -66,42 +68,50 @@ namespace Reign.Plugin
 			var data = shareData;
 			shareData = null;
 
-			// share
-			if (shareType == SocialShareTypes.Image_PNG || shareType == SocialShareTypes.Image_JPG)
+			// check data type is valid
+			if (data != null && shareType != SocialShareDataTypes.Image_PNG && shareType != SocialShareDataTypes.Image_JPG)
 			{
-				if (Common.navigator_invoke_invocation_create(ref invoke) != 0) return;
-				if (appType == 0 && Common.navigator_invoke_invocation_set_target(invoke, "sys.bbm.sharehandler") != 0)
+				Debug.LogError("Unusported data Share type: " + shareType);
+				return;
+			}
+
+			// share
+			if (Common.navigator_invoke_invocation_create(ref invoke) != 0) return;
+			if (appType == 0 && Common.navigator_invoke_invocation_set_target(invoke, "sys.bbm.sharehandler") != 0)
+			{
+				Common.navigator_invoke_invocation_destroy(invoke);
+				return;
+			}
+
+			if (appType == 1 && Common.navigator_invoke_invocation_set_target(invoke, "Facebook") != 0)
+			{
+				Common.navigator_invoke_invocation_destroy(invoke);
+				return;
+			}
+
+			if (appType == 2 && Common.navigator_invoke_invocation_set_target(invoke, "Twitter") != 0)
+			{
+				Common.navigator_invoke_invocation_destroy(invoke);
+				return;
+			}
+
+			if (Common.navigator_invoke_invocation_set_action(invoke, "bb.action.SHARE") != 0)
+			{
+				Common.navigator_invoke_invocation_destroy(invoke);
+				return;
+			}
+
+			IntPtr dataValue = IntPtr.Zero;
+			if (data != null)
+			{
+				if (Common.navigator_invoke_invocation_set_type(invoke, shareType == SocialShareDataTypes.Image_PNG ? "image/png" : "image/jpg") != 0)
 				{
 					Common.navigator_invoke_invocation_destroy(invoke);
 					return;
 				}
 
-				if (appType == 1 && Common.navigator_invoke_invocation_set_target(invoke, "Facebook") != 0)
-				{
-					Common.navigator_invoke_invocation_destroy(invoke);
-					return;
-				}
-
-				if (appType == 2 && Common.navigator_invoke_invocation_set_target(invoke, "Twitter") != 0)
-				{
-					Common.navigator_invoke_invocation_destroy(invoke);
-					return;
-				}
-
-				if (Common.navigator_invoke_invocation_set_action(invoke, "bb.action.SHARE") != 0)
-				{
-					Common.navigator_invoke_invocation_destroy(invoke);
-					return;
-				}
-
-				if ((appType == 1 || appType == 2) && Common.navigator_invoke_invocation_set_type(invoke, shareType == SocialShareTypes.Image_PNG ? "image/png" : "image/jpg") != 0)
-				{
-					Common.navigator_invoke_invocation_destroy(invoke);
-					return;
-				}
-
-				string filename = "data/ReignSocialImage" + (shareType == SocialShareTypes.Image_PNG ? ".png" : ".jpg");
-				IntPtr filenamePtr = Marshal.StringToHGlobalAnsi(filename);
+				string filename = "data/ReignSocialImage" + (shareType == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg");
+				dataValue = Marshal.StringToHGlobalAnsi(filename);
 				try
 				{
 					using (var stream = new FileStream(filename, FileMode.Create, FileAccess.Write))
@@ -115,25 +125,36 @@ namespace Reign.Plugin
 					return;
 				}
 
-				if (Common.navigator_invoke_invocation_set_data(invoke, filenamePtr, filename.Length) != 0)
+				if (Common.navigator_invoke_invocation_set_data(invoke, dataValue, filename.Length) != 0)
 				{
 					Common.navigator_invoke_invocation_destroy(invoke);
 					return;
 				}
-
-				if (Common.navigator_invoke_invocation_send(invoke) != 0)
-				{
-					Common.navigator_invoke_invocation_destroy(invoke);
-					return;
-				}
-
-				Common.navigator_invoke_invocation_destroy(invoke);
-				Marshal.FreeHGlobal(filenamePtr);
 			}
-			else
+			else if (!string.IsNullOrEmpty(shareText))
 			{
-				Debug.LogError("Unusported Share type: " + shareType);
+				if (Common.navigator_invoke_invocation_set_type(invoke, "text/plain") != 0)
+				{
+					Common.navigator_invoke_invocation_destroy(invoke);
+					return;
+				}
+
+				dataValue = Marshal.StringToHGlobalAnsi(shareText);
+				if (Common.navigator_invoke_invocation_set_data(invoke, dataValue, shareText.Length) != 0)
+				{
+					Common.navigator_invoke_invocation_destroy(invoke);
+					return;
+				}
 			}
+
+			if (Common.navigator_invoke_invocation_send(invoke) != 0)
+			{
+				Common.navigator_invoke_invocation_destroy(invoke);
+				return;
+			}
+
+			Common.navigator_invoke_invocation_destroy(invoke);
+			if (dataValue != IntPtr.Zero) Marshal.FreeHGlobal(dataValue);
 		}
 	}
 }
