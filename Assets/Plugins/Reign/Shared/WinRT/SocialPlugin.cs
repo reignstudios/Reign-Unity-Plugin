@@ -22,7 +22,7 @@ namespace Reign.Plugin
 	{
 		#if UNITY_METRO || UNITY_WP_8_1
 		private bool shareImage;
-		private string shareText, shareTitle, shareDesc;
+		private string shareText, shareTitle, shareDesc, shareDataFilename;
 		#endif
 
 		public void Init(SocialDesc desc)
@@ -30,14 +30,14 @@ namespace Reign.Plugin
 			// do nothing...
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type)
 		{
 			#if WINDOWS_PHONE
 			if (data != null)
 			{
 				string filename;
 				using (var m = new MediaLibrary())
-				using (var image = m.SavePicture("ReignSharedImage.png", data))
+				using (var image = m.SavePicture("ReignSharedImage" + (type == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg"), data))
 				{
 					filename = MediaLibraryExtensions.GetPath(image);
 				}
@@ -59,7 +59,8 @@ namespace Reign.Plugin
 			if (data != null)
 			{
 				shareImage = true;
-				StreamManager.SaveFile("ReignSharedImage.png", data, FolderLocations.Storage, imageSavedCallback);
+				shareDataFilename = "ReignSharedImage" + (type == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg");
+				StreamManager.SaveFile(shareDataFilename, data, FolderLocations.Storage, imageSavedCallback);
 			}
 			else
 			{
@@ -68,7 +69,7 @@ namespace Reign.Plugin
 			#endif
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
 		{
 			Share(data, text, title, desc, type);
 		}
@@ -96,7 +97,7 @@ namespace Reign.Plugin
 				if (!string.IsNullOrEmpty(shareText)) request.Data.SetText(shareText);  
 				if (shareImage)
 				{
-					StorageFile shareFile = await ApplicationData.Current.LocalFolder.GetFileAsync("ReignSharedImage.png");
+					StorageFile shareFile = await ApplicationData.Current.LocalFolder.GetFileAsync(shareDataFilename);
 					var storageItems = new List<IStorageItem>();
 					storageItems.Add(shareFile);
 					request.Data.SetStorageItems(storageItems);
@@ -136,12 +137,12 @@ namespace Reign.Plugin
 			Native.Init(desc);
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type)
 		{
 			Native.Share(data, text, title, desc, type);
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
 		{
 			Native.Share(data, text, title, desc, x, y, width, height, type);
 		}

@@ -500,6 +500,7 @@
 /Plugins/Android/res/drawable-hdpi/powered_by_google_light.png
 /Plugins/Android/res/drawable-hdpi/tw_widget_progressbar_effect_holo_light.png
 /Plugins/Android/res/drawable-hdpi/tw_widget_progressbar_holo_light.png
+/Plugins/Android/res/drawable-mdpi/common_full_open_on_phone.png
 /Plugins/Android/res/drawable-mdpi/common_signin_btn_icon_disabled_dark.9.png
 /Plugins/Android/res/drawable-mdpi/common_signin_btn_icon_disabled_focus_dark.9.png
 /Plugins/Android/res/drawable-mdpi/common_signin_btn_icon_disabled_focus_light.9.png
@@ -528,10 +529,12 @@
 /Plugins/Android/res/drawable-mdpi/powered_by_google_light.png
 /Plugins/Android/res/drawable-mdpi/tw_widget_progressbar_effect_holo_light.png
 /Plugins/Android/res/drawable-mdpi/tw_widget_progressbar_holo_light.png
+/Plugins/Android/res/drawable-tvdpi/common_full_open_on_phone.png
 /Plugins/Android/res/drawable-tvdpi/ic_plusone_medium_off_client.png
 /Plugins/Android/res/drawable-tvdpi/ic_plusone_small_off_client.png
 /Plugins/Android/res/drawable-tvdpi/ic_plusone_standard_off_client.png
 /Plugins/Android/res/drawable-tvdpi/ic_plusone_tall_off_client.png
+/Plugins/Android/res/drawable-xhdpi/common_full_open_on_phone.png
 /Plugins/Android/res/drawable-xhdpi/common_signin_btn_icon_disabled_dark.9.png
 /Plugins/Android/res/drawable-xhdpi/common_signin_btn_icon_disabled_focus_dark.9.png
 /Plugins/Android/res/drawable-xhdpi/common_signin_btn_icon_disabled_focus_light.9.png
@@ -560,6 +563,7 @@
 /Plugins/Android/res/drawable-xhdpi/powered_by_google_light.png
 /Plugins/Android/res/drawable-xhdpi/tw_widget_progressbar_effect_holo_light.png
 /Plugins/Android/res/drawable-xhdpi/tw_widget_progressbar_holo_light.png
+/Plugins/Android/res/drawable-xxhdpi/common_full_open_on_phone.png
 /Plugins/Android/res/drawable-xxhdpi/common_signin_btn_icon_disabled_dark.9.png
 /Plugins/Android/res/drawable-xxhdpi/common_signin_btn_icon_disabled_focus_dark.9.png
 /Plugins/Android/res/drawable-xxhdpi/common_signin_btn_icon_disabled_focus_light.9.png
@@ -777,12 +781,12 @@
 /Plugins/Android/res/values-zh-rTW/common_strings.xml
 /Plugins/Android/res/values-zh-rTW/strings.xml
 /Plugins/Android/res/values-zu/common_strings.xml
-/Plugins/Android/amazon-ads-5.4.227.jar
+/Plugins/Android/amazon-ads-5.5.102.jar
 /Plugins/Android/AmazonInsights-android-sdk-2.1.26.jar
 /Plugins/Android/AndroidManifest.xml
 /Plugins/Android/gamecirclesdk.jar
 /Plugins/Android/google-play-services.jar
-/Plugins/Android/in-app-purchasing-2.0.1.jar
+/Plugins/Android/in-app-purchasing-2.0.61.jar
 /Plugins/Android/libAmazonGamesJni.so
 /Plugins/Android/login-with-amazon-sdk.jar
 /Plugins/Android/proguard-project.txt
@@ -792,7 +796,6 @@
 /Plugins/Android/reignnativeamazon.jar
 /Plugins/Android/reignnativegoogleplay.jar
 /Plugins/Android/reignnativesamsung.jar
-/Plugins/Android/Samsung_iap2.0_lib.jar
 /Plugins/Reign/Android/AdMob_AdPlugin.cs
 /Plugins/Reign/Android/AdMob_InterstitialAdPlugin.cs
 /Plugins/Reign/Android/Amazon_AdPlugin.cs

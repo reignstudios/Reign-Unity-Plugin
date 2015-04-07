@@ -43,7 +43,7 @@ namespace Reign
 		/// Invokes the native share view (BlackBerry uses Unity UI)
 		/// </summary>
 		/// <param name="data">Data you wish to share (taks priority over Text if multiple share types not supported)</param>
-		/// <param name="text">Text you wish to share (Not supported on WP 8.0)</param>
+		/// <param name="text">Text you wish to share</param>
 		/// <param name="title">Title for native view</param>
 		/// <param name="desc">Description for native view</param>
 		/// <param name="type">Type of data sharing</param>
@@ -56,7 +56,7 @@ namespace Reign
 		/// Invokes the native share view (BlackBerry uses Unity UI)
 		/// </summary>
 		/// <param name="data">Data you wish to share (taks priority over Text if multiple share types not supported)</param>
-		/// <param name="text">Text you wish to share (Not supported on WP 8.0)</param>
+		/// <param name="text">Text you wish to share</param>
 		/// <param name="title">Title for native view</param>
 		/// <param name="desc">Description for native view</param>
 		/// <param name="x">iOS view position X</param>
