@@ -18,15 +18,21 @@ namespace Reign.Plugin
 			// do nothing...
 		}
 
-		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type)
 		{
-			if (type == SocialShareTypes.Image_PNG || type == SocialShareTypes.Image_JPG) native.CallStatic("ShareImage", data, title, type == SocialShareTypes.Image_PNG);
-			else Debug.LogError("Unusported Share type: " + type);
+			// check data type is valid
+			if (data != null && type != SocialShareDataTypes.Image_PNG && type != SocialShareDataTypes.Image_JPG)
+			{
+				Debug.LogError("Unusported Share type: " + type);
+				return;
+			}
+
+			native.CallStatic("ShareImage", data, text, title, type == SocialShareDataTypes.Image_PNG);
 		}
 
-		public void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
 		{
-			Share(data, title, desc, type);
+			Share(data, text, title, desc, type);
 		}
 	}
 }

@@ -12,37 +12,60 @@ public class SocialNative
 {
 	private static final String logTag = "Reign_Social";
 	
-	public static void ShareImage(final byte[] data, final String title, final boolean isPNG)
+	public static void ShareImage(final byte[] data, final String text, final String title, final boolean isPNG)
 	{
 		ReignUnityActivity.ReignContext.runOnUiThread(new Runnable()
 		{
 			public void run()
 			{
-				Log.d(logTag, "Saving file for ShareImage dlg");
-				File sdCardDirectory = Environment.getExternalStorageDirectory();
-				File imageFile = new File(sdCardDirectory, isPNG ? "ReignSocialImage.png" : "ReignSocialImage.jpg");
-				FileOutputStream outputStream;
-				try
+				if (data != null)
 				{
-					outputStream = new FileOutputStream(imageFile);
-					outputStream.write(data);
-					outputStream.close();
+					Log.d(logTag, "Saving file for ShareImage dlg");
+					File sdCardDirectory = Environment.getExternalStorageDirectory();
+					File imageFile = new File(sdCardDirectory, isPNG ? "ReignSocialImage.png" : "ReignSocialImage.jpg");
+					FileOutputStream outputStream;
+					try
+					{
+						outputStream = new FileOutputStream(imageFile);
+						outputStream.write(data);
+						outputStream.close();
+					}
+					catch (Exception e)
+					{
+						Log.d(logTag, "ShareImage error!");
+						e.printStackTrace();
+					}
+					
+					Log.d(logTag, "Invoking ShareImage dlg: IsPNG = " + isPNG);
+					Log.d(logTag, "Data length = " + data.length);
+					
+					if (text != null && text.length() != 0)
+					{
+						Intent shareIntent = new Intent(Intent.ACTION_SEND);
+						shareIntent.setType("*/*");
+						shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(imageFile));
+						shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+						Intent chooser = Intent.createChooser(shareIntent, title);
+						ReignUnityActivity.ReignContext.startActivity(chooser);
+					}
+					else
+					{
+						Intent shareIntent = new Intent(Intent.ACTION_SEND);
+						shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(imageFile));
+						if (isPNG) shareIntent.setType("image/png");
+						else shareIntent.setType("image/jpg");
+						Intent chooser = Intent.createChooser(shareIntent, title);
+						ReignUnityActivity.ReignContext.startActivity(chooser);
+					}
 				}
-				catch (Exception e)
+				else if (text != null && text.length() != 0)
 				{
-					Log.d(logTag, "ShareImage error!");
-					e.printStackTrace();
+					Intent shareIntent = new Intent(Intent.ACTION_SEND);
+					shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+					shareIntent.setType("text/plain");
+					Intent chooser = Intent.createChooser(shareIntent, title);
+					ReignUnityActivity.ReignContext.startActivity(chooser);
 				}
-				
-				Log.d(logTag, "Invoking ShareImage dlg: IsPNG = " + isPNG);
-				Log.d(logTag, "Data length = " + data.length);
-				
-				Intent shareIntent = new Intent(Intent.ACTION_SEND);
-				shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(imageFile));
-				if (isPNG) shareIntent.setType("image/png");
-				else shareIntent.setType("image/jpg");
-				Intent chooser = Intent.createChooser(shareIntent, title);
-				ReignUnityActivity.ReignContext.startActivity(chooser);
 			}
 		});
 	}

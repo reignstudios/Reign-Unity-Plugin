@@ -34,6 +34,7 @@ public class SocialDemo : MonoBehaviour
 
 	private void shareClicked()
 	{
+		// NOTE: If the platform doesn't support multiple share types at once, then data will take priority!
 		var data = ReignLogo.texture.EncodeToPNG();
 		SocialManager.Share(data, "Demo Text", "Reign Demo", "Reign Demo Desc", SocialShareDataTypes.Image_PNG);
 	}
