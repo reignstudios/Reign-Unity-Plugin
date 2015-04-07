@@ -12,5 +12,5 @@
     CGRect PopoverRect;
 }
 
-- (void)ShareImage:(Byte*)data dataLength:(int)dataLength isPNG:(bool)isPNG;
+- (void)ShareImage:(Byte*)data text:(char*)text dataLength:(int)dataLength isPNG:(bool)isPNG;
 @end

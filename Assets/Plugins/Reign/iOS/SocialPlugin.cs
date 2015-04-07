@@ -14,7 +14,7 @@ namespace Reign.Plugin
 		private static extern void DisposeSocial();
 
 		[DllImport("__Internal", EntryPoint="Social_ShareImage")]
-		private static extern void Social_ShareImage(byte[] data, int dataLength, bool isPNG, int x, int y, int width, int height);
+		private static extern void Social_ShareImage(byte[] data, string text, int dataLength, bool isPNG, int x, int y, int width, int height);
 
 		public SocialPlugin_iOS()
 		{
@@ -31,15 +31,21 @@ namespace Reign.Plugin
 			// do nothing...
 		}
 
-		public void Share(byte[] data, string title, string desc, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type)
 		{
-			Share(data, title, desc, 0, 0, 10, 10, type);
+			Share(data, text, title, desc, 0, 0, 10, 10, type);
 		}
 
-		public void Share(byte[] data, string title, string desc, int x, int y, int width, int height, SocialShareTypes type)
+		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
 		{
-			if (type == SocialShareTypes.Image_PNG || type == SocialShareTypes.Image_JPG) Social_ShareImage(data, data.Length, type == SocialShareTypes.Image_PNG, x, y, width, height);
-			else Debug.LogError("Unusported Share type: " + type);
+			// check data type is valid
+			if (data != null && type != SocialShareDataTypes.Image_PNG && type != SocialShareDataTypes.Image_JPG)
+			{
+				Debug.LogError("Unusported Share type: " + type);
+				return;
+			}
+
+			Social_ShareImage(data, text, data.Length, type == SocialShareDataTypes.Image_PNG, x, y, width, height);
 		}
 	}
 }

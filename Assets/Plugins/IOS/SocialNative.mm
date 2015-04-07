@@ -17,19 +17,30 @@
 - (void)dealloc
 {
     // dispose..
-    #if !UNITY_5_0_0
+#if !UNITY_5_0_0
     [super dealloc];
-    #endif
+#endif
 }
 
-- (void)ShareImage:(Byte*)data  dataLength:(int)dataLength isPNG:(bool)isPNG
+- (void)ShareImage:(Byte*)data text:(char*)text dataLength:(int)dataLength isPNG:(bool)isPNG
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     
-    NSData *nsData = [NSData dataWithBytes:data length:dataLength];
-    UIImage *image = [UIImage imageWithData:nsData];
+    NSMutableArray *objectsToShare = [[NSMutableArray alloc] init];
+    if (data != nil)
+    {
+        NSData *nsData = [NSData dataWithBytes:data length:dataLength];
+        UIImage *image = [UIImage imageWithData:nsData];
+        [objectsToShare addObject:image];
+    }
     
-    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[image] applicationActivities:nil];
+    if (text != nil)
+    {
+        NSString* textObj = GetStringParam(text);
+        [objectsToShare addObject:textObj];
+    }
+    
+    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
     UIViewController *vc = UnityGetGLViewController();
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     {
@@ -56,16 +67,16 @@ extern "C"
     {
         if (native != nil)
         {
-            #if !UNITY_5_0_0
+#if !UNITY_5_0_0
             [native release];
-            #endif
+#endif
             native = nil;
         }
     }
     
-    void Social_ShareImage(Byte* data, int dataLength, bool isPNG, int x, int y, int width, int height)
+    void Social_ShareImage(Byte* data, char* text, int dataLength, bool isPNG, int x, int y, int width, int height)
     {
         native->PopoverRect = CGRectMake(x, y, width, height);
-        [native ShareImage:data dataLength:dataLength isPNG:isPNG];
+        [native ShareImage:data text:text dataLength:dataLength isPNG:isPNG];
     }
 }
