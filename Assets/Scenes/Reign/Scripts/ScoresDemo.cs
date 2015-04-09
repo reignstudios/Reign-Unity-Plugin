@@ -283,7 +283,7 @@ public class ScoresDemo : MonoBehaviour
 				ScoreManager.ReportScore("Level1", Random.Range(0, 500), reportScoreCallback);
 
 				// Or submit score as floating-point or currency
-				//ScoreManager.ReportScore("Level1", 3.14d, reportScoreCallback);
+				//ScoreManager.ReportScore("Level1", 3.14f, reportScoreCallback);
 
 				// Or submit score as TimeSpan
 				//ScoreManager.ReportScore("Level1", System.TimeSpan.FromSeconds(2.5f), reportScoreCallback);

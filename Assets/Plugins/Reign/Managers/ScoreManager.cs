@@ -254,7 +254,7 @@ namespace Reign
 		/// <param name="leaderboardID">Leaderboard ID.</param>
 		/// <param name="score">Score to report.</param>
 		/// <param name="callback">The callback that fires when done.</param>
-		public static void ReportScore(string leaderboardID, double score, ReportScoreCallbackMethod callback)
+		public static void ReportScore(string leaderboardID, float score, ReportScoreCallbackMethod callback)
 		{
 			if (waitingForOperation)
 			{
