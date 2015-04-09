@@ -290,7 +290,7 @@ extern "C"
         return (char*)userID;
     }
     
-    void GameCenterReportScore(int score, const char* leaderboardID)
+    void GameCenterReportScore(int64_t score, const char* leaderboardID)
     {
         NSString* nativeID = [[NSString alloc] initWithUTF8String:leaderboardID];
         [native ReportScore:score leaderboardID:nativeID];

@@ -39,7 +39,7 @@ namespace Reign.Plugin
 		private static extern IntPtr GameCenterGetUserID();
 
 		[DllImport("__Internal", EntryPoint="GameCenterReportScore")]
-		private static extern void GameCenterReportScore(int score, string leaderboardID);
+		private static extern void GameCenterReportScore(long score, string leaderboardID);
 
 		[DllImport("__Internal", EntryPoint="GameCenterReportScoreDone")]
 		private static extern bool GameCenterReportScoreDone();
@@ -173,7 +173,7 @@ namespace Reign.Plugin
 			GameCenterReportAchievement(findNativeAchievementID(achievementID), (percentComplete / found.PercentCompletedAtValue) * 100f);
 		}
 
-		public void ReportScore (string leaderboardID, int score, ReportScoreCallbackMethod callback, MonoBehaviour services)
+		public void ReportScore (string leaderboardID, long score, ReportScoreCallbackMethod callback, MonoBehaviour services)
 		{
 			reportScoreCallback = callback;
 			GameCenterReportScore(score, findNativeLoaderboardID(leaderboardID));
