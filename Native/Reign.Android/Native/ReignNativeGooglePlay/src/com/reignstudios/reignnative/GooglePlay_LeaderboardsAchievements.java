@@ -176,7 +176,7 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 		});
 	}
 	
-	public static void ReportScore(final String id, final int scoreValue)
+	public static void ReportScore(final String id, final long scoreValue)
 	{
 		ReignUnityActivity.ReignContext.runOnUiThread(new Runnable()
 		{

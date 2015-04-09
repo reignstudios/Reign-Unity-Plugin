@@ -110,7 +110,7 @@ public class Amazon_GameCircle_LeaderboardsAchievements implements AmazonGamesCa
 		});
 	}
 	
-	public static void ReportScore(final String id, final int scoreValue)
+	public static void ReportScore(final String id, final long scoreValue)
 	{
 		ReignUnityActivity.ReignContext.runOnUiThread(new Runnable()
 		{
