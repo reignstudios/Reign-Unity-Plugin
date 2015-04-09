@@ -51,6 +51,50 @@ namespace Reign
 	}
 
 	/// <summary>
+	/// Use for formating score data
+	/// </summary>
+	public enum LeaderbaordScoreFormats
+	{
+		/// <summary>
+		/// Numerical
+		/// </summary>
+		Numerical,
+
+		/// <summary>
+		/// Time (make sure to set 
+		/// </summary>
+		Time,
+
+		/// <summary>
+		/// Currency
+		/// </summary>
+		Currency
+	}
+
+	public enum LeaderboardScoreTimeFormats
+	{
+		/// <summary>
+		/// Time in minutes
+		/// </summary>
+		Minutes,
+
+		/// <summary>
+		/// Time in seconds
+		/// </summary>
+		Seconds,
+
+		/// <summary>
+		/// Time in centiseconds
+		/// </summary>
+		Centiseconds,
+
+		/// <summary>
+		/// Time in milliseconds
+		/// </summary>
+		Milliseconds,
+	}
+
+	/// <summary>
 	/// Leaderboard desc object
 	/// </summary>
 	public class LeaderboardDesc
@@ -71,9 +115,24 @@ namespace Reign
 		public string Desc;
 
 		/// <summary>
+		/// Score format leaderboard shows and receives data in (Default Numerical)
+		/// </summary>
+		public LeaderbaordScoreFormats ScoreFormat = LeaderbaordScoreFormats.Numerical;
+
+		/// <summary>
+		/// Floating point decimal places for numerical or currency scores (Default 0)
+		/// </summary>
+		public int ScoreFormat_DecimalPlaces;
+
+		/// <summary>
+		/// Time format for time based scores (Default Milliseconds)
+		/// </summary>
+		public LeaderboardScoreTimeFormats ScoreTimeFormat = LeaderboardScoreTimeFormats.Milliseconds;
+
+		/// <summary>
 		/// Tells what order to pull scores in (default is Assending)
 		/// </summary>
-		public LeaderboardSortOrders ReignScores_SortOrder = LeaderboardSortOrders.Ascending;
+		public LeaderboardSortOrders SortOrder = LeaderboardSortOrders.Ascending;
 
 		/// <summary>
 		/// ReignScores ID (Unique value)
@@ -298,15 +357,30 @@ namespace Reign
 		public string Android_ReignScores_GameID;
 	}
 	
+	/// <summary>
+	/// Leaderboard object
+	/// </summary>
 	public class LeaderboardScore
 	{
-		public string UserName {get; private set;}
-		public int Score {get; private set;}
+		/// <summary>
+		/// Username of player
+		/// </summary>
+		public string Username {get; private set;}
+
+		/// <summary>
+		/// Score of player
+		/// </summary>
+		public long Score {get; private set;}
 		
-		public LeaderboardScore(string userName, int score)
+		/// <summary>
+		/// Used to construct an leaderboard object
+		/// </summary>
+		/// <param name="username">Username of player</param>
+		/// <param name="score">Score of player</param>
+		public LeaderboardScore(string username, long score)
 		{
-			UserName = userName;
-			Score = score;
+			this.Username = username;
+			this.Score = score;
 		}
 	}
 	
@@ -361,13 +435,13 @@ namespace Reign
 		/// <param name="unachievedImage">Unachieved Image</param>
 		public Achievement(bool isAchieved, float percentComplete, string id, string name, string desc, Texture achievedImage, Texture unachievedImage)
 		{
-			IsAchieved = isAchieved;
-			PercentComplete = percentComplete;
-			ID = id;
-			Name = name;
-			Desc = desc;
-			AchievedImage = achievedImage;
-			UnachievedImage = unachievedImage;
+			this.IsAchieved = isAchieved;
+			this.PercentComplete = percentComplete;
+			this.ID = id;
+			this.Name = name;
+			this.Desc = desc;
+			this.AchievedImage = achievedImage;
+			this.UnachievedImage = unachievedImage;
 		}
 	}
 
@@ -434,7 +508,7 @@ namespace Reign
 	/// </summary>
 	/// <param name="score">Score value to format</param>
 	/// <param name="scoreValue">Output formated score value</param>
-	public delegate void ScoreFormatCallbackMethod(int score, out string scoreValue);
+	public delegate void ScoreFormatCallbackMethod(long score, out string scoreValue);
 }
 
 namespace Reign.Plugin
@@ -491,7 +565,7 @@ namespace Reign.Plugin
 		/// <param name="score">Score to report</param>
 		/// <param name="callback">Callback fired when done</param>
 		/// <param name="services">Takes in ReignServices object</param>
-		void ReportScore(string leaderboardID, int score, ReportScoreCallbackMethod callback, MonoBehaviour services);
+		void ReportScore(string leaderboardID, long score, ReportScoreCallbackMethod callback, MonoBehaviour services);
 
 		/// <summary>
 		/// Use to request scores

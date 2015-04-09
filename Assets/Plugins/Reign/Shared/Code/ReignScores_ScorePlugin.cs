@@ -21,7 +21,7 @@ namespace Reign.Plugin
 			[XmlElement("ID")] public string ID;
 			[XmlElement("UserID")] public string UserID;
 			[XmlElement("Username")] public string Username;
-			[XmlElement("Score")] public int Score;
+			[XmlElement("Score")] public long Score;
 		}
 
 		public class WebResponse_Achievement
@@ -339,7 +339,7 @@ namespace Reign.Plugin
 		}
 	
 		private ReportScoreCallbackMethod ReportScore_callback;
-		public void ReportScore(string leaderboardID, int score, ReportScoreCallbackMethod callback, MonoBehaviour services)
+		public void ReportScore(string leaderboardID, long score, ReportScoreCallbackMethod callback, MonoBehaviour services)
 		{
 			// find leaderboard
 			var leaderboardDesc = findLeaderboard(leaderboardID);
@@ -418,7 +418,7 @@ namespace Reign.Plugin
 
 			// get scores
 			RequestScores_callback = callback;
-			helper.InvokeServiceMethod(ReignScores_ServiceTypes.Games, "RequestScores", requestScoresCallback, services, "user_id="+UserID, "leaderboard_id="+serverLeaderboardID, "offset="+offset, "range="+range, "sort_order="+leaderboardDesc.ReignScores_SortOrder);
+			helper.InvokeServiceMethod(ReignScores_ServiceTypes.Games, "RequestScores", requestScoresCallback, services, "user_id="+UserID, "leaderboard_id="+serverLeaderboardID, "offset="+offset, "range="+range, "sort_order="+leaderboardDesc.SortOrder);
 		}
 
 		private void requestScoresCallback(bool succeeded, XML.WebResponse response)

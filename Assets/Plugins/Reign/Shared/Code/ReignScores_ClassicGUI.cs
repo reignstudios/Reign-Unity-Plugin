@@ -466,7 +466,7 @@ namespace Reign.Plugin
 					{
 						// username
 						float height = usernameRect.height / TopScoresToListPerPage;
-						GUI.Label(new Rect(usernameRect.x, usernameRect.y + userI, usernameRect.width, height), score.UserName, style);
+						GUI.Label(new Rect(usernameRect.x, usernameRect.y + userI, usernameRect.width, height), score.Username, style);
 						userI += (int)height;
 
 						// score

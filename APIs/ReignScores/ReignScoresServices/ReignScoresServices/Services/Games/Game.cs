@@ -82,7 +82,7 @@ namespace ReignScores.Services.Games
 							{
 								ID = reader["ID"].ToString(),
 								UserID = reader["UserID"].ToString(),
-								Score = int.Parse(reader["Score"].ToString())
+								Score = long.Parse(reader["Score"].ToString())
 							});
 						}
 					}

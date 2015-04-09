@@ -59,13 +59,13 @@ namespace ReignScores.Services.Users
 					// check if score already exists
 					command.CommandText = string.Format("SELECT ID, Score FROM Scores WHERE UserID = '{0}' and LeaderboardID = '{1}'", userID, leaderboardID);
 					string id = null;
-					int currentScore = 0;
+					long currentScore = 0;
 					using (var reader = command.ExecuteReader())
 					{
 						if (reader.Read())
 						{
 							id = reader["ID"].ToString();
-							currentScore = int.Parse(reader["Score"].ToString());
+							currentScore = long.Parse(reader["Score"].ToString());
 						}
 					}
 
@@ -88,7 +88,7 @@ namespace ReignScores.Services.Users
 							return ResponseTool.GenerateXML(webResponse);
 						}
 					}
-					else if (int.Parse(score) > currentScore)
+					else if (long.Parse(score) > currentScore)
 					{
 						// update existing score
 						command.CommandText = string.Format("UPDATE Scores SET Date = '{0}', Score = {1} WHERE ID = '{2}'", DateTime.UtcNow, score, id);

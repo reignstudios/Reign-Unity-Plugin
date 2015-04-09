@@ -14,7 +14,7 @@ public class ScoresDemo : MonoBehaviour
 	GUIStyle uiStyle;
 
 	void Start()
-	{
+	{Debug.Log(float.MaxValue);
 		if (created)
 		{
 			Destroy(gameObject);
@@ -35,7 +35,14 @@ public class ScoresDemo : MonoBehaviour
 		var leaderboard = new LeaderboardDesc();
 		leaderboards[0] = leaderboard;
 		var leaderboardID = new System.Guid("f55e3800-eacd-4728-ae4f-31b00aaa63bf");
-		leaderboard.ReignScores_SortOrder = LeaderboardSortOrders.Ascending;
+		leaderboard.SortOrder = LeaderboardSortOrders.Ascending;
+		leaderboard.ScoreFormat = LeaderbaordScoreFormats.Numerical;
+		leaderboard.ScoreFormat_DecimalPlaces = 0;
+		#if UNITY_IOS
+		leaderboard.ScoreTimeFormat = LeaderboardScoreTimeFormats.Centiseconds;
+		#else
+		leaderboard.ScoreTimeFormat = LeaderboardScoreTimeFormats.Milliseconds;
+		#endif
 		
 		// Global
 		leaderboard.ID = "Level1";// Any unique ID value you want
@@ -211,7 +218,7 @@ public class ScoresDemo : MonoBehaviour
 		else ScoreManager.Authenticate(authenticateCallback);
 	}
 
-	private void scoreFormatCallback(int score, out string scoreValue)
+	private void scoreFormatCallback(long score, out string scoreValue)
 	{
 		scoreValue = System.TimeSpan.FromSeconds(score).ToString();
 	}
@@ -272,7 +279,17 @@ public class ScoresDemo : MonoBehaviour
 			// Report Scores
 			if (GUI.Button(new Rect(Screen.width-256, offset, 256, 64), "Report Random Score") || Input.GetKeyUp(KeyCode.S))
 			{
+				// Submit score as numerical value or currency
 				ScoreManager.ReportScore("Level1", Random.Range(0, 500), reportScoreCallback);
+
+				// Or submit score as floating-point or currency
+				//ScoreManager.ReportScore("Level1", 3.14d, reportScoreCallback);
+
+				// Or submit score as TimeSpan
+				//ScoreManager.ReportScore("Level1", System.TimeSpan.FromSeconds(2.5f), reportScoreCallback);
+
+				// Or submit score as numerical RAW value if you want to format manually
+				//ScoreManager.ReportScoreRaw("Level1", 128, reportScoreCallback);
 			}
 
 			// Report Achievements

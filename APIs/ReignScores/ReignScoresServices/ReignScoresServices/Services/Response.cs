@@ -18,7 +18,7 @@ namespace ReignScores.Services
 		[XmlElement("ID")] public string ID;
 		[XmlElement("UserID")] public string UserID;
 		[XmlElement("Username")] public string Username;
-		[XmlElement("Score")] public int Score;
+		[XmlElement("Score")] public long Score;
 	}
 
 	public class WebResponse_Achievement

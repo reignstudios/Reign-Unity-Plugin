@@ -39,6 +39,7 @@ namespace Reign
 		}
 
 		private static IScorePlugin plugin;
+		private static ScoreDesc desc;
 
 		private static bool waitingForOperation;
 		private static AuthenticateCallbackMethod authenticateCallback;
@@ -78,6 +79,7 @@ namespace Reign
 			ScoreManager.createdCallback = callback;
 			ReignServices.CheckStatus();
 			plugin = ScorePluginAPI.New(desc, async_CreatedCallback);
+			ScoreManager.desc = desc;
 			ReignServices.AddService(update, null, null);
 		}
 
@@ -192,9 +194,28 @@ namespace Reign
 			authenticateCallback = callback;
 			plugin.ManualCreateUser(username, password, async_authenticateCallback, ReignServices.Singleton);
 		}
+
+		/// <summary>
+		/// Use to report a integer based numerical score with no API checks or formating
+		/// </summary>
+		/// <param name="leaderboardID">Leaderboard ID.</param>
+		/// <param name="score">Score to report.</param>
+		/// <param name="callback">The callback that fires when done.</param>
+		public static void ReportScoreRaw(string leaderboardID, long score, ReportScoreCallbackMethod callback)
+		{
+			if (waitingForOperation)
+			{
+				Debug.LogError("Must wait for last Score operation to complete.");
+				return;
+			}
+
+			waitingForOperation = true;
+			reportScoreCallback = callback;
+			plugin.ReportScore(leaderboardID, score, async_reportScoreCallback, ReignServices.Singleton);
+		}
 	
 		/// <summary>
-		/// Use to report a score.
+		/// Use to report a integer based numerical or currency score that formats according to the 'ScoreFormat' option
 		/// </summary>
 		/// <param name="leaderboardID">Leaderboard ID.</param>
 		/// <param name="score">Score to report.</param>
@@ -207,9 +228,110 @@ namespace Reign
 				return;
 			}
 
+			var leaderboard = findLeaderboard(leaderboardID);
+			if (leaderboard == null)
+			{
+				Debug.LogError("Failed to find leaderboard with ID: " + leaderboardID);
+				return;
+			}
+
+			if (leaderboard.ScoreFormat != LeaderbaordScoreFormats.Numerical)
+			{
+				Debug.LogError("Leaderboard Formating type must be Numerical not: " + leaderboard.ScoreFormat);
+				return;
+			}
+
+			long value = (long)(score * Math.Pow(10, leaderboard.ScoreFormat_DecimalPlaces));
+
 			waitingForOperation = true;
 			reportScoreCallback = callback;
 			plugin.ReportScore(leaderboardID, score, async_reportScoreCallback, ReignServices.Singleton);
+		}
+
+		/// <summary>
+		/// Use to report a floating-point or currency score that formats according to the 'ScoreFormat' option
+		/// </summary>
+		/// <param name="leaderboardID">Leaderboard ID.</param>
+		/// <param name="score">Score to report.</param>
+		/// <param name="callback">The callback that fires when done.</param>
+		public static void ReportScore(string leaderboardID, double score, ReportScoreCallbackMethod callback)
+		{
+			if (waitingForOperation)
+			{
+				Debug.LogError("Must wait for last Score operation to complete.");
+				return;
+			}
+
+			var leaderboard = findLeaderboard(leaderboardID);
+			if (leaderboard == null)
+			{
+				Debug.LogError("Failed to find leaderboard with ID: " + leaderboardID);
+				return;
+			}
+
+			if (leaderboard.ScoreFormat != LeaderbaordScoreFormats.Numerical)
+			{
+				Debug.LogError("Leaderboard Formating type must be Numerical not: " + leaderboard.ScoreFormat);
+				return;
+			}
+
+			long value = (long)(Math.Round(score, leaderboard.ScoreFormat_DecimalPlaces) * Math.Pow(10, leaderboard.ScoreFormat_DecimalPlaces));
+
+			waitingForOperation = true;
+			reportScoreCallback = callback;
+			plugin.ReportScore(leaderboardID, value, async_reportScoreCallback, ReignServices.Singleton);
+		}
+
+		/// <summary>
+		/// Use to report a Time score that formats according to the 'ScoreFormat' option
+		/// </summary>
+		/// <param name="leaderboardID">Leaderboard ID.</param>
+		/// <param name="score">Score to report.</param>
+		/// <param name="callback">The callback that fires when done.</param>
+		public static void ReportScore(string leaderboardID, TimeSpan score, ReportScoreCallbackMethod callback)
+		{
+			if (waitingForOperation)
+			{
+				Debug.LogError("Must wait for last Score operation to complete.");
+				return;
+			}
+
+			var leaderboard = findLeaderboard(leaderboardID);
+			if (leaderboard == null)
+			{
+				Debug.LogError("Failed to find leaderboard with ID: " + leaderboardID);
+				return;
+			}
+
+			if (leaderboard.ScoreFormat != LeaderbaordScoreFormats.Time)
+			{
+				Debug.LogError("Leaderboard Formating type must be Time not: " + leaderboard.ScoreFormat);
+				return;
+			}
+
+			long value = 0;
+			switch (leaderboard.ScoreTimeFormat)
+			{
+				case LeaderboardScoreTimeFormats.Minutes: value = (long)score.TotalMinutes; break;
+				case LeaderboardScoreTimeFormats.Seconds: value = (long)score.TotalSeconds; break;
+				case LeaderboardScoreTimeFormats.Centiseconds: value = (long)(score.TotalSeconds / 100d); break;
+				case LeaderboardScoreTimeFormats.Milliseconds: value = (long)score.TotalMilliseconds; break;
+				default: Debug.LogError("Unsuported LeaderboardScoreTimeFormat: " + leaderboard.ScoreTimeFormat); return;
+			}
+
+			waitingForOperation = true;
+			reportScoreCallback = callback;
+			plugin.ReportScore(leaderboardID, value, async_reportScoreCallback, ReignServices.Singleton);
+		}
+
+		private static LeaderboardDesc findLeaderboard(string leaderboardID)
+		{
+			foreach (var l in desc.LeaderboardDescs)
+			{
+				if (l.ID == leaderboardID) return l;
+			}
+
+			return null;
 		}
 		
 		/// <summary>
@@ -407,7 +529,7 @@ namespace Reign.Plugin
 		/// <param name="score"></param>
 		/// <param name="callback"></param>
 		/// <param name="services"></param>
-		public void ReportScore(string leaderboardID, int score, ReportScoreCallbackMethod callback, MonoBehaviour services)
+		public void ReportScore(string leaderboardID, long score, ReportScoreCallbackMethod callback, MonoBehaviour services)
 		{
 			if (callback != null) callback(false, "Dumy Score Obj");
 		}

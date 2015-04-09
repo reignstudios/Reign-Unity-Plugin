@@ -29,7 +29,7 @@ Scores - Users scores get saved here organized by the user and leaderboard IDs
 	[ID] [uniqueidentifier] NOT NULL,
 	[UserID] [uniqueidentifier] NOT NULL,
 	[LeaderboardID] [uniqueidentifier] NOT NULL,
-	[Score] [int] NOT NULL,
+	[Score] [bigint] NOT NULL,
 	[Date] [datetime] NOT NULL
 }
 
