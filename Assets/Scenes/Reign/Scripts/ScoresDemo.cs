@@ -8,13 +8,14 @@ using Reign;
 public class ScoresDemo : MonoBehaviour
 {
 	private static bool created;
-	public GameObject ReignScores_Renderer;
+	public bool UseUnityUI = true;
+	public GameObject ReignScores_ModernRenderer, ReignScores_ClassicRenderer;
 
 	private bool disableUI;
 	GUIStyle uiStyle;
 
 	void Start()
-	{Debug.Log(float.MaxValue);
+	{
 		if (created)
 		{
 			Destroy(gameObject);
@@ -152,7 +153,8 @@ public class ScoresDemo : MonoBehaviour
 		// Desc ---------------------------
 		const string reignScores_gameID = "B2A24047-0487-41C4-B151-0F175BB54D0E";// Get this ID from the Reign-Scores Console.
 		var desc = new ScoreDesc();
-		desc.ReignScores_UI = ReignScores_Renderer.GetComponent<MonoBehaviour>() as IScores_UI;
+		if (UseUnityUI) desc.ReignScores_UI = ReignScores_ModernRenderer.GetComponent<MonoBehaviour>() as IScores_UI;
+		else desc.ReignScores_UI = ReignScores_ClassicRenderer.GetComponent<MonoBehaviour>() as IScores_UI;
 		desc.ReignScores_UI.ScoreFormatCallback += scoreFormatCallback;
 		desc.ReignScores_ServicesURL = "http://localhost:5537/Services/";// Set to your server!
 		desc.ReignScores_GameKey = "04E0676D-AAF8-4836-A584-DE0C1D618D84";// Set to your servers game_api_key!
