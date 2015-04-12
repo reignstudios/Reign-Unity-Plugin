@@ -134,10 +134,10 @@ namespace Reign.Plugin
 		// IScores_UI interface methods
 		// =========================================================================================================
 		public event ScoreFormatCallbackMethod ScoreFormatCallback;
-		private Plugin.IScorePlugin plugin;
+		private IScorePlugin plugin;
 		private AuthenticateCallbackMethod authenticateCallback;
 
-		public void Init(Plugin.IScorePlugin plugin)
+		public void Init(IScorePlugin plugin)
 		{
 			this.plugin = plugin;
 		}
