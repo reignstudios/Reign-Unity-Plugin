@@ -245,7 +245,7 @@ namespace Reign
 
 			waitingForOperation = true;
 			reportScoreCallback = callback;
-			plugin.ReportScore(leaderboardID, score, async_reportScoreCallback, ReignServices.Singleton);
+			plugin.ReportScore(leaderboardID, value, async_reportScoreCallback, ReignServices.Singleton);
 		}
 
 		/// <summary>

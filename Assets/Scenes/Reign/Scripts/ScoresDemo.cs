@@ -3,33 +3,46 @@
 // -----------------------------------------------
 
 using UnityEngine;
+using UnityEngine.UI;
 using Reign;
 
 public class ScoresDemo : MonoBehaviour
 {
 	private static bool created;
+
 	public bool UseUnityUI = true;
 	public GameObject ReignScores_ModernRenderer, ReignScores_ClassicRenderer;
+	public Button BackButton, LogoutButton, ReportScoreButton, ReportAchievementButton, ShowLeaderboardsButton, ShowAchievementsButton;
+	public Text StatusText;
 
 	private bool disableUI;
 	GUIStyle uiStyle;
 
 	void Start()
 	{
-		if (created)
-		{
-			Destroy(gameObject);
-			return;
-		}
-		created = true;
-		DontDestroyOnLoad(gameObject);// Make sure the start method never gets called more then once. So we don't init the same API twice.
+		// bind button events
+		BackButton.Select();
+		LogoutButton.onClick.AddListener(LogoutButton_Clicked);
+		BackButton.onClick.AddListener(BackButton_Clicked);
+		ReportScoreButton.onClick.AddListener(ReportScoreButton_Clicked);
+		ReportAchievementButton.onClick.AddListener(ReportAchievementButton_Clicked);
+		ShowLeaderboardsButton.onClick.AddListener(ShowLeaderboardsButton_Clicked);
+		ShowAchievementsButton.onClick.AddListener(ShowAchievementsButton_Clicked);
 
-		uiStyle = new GUIStyle()
+		// make sure we don't init the same Score data twice
+		if (created) return;
+		created = true;
+
+		// classic GUI stuff
+		if (!UseUnityUI)
 		{
-			alignment = TextAnchor.MiddleCenter,
-			fontSize = 32,
-			normal = new GUIStyleState() {textColor = Color.white},
-		};
+			uiStyle = new GUIStyle()
+			{
+				alignment = TextAnchor.MiddleCenter,
+				fontSize = 32,
+				normal = new GUIStyleState() {textColor = Color.white},
+			};
+		}
 
 		// Leaderboards ---------------------------
 		var leaderboards = new LeaderboardDesc[1];
@@ -153,7 +166,7 @@ public class ScoresDemo : MonoBehaviour
 		// Desc ---------------------------
 		const string reignScores_gameID = "B2A24047-0487-41C4-B151-0F175BB54D0E";// Get this ID from the Reign-Scores Console.
 		var desc = new ScoreDesc();
-		if (UseUnityUI) desc.ReignScores_UI = ReignScores_ModernRenderer.GetComponent<MonoBehaviour>() as IScores_UI;
+		if (UseUnityUI) desc.ReignScores_UI = ReignScores_ModernRenderer.GetComponent<Reign.Plugin.ReignScores_UnityUI>() as IScores_UI;
 		else desc.ReignScores_UI = ReignScores_ClassicRenderer.GetComponent<MonoBehaviour>() as IScores_UI;
 		desc.ReignScores_UI.ScoreFormatCallback += scoreFormatCallback;
 		desc.ReignScores_ServicesURL = "http://localhost:5537/Services/";// Set to your server!
@@ -214,6 +227,48 @@ public class ScoresDemo : MonoBehaviour
 		//ScoreManager.ManualCreateUser(...);
 	}
 
+	private void BackButton_Clicked()
+	{
+		Application.LoadLevel("MainDemo");
+	}
+
+	private void LogoutButton_Clicked()
+	{
+		ScoreManager.Logout();
+		StatusText.text = "Logged out...";
+	}
+
+	private void ReportScoreButton_Clicked()
+	{
+		// Submit score as numerical value or currency
+		ScoreManager.ReportScore("Level1", Random.Range(0, 500), reportScoreCallback);
+
+		// Or submit score as floating-point or currency
+		//ScoreManager.ReportScore("Level1", 3.14f, reportScoreCallback);
+
+		// Or submit score as TimeSpan
+		//ScoreManager.ReportScore("Level1", System.TimeSpan.FromSeconds(2.5f), reportScoreCallback);
+
+		// Or submit score as numerical RAW value if you want to format manually
+		//ScoreManager.ReportScoreRaw("Level1", 128, reportScoreCallback);
+	}
+
+	private void ReportAchievementButton_Clicked()
+	{
+		string value = "Achievement" + 1;
+		ScoreManager.ReportAchievement(value, 100, reportAchievementCallback);
+	}
+
+	private void ShowLeaderboardsButton_Clicked()
+	{
+		ScoreManager.ShowNativeScoresPage("Level1", showNativePageCallback);
+	}
+
+	private void ShowAchievementsButton_Clicked()
+	{
+		ScoreManager.ShowNativeAchievementsPage(showNativePageCallback);
+	}
+
 	private void createdCallback(bool success, string errorMessage)
 	{
 		if (!success) Debug.LogError(errorMessage);
@@ -228,6 +283,9 @@ public class ScoresDemo : MonoBehaviour
 	private void authenticateCallback(bool succeeded, string errorMessage)
 	{
 		Debug.Log("Authenticated: " + succeeded);
+		if (succeeded) StatusText.text = "Authenticated as: " + ScoreManager.Username;
+		else StatusText.text = "Authenticated: " + succeeded;
+
 		if (!succeeded && errorMessage != null) Debug.LogError(errorMessage);
 		if (succeeded) ScoreManager.RequestAchievements(requestAchievementsCallback);
 	}
@@ -244,12 +302,51 @@ public class ScoresDemo : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogError("Request Achievements Error: " + errorMessage);
+			string error = "Request Achievements Error: " + errorMessage;
+			Debug.LogError(error);
+			StatusText.text = error;
 		}
 	}
 
+	void showNativePageCallback(bool succeeded, string errorMessage)
+	{
+		disableUI = false;
+		Debug.Log("Show Native Page: " + succeeded);
+		if (!succeeded)
+		{
+			Debug.LogError(errorMessage);
+			StatusText.text = errorMessage;
+		}
+	}
+
+	void reportScoreCallback(bool succeeded, string errorMessage)
+	{
+		Debug.Log("Report Score Done: " + succeeded);
+		if (!succeeded)
+		{
+			Debug.LogError(errorMessage);
+			StatusText.text = errorMessage;
+		}
+	}
+
+	void reportAchievementCallback(bool succeeded, string errorMessage)
+	{
+		Debug.Log("Report Achievement Done: " + succeeded);
+		if (!succeeded)
+		{
+			Debug.LogError(errorMessage);
+			StatusText.text = errorMessage;
+		}
+	}
+
+	// NOTE: Ignore OnGUI stuff if you are using Unity UI
+	#region ClassicGUI
 	void OnGUI()
 	{
+		// don't use classic GUI if were using Unity UI
+		if (UseUnityUI) return;
+
+		// Classic GUI mode stuff only...
 		if (ScoreManager.IsAuthenticated && !disableUI)
 		{
 			float offset = 0;
@@ -268,43 +365,32 @@ public class ScoresDemo : MonoBehaviour
 			if (GUI.Button(new Rect(0, Screen.height-64, 256, 64), "Show Leaderboard Scores") || Input.GetKeyUp(KeyCode.L))
 			{
 				disableUI = true;
-				ScoreManager.ShowNativeScoresPage("Level1", showNativePageCallback);
+				ShowLeaderboardsButton_Clicked();
 			}
 
 			// Show Achievements
 			if (GUI.Button(new Rect(256, Screen.height-64, 256, 64), "Show Achievements") || Input.GetKeyUp(KeyCode.A))
 			{
 				disableUI = true;
-				ScoreManager.ShowNativeAchievementsPage(showNativePageCallback);
+				ShowAchievementsButton_Clicked();
 			}
 
-			// Report Scores
+			// Report Score
 			if (GUI.Button(new Rect(Screen.width-256, offset, 256, 64), "Report Random Score") || Input.GetKeyUp(KeyCode.S))
 			{
-				// Submit score as numerical value or currency
-				ScoreManager.ReportScore("Level1", Random.Range(0, 500), reportScoreCallback);
-
-				// Or submit score as floating-point or currency
-				//ScoreManager.ReportScore("Level1", 3.14f, reportScoreCallback);
-
-				// Or submit score as TimeSpan
-				//ScoreManager.ReportScore("Level1", System.TimeSpan.FromSeconds(2.5f), reportScoreCallback);
-
-				// Or submit score as numerical RAW value if you want to format manually
-				//ScoreManager.ReportScoreRaw("Level1", 128, reportScoreCallback);
+				ReportScoreButton_Clicked();
 			}
 
 			// Report Achievements
 			if (GUI.Button(new Rect(Screen.width-256, 64+offset, 256, 64), "Report Random Achievement") || Input.GetKeyUp(KeyCode.R))
 			{
-				string value = "Achievement" + 1;
-				ScoreManager.ReportAchievement(value, 100, reportAchievementCallback);
+				ReportAchievementButton_Clicked();
 			}
 
 			// Logout (NOTE: Some platforms do not support this!)
 			if (GUI.Button(new Rect((Screen.width/2)-(256/2), (Screen.height/2)-(64/2)+offset, 256, 64), "Logout") || Input.GetKeyUp(KeyCode.O))
 			{
-				ScoreManager.Logout();
+				LogoutButton_Clicked();
 			}
 		}
 		else
@@ -312,25 +398,7 @@ public class ScoresDemo : MonoBehaviour
 			GUI.Label(new Rect(0, 0, 256, 64), "Not Authenticated!");
 		}
 	}
-
-	void showNativePageCallback(bool succeeded, string errorMessage)
-	{
-		disableUI = false;
-		Debug.Log("Show Native Page: " + succeeded);
-		if (!succeeded) Debug.LogError(errorMessage);
-	}
-
-	void reportScoreCallback(bool succeeded, string errorMessage)
-	{
-		Debug.Log("Report Score Done: " + succeeded);
-		if (!succeeded) Debug.LogError(errorMessage);
-	}
-
-	void reportAchievementCallback(bool succeeded, string errorMessage)
-	{
-		Debug.Log("Report Achievement Done: " + succeeded);
-		if (!succeeded) Debug.LogError(errorMessage);
-	}
+	#endregion
 
 	void Update()
 	{

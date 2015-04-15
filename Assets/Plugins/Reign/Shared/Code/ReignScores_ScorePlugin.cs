@@ -536,7 +536,7 @@ namespace Reign.Plugin
 					{
 						// load textures
 						string fileName = "Reign/Achievements/" + achievementDesc.ID + "_achieved";
-						var achievedTexture = (Texture)Resources.Load(fileName);
+						var achievedTexture = (Texture2D)Resources.Load(fileName);
 						if (achievedTexture == null)
 						{
 							string error = "RequestAchievements Failed to load texture: " + fileName;
@@ -546,7 +546,7 @@ namespace Reign.Plugin
 						}
 
 						fileName = "Reign/Achievements/" + achievementDesc.ID + "_unachieved";
-						var unachievedTexture = (Texture)Resources.Load(fileName);
+						var unachievedTexture = (Texture2D)Resources.Load(fileName);
 						if (unachievedTexture == null)
 						{
 							string error = "RequestAchievements Failed to load texture: " + fileName;

@@ -417,12 +417,22 @@ namespace Reign
 		/// <summary>
 		/// Use to get achievement achieved image
 		/// </summary>
-		public Texture AchievedImage {get; private set;}
+		public Texture2D AchievedImage {get; private set;}
 
 		/// <summary>
 		/// Use to get achievement unachieved name
 		/// </summary>
-		public Texture UnachievedImage {get; private set;}
+		public Texture2D UnachievedImage {get; private set;}
+
+		/// <summary>
+		/// Use to get achievement achieved image
+		/// </summary>
+		public Sprite AchievedSprite {get; private set;}
+
+		/// <summary>
+		/// Use to get achievement unachieved name
+		/// </summary>
+		public Sprite UnachievedSprite {get; private set;}
 		
 		/// <summary>
 		/// Used to construct an achievement object
@@ -433,7 +443,7 @@ namespace Reign
 		/// <param name="desc">Desc</param>
 		/// <param name="achievedImage">Achieved Image</param>
 		/// <param name="unachievedImage">Unachieved Image</param>
-		public Achievement(bool isAchieved, float percentComplete, string id, string name, string desc, Texture achievedImage, Texture unachievedImage)
+		public Achievement(bool isAchieved, float percentComplete, string id, string name, string desc, Texture2D achievedImage, Texture2D unachievedImage)
 		{
 			this.IsAchieved = isAchieved;
 			this.PercentComplete = percentComplete;
@@ -442,6 +452,8 @@ namespace Reign
 			this.Desc = desc;
 			this.AchievedImage = achievedImage;
 			this.UnachievedImage = unachievedImage;
+			this.AchievedSprite = Sprite.Create(achievedImage, new Rect(0, 0, achievedImage.width, achievedImage.height), Vector2.zero);
+			this.UnachievedSprite = Sprite.Create(unachievedImage, new Rect(0, 0, unachievedImage.width, unachievedImage.height), Vector2.zero);
 		}
 	}
 
