@@ -97,6 +97,7 @@
 /Plugins/Reign/Shared/Code/PlayerPrefsEx.cs
 /Plugins/Reign/Shared/Code/ReignScores_ClassicGUI.cs
 /Plugins/Reign/Shared/Code/ReignScores_ScorePlugin.cs
+/Plugins/Reign/Shared/Code/ReignScores_UnityUI.cs
 /Plugins/Reign/Shared/Code/StreamPluginBase.cs
 /Plugins/Reign/Shared/Code/TextureGIF.cs
 /Plugins/Reign/Shared/Interfaces/IAdPlugin.cs
