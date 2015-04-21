@@ -155,11 +155,11 @@ namespace Reign.Plugin
 			else
 			{
 				string error = errorMessage != null ? errorMessage : "Unknown Error ???";
-				Debug.LogError("YAHOO: " + error);
 				LoginScreen_ErrorMessage.text = error;
 				CreateUserScreen_ErrorMessage.text = error;
 				if (mode == ReignScores_UnityUIModes.LoggingIn) mode = ReignScores_UnityUIModes.Login;
 				else if (mode == ReignScores_UnityUIModes.CreatingUser) mode = ReignScores_UnityUIModes.CreateUser;
+				else mode = ReignScores_UnityUIModes.Login;
 			}
 		}
 
