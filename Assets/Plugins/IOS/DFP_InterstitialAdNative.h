@@ -4,8 +4,8 @@
 // -------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "GADInterstitial.h"
-#import "DFPInterstitial.h"
+#import <GoogleMobileAds/GADInterstitial.h>
+#import <GoogleMobileAds/DFPInterstitial.h>
 
 @interface DFP_InterstitialAdNative : UIViewController<GADInterstitialDelegate>
 {

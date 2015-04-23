@@ -4,7 +4,7 @@
 // -------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "GADInterstitial.h"
+#import <GoogleMobileAds/GADInterstitial.h>
 
 @interface AdMob_InterstitialAdNative : UIViewController<GADInterstitialDelegate>
 {

@@ -4,7 +4,7 @@
 // -------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "GADBannerView.h"
+#import <GoogleMobileAds/GADBannerView.h>
 
 @interface AdMob_AdsNative : UIViewController<GADBannerViewDelegate>
 {

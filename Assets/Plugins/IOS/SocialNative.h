@@ -4,7 +4,6 @@
 // -------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "GADBannerView.h"
 
 @interface SocialNative : NSObject
 {

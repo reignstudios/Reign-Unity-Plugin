@@ -40,7 +40,7 @@ public class InterstitialAdDemo : MonoBehaviour
 			
 		// iOS
 		desc.iOS_AdAPI = InterstitialAdAPIs.AdMob;
-		desc.iOS_AdMob_UnitID = "";// NOTE: Must set event for testing
+		desc.iOS_AdMob_UnitID = "ca-app-pub-2176319445832370/9563358442";// NOTE: Must set event for testing
 		
 		// Android
 		#if AMAZON

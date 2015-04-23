@@ -100,8 +100,8 @@
     if (testing)
     {
         GADRequest *request = [GADRequest request];
-        request.testing = YES;
-        request.testDevices = [NSArray arrayWithObjects:GAD_SIMULATOR_ID, nil];
+        //request.testing = YES;
+        //request.testDevices = [NSArray arrayWithObjects:GAD_SIMULATOR_ID, nil];
         [ad loadRequest:request];
     }
     else

@@ -452,8 +452,8 @@ namespace Reign
 			this.Desc = desc;
 			this.AchievedImage = achievedImage;
 			this.UnachievedImage = unachievedImage;
-			this.AchievedSprite = Sprite.Create(achievedImage, new Rect(0, 0, achievedImage.width, achievedImage.height), Vector2.zero);
-			this.UnachievedSprite = Sprite.Create(unachievedImage, new Rect(0, 0, unachievedImage.width, unachievedImage.height), Vector2.zero);
+			if (achievedImage != null) this.AchievedSprite = Sprite.Create(achievedImage, new Rect(0, 0, achievedImage.width, achievedImage.height), Vector2.zero);
+			if (unachievedImage != null) this.UnachievedSprite = Sprite.Create(unachievedImage, new Rect(0, 0, unachievedImage.width, unachievedImage.height), Vector2.zero);
 		}
 	}
 

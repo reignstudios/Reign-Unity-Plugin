@@ -192,7 +192,7 @@ namespace Reign.Plugin
 
 							// add achievement
 							float percentComplete = float.Parse(achievementValues[i+1]);
-							achievements.Add(new Achievement(percentComplete >= 100f, percentComplete, found.ID, found.Name, found.Desc, null, null));
+							achievements.Add(new Achievement(percentComplete >= found.PercentCompletedAtValue, (percentComplete/100f)*found.PercentCompletedAtValue, found.ID, found.Name, found.Desc, null, null));
 						}
 
 						requestAchievementsCallback(achievements.ToArray(), success, eventValues[1]);

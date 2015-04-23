@@ -4,8 +4,8 @@
 // -------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "GADBannerView.h"
-#import "DFPBannerView.h"
+#import <GoogleMobileAds/GADBannerView.h>
+#import <GoogleMobileAds/DFPBannerView.h>
 
 @interface DFP_AdsNative : UIViewController<GADBannerViewDelegate>
 {

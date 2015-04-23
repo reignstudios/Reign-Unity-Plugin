@@ -80,7 +80,7 @@ public class ScoresDemo : MonoBehaviour
 
 		// Android
 		leaderboard.Android_ReignScores_ID = leaderboardID;// Any unique value
-		leaderboard.Android_GooglePlay_ID = "";// Set to your GooglePlay leaderboard ID (Not Name)
+		leaderboard.Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQBg";// Set to your GooglePlay leaderboard ID (Not Name)
 		leaderboard.Android_GameCircle_ID = "";// Set to your GameCircle leaderboard ID (Not Name)
 
 		// Win32
@@ -130,7 +130,7 @@ public class ScoresDemo : MonoBehaviour
 
 		// Android
 		achievement.Android_ReignScores_ID = achievementID;// Any unique value
-		achievement.Android_GooglePlay_ID = "";// Set to your GooglePlay achievement ID (Not Name)
+		achievement.Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQAQ";// Set to your GooglePlay achievement ID (Not Name)
 		achievement.Android_GameCircle_ID = "";// Set to your GameCircle achievement ID (Not Name)
 
 		// Win32
@@ -162,6 +162,11 @@ public class ScoresDemo : MonoBehaviour
 			achievement.OSX_ReignScores_ID = achievementID;
 			achievement.Linux_ReignScores_ID = achievementID;
 		}
+
+		achievements[1].Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQAg";
+		achievements[2].Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQAw";
+		achievements[3].Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQBA";
+		achievements[4].Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQBQ";
 
 		// Desc ---------------------------
 		const string reignScores_gameID = "B2A24047-0487-41C4-B151-0F175BB54D0E";// Get this ID from the Reign-Scores Console.

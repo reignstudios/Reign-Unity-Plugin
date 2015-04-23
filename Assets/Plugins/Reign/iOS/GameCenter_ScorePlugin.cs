@@ -309,7 +309,7 @@ namespace Reign.Plugin
 					}
 
 					// add achievement
-					if (found) achievements.Add(new Achievement(percentComplete >= 100f, percentComplete, achievementsDesc.ID, achievementsDesc.Name, achievementsDesc.Desc, null, null));
+					if (found) achievements.Add(new Achievement(percentComplete >= achievementsDesc.PercentCompletedAtValue, (percentComplete/100f)*achievementsDesc.PercentCompletedAtValue, achievementsDesc.ID, achievementsDesc.Name, achievementsDesc.Desc, null, null));
 					else achievements.Add(new Achievement(false, 0, achievementsDesc.ID, achievementsDesc.Name, achievementsDesc.Desc, null, null));
 				}
 

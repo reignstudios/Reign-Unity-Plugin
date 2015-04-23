@@ -475,7 +475,7 @@ namespace Reign.Plugin
 
 			// submit achievement
 			ReportAchievement_callback = callback;
-			helper.InvokeServiceMethod(ReignScores_ServiceTypes.Users, "ReportAchievement", reportAchievementCallback, services, "user_id="+UserID, "achievement_id="+serverAchievementID, "percent_complete="+percentComplete);
+			helper.InvokeServiceMethod(ReignScores_ServiceTypes.Users, "ReportAchievement", reportAchievementCallback, services, "user_id="+UserID, "achievement_id="+serverAchievementID, "percent_complete="+((percentComplete / achievementDesc.PercentCompletedAtValue) * 100f));
 		}
 
 		private void reportAchievementCallback(bool succeeded, XML.WebResponse response)
@@ -556,7 +556,7 @@ namespace Reign.Plugin
 						}
 
 						// add achievment object
-						if (found != null) achievements[i] = new Achievement(found.PercentComplete >= 100, found.PercentComplete, achievementDesc.ID, achievementDesc.Name, achievementDesc.Desc, achievedTexture, unachievedTexture);
+						if (found != null) achievements[i] = new Achievement(found.PercentComplete >= achievementDesc.PercentCompletedAtValue, (found.PercentComplete/100f)*achievementDesc.PercentCompletedAtValue, achievementDesc.ID, achievementDesc.Name, achievementDesc.Desc, achievedTexture, unachievedTexture);
 						else achievements[i] = new Achievement(false, 0, achievementDesc.ID, achievementDesc.Name, achievementDesc.Desc, achievedTexture, unachievedTexture);
 					}
 					else
