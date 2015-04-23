@@ -80,7 +80,7 @@ public class ScoresDemo : MonoBehaviour
 
 		// Android
 		leaderboard.Android_ReignScores_ID = leaderboardID;// Any unique value
-		leaderboard.Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQBg";// Set to your GooglePlay leaderboard ID (Not Name)
+		leaderboard.Android_GooglePlay_ID = "";// Set to your GooglePlay leaderboard ID (Not Name)
 		leaderboard.Android_GameCircle_ID = "";// Set to your GameCircle leaderboard ID (Not Name)
 
 		// Win32
@@ -94,7 +94,7 @@ public class ScoresDemo : MonoBehaviour
 
 
 		// Achievements ---------------------------
-		var achievements = new AchievementDesc[5];
+		var achievements = new AchievementDesc[1];
 		var achievement = new AchievementDesc();
 		achievements[0] = achievement;
 		var achievementID = new System.Guid("352ce53d-142f-4a10-a4fb-804ad38be879");
@@ -130,7 +130,7 @@ public class ScoresDemo : MonoBehaviour
 
 		// Android
 		achievement.Android_ReignScores_ID = achievementID;// Any unique value
-		achievement.Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQAQ";// Set to your GooglePlay achievement ID (Not Name)
+		achievement.Android_GooglePlay_ID = "";// Set to your GooglePlay achievement ID (Not Name)
 		achievement.Android_GameCircle_ID = "";// Set to your GameCircle achievement ID (Not Name)
 
 		// Win32
@@ -142,31 +142,6 @@ public class ScoresDemo : MonoBehaviour
 		// Linux
 		achievement.Linux_ReignScores_ID = achievementID;// Any unique value
 
-		// Add other achievements...
-		for (int i = 1; i != achievements.Length; ++i)
-		{
-			achievement = new AchievementDesc();
-			achievements[i] = achievement;
-			achievement.ID = "Achievement" + (i+1);
-			achievement.Name = "Achievement_TODO" + (i+1);
-			achievement.Desc = "Achievement_TODO Desc" + (i+1);
-
-			achievementID = System.Guid.Empty;
-			achievement.Editor_ReignScores_ID = achievementID;
-			achievement.WinRT_ReignScores_ID = achievementID;
-			achievement.WP8_ReignScores_ID = achievementID;
-			achievement.BB10_ReignScores_ID = achievementID;
-			achievement.iOS_ReignScores_ID = achievementID;
-			achievement.Android_ReignScores_ID = achievementID;
-			achievement.Win32_ReignScores_ID = achievementID;
-			achievement.OSX_ReignScores_ID = achievementID;
-			achievement.Linux_ReignScores_ID = achievementID;
-		}
-
-		achievements[1].Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQAg";
-		achievements[2].Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQAw";
-		achievements[3].Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQBA";
-		achievements[4].Android_GooglePlay_ID = "CgkIzZPjyNgZEAIQBQ";
 
 		// Desc ---------------------------
 		const string reignScores_gameID = "B2A24047-0487-41C4-B151-0F175BB54D0E";// Get this ID from the Reign-Scores Console.

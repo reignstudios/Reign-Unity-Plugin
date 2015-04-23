@@ -44,6 +44,7 @@ public static class ExportPlugins
 			var files = getAllFiles(null, false);
 			foreach (var file in files)
 			{
+				if (Path.GetExtension(file) == ".DS_Store") continue;
 				string value = file.Remove(0, Application.dataPath.Length).Replace('\\', '/');
 				switch (value)
 				{
