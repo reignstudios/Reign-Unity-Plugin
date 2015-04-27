@@ -77,6 +77,15 @@ public class Amazon_InAppPurchaseNative implements PurchasingListener, ReignActi
 				initStatus = 2;
 			}
 		}
+		else
+		{
+			String[] skus = itemSKUs.split(":");
+			skuSet = new HashSet<String>();
+			for (int i = 0; i != skus.length; ++i)
+			{
+				skuSet.add(skus[i]);
+			}
+		}
 		
 		Singleton = new Amazon_InAppPurchaseNative();
 		ReignUnityActivity.AddCallbacks(Singleton);
