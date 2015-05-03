@@ -48,7 +48,7 @@ public class ScoresDemo : MonoBehaviour
 		var leaderboards = new LeaderboardDesc[1];
 		var leaderboard = new LeaderboardDesc();
 		leaderboards[0] = leaderboard;
-		var leaderboardID = new System.Guid("f55e3800-eacd-4728-ae4f-31b00aaa63bf");
+		var reignScores_LeaderboardID = new System.Guid("f55e3800-eacd-4728-ae4f-31b00aaa63bf");
 		leaderboard.SortOrder = LeaderboardSortOrders.Ascending;
 		leaderboard.ScoreFormat = LeaderbaordScoreFormats.Numerical;
 		leaderboard.ScoreFormat_DecimalPlaces = 0;
@@ -63,41 +63,41 @@ public class ScoresDemo : MonoBehaviour
 		leaderboard.Desc = "Level1 Desc...";// Any desc you want
 
 		// Editor
-		leaderboard.Editor_ReignScores_ID = leaderboardID;// Any unique value
+		leaderboard.Editor_ReignScores_ID = reignScores_LeaderboardID;// Any unique value
 
 		// WinRT
-		leaderboard.WinRT_ReignScores_ID = leaderboardID;// Any unique value
+		leaderboard.WinRT_ReignScores_ID = reignScores_LeaderboardID;// Any unique value
 
 		// WP8
-		leaderboard.WP8_ReignScores_ID = leaderboardID;// Any unique value
+		leaderboard.WP8_ReignScores_ID = reignScores_LeaderboardID;// Any unique value
 
 		// BB10
-		leaderboard.BB10_ReignScores_ID = leaderboardID;// Any unique value
+		leaderboard.BB10_ReignScores_ID = reignScores_LeaderboardID;// Any unique value
 
 		// iOS
-		leaderboard.iOS_ReignScores_ID = leaderboardID;// Any unique value
+		leaderboard.iOS_ReignScores_ID = reignScores_LeaderboardID;// Any unique value
 		leaderboard.iOS_GameCenter_ID = "";// Set to your GameCenter leaderboard ID
 
 		// Android
-		leaderboard.Android_ReignScores_ID = leaderboardID;// Any unique value
+		leaderboard.Android_ReignScores_ID = reignScores_LeaderboardID;// Any unique value
 		leaderboard.Android_GooglePlay_ID = "";// Set to your GooglePlay leaderboard ID (Not Name)
 		leaderboard.Android_GameCircle_ID = "";// Set to your GameCircle leaderboard ID (Not Name)
 
 		// Win32
-		leaderboard.Win32_ReignScores_ID = leaderboardID;// Any unique value
+		leaderboard.Win32_ReignScores_ID = reignScores_LeaderboardID;// Any unique value
 
 		// OSX
-		leaderboard.OSX_ReignScores_ID = leaderboardID;// Any unique value
+		leaderboard.OSX_ReignScores_ID = reignScores_LeaderboardID;// Any unique value
 
 		// Linux
-		leaderboard.Linux_ReignScores_ID = leaderboardID;// Any unique value
+		leaderboard.Linux_ReignScores_ID = reignScores_LeaderboardID;// Any unique value
 
 
 		// Achievements ---------------------------
 		var achievements = new AchievementDesc[1];
 		var achievement = new AchievementDesc();
 		achievements[0] = achievement;
-		var achievementID = new System.Guid("352ce53d-142f-4a10-a4fb-804ad38be879");
+		var reignScores_AchievementID = new System.Guid("352ce53d-142f-4a10-a4fb-804ad38be879");
 
 		// Global
 		achievement.ID = "Achievement1";// Any unique ID value you want
@@ -113,34 +113,34 @@ public class ScoresDemo : MonoBehaviour
 		achievement.IsIncremental = true;
 
 		// Editor
-		achievement.Editor_ReignScores_ID = achievementID;// Any unique value
+		achievement.Editor_ReignScores_ID = reignScores_AchievementID;// Any unique value
 
 		// WinRT
-		achievement.WinRT_ReignScores_ID = achievementID;// Any unique value
+		achievement.WinRT_ReignScores_ID = reignScores_AchievementID;// Any unique value
 
 		// WP8
-		achievement.WP8_ReignScores_ID = achievementID;// Any unique value
+		achievement.WP8_ReignScores_ID = reignScores_AchievementID;// Any unique value
 
 		// BB10
-		achievement.BB10_ReignScores_ID = achievementID;// Any unique value
+		achievement.BB10_ReignScores_ID = reignScores_AchievementID;// Any unique value
 
 		// iOS
-		achievement.iOS_ReignScores_ID = achievementID;// Any unique index value
+		achievement.iOS_ReignScores_ID = reignScores_AchievementID;// Any unique index value
 		achievement.iOS_GameCenter_ID = "";// Set to your GameCenter achievement ID
 
 		// Android
-		achievement.Android_ReignScores_ID = achievementID;// Any unique value
+		achievement.Android_ReignScores_ID = reignScores_AchievementID;// Any unique value
 		achievement.Android_GooglePlay_ID = "";// Set to your GooglePlay achievement ID (Not Name)
 		achievement.Android_GameCircle_ID = "";// Set to your GameCircle achievement ID (Not Name)
 
 		// Win32
-		achievement.Win32_ReignScores_ID = achievementID;// Any unique value
+		achievement.Win32_ReignScores_ID = reignScores_AchievementID;// Any unique value
 
 		// OSX
-		achievement.OSX_ReignScores_ID = achievementID;// Any unique value
+		achievement.OSX_ReignScores_ID = reignScores_AchievementID;// Any unique value
 
 		// Linux
-		achievement.Linux_ReignScores_ID = achievementID;// Any unique value
+		achievement.Linux_ReignScores_ID = reignScores_AchievementID;// Any unique value
 
 
 		// Desc ---------------------------

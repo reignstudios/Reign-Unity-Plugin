@@ -97,7 +97,7 @@ public class AdsDemo : MonoBehaviour
 		desc.iOS_iAd_AdGravity = AdGravity.BottomCenter;
 			
 		desc.iOS_AdMob_AdGravity = AdGravity.BottomCenter;
-		desc.iOS_AdMob_UnitID = "ca-app-pub-2176319445832370/3757406843";// NOTE: You can use legacy (PublisherID) too, You MUST have this even for Testing!
+		desc.iOS_AdMob_UnitID = "";// NOTE: You can use legacy (PublisherID) too, You MUST have this even for Testing!
 		desc.iOS_AdMob_AdSize = iOS_AdMob_AdSize.Banner_320x50;
 			
 		// Android settings
