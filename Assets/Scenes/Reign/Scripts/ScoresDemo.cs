@@ -178,6 +178,7 @@ public class ScoresDemo : MonoBehaviour
 		// Android
 		#if GOOGLEPLAY
 		desc.Android_ScoreAPI = ScoreAPIs.GooglePlay;
+		desc.Android_GooglePlay_DisableUsernameRetrieval = false;// This lets you remove the android.permission.GET_ACCOUNTS requirement if enabled
 		#elif AMAZON
 		desc.Android_ScoreAPI = ScoreAPIs.GameCircle;
 		#else

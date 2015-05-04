@@ -31,17 +31,18 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 	private static GoogleApiClient client;
 	private static List<String> events;
 	private static int initStatus;
-	private static boolean isAuthenticated;
+	private static boolean isAuthenticated, disableUsernameRetrieval;
 	private static String requestAchievementsResult;
 	
 	private static int REQUEST_LEADERBOARD_ID = 100001, REQUEST_ACHIEVEMENTS_ID = 100002, RC_RESOLVE_ID = 100003;
 	
-	public static void Init()
+	public static void Init(boolean disableUsernameRetrieval)
 	{
 		if (singleton == null) singleton = new GooglePlay_LeaderboardsAchievements();
 		if (events == null) events = new ArrayList<String>();
 		ReignUnityActivity.AddCallbacks(singleton);
 		
+		GooglePlay_LeaderboardsAchievements.disableUsernameRetrieval = disableUsernameRetrieval;
 		ReignUnityActivity.ReignContext.runOnUiThread(new Runnable()
 		{
 			public void run()
@@ -293,7 +294,8 @@ public class GooglePlay_LeaderboardsAchievements implements GoogleApiClient.Conn
 	@Override
 	public void onConnected(Bundle arg0)
 	{
-		String username = Plus.AccountApi.getAccountName(client);
+		String username = "Disabled";
+		if (!disableUsernameRetrieval) username = Plus.AccountApi.getAccountName(client);
 		events.add("Connected:" + username);
 		isAuthenticated = true;
 	}

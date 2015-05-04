@@ -28,7 +28,7 @@ namespace Reign.Plugin
 			try
 			{
 				native = new AndroidJavaClass("com.reignstudios.reignnative.GooglePlay_LeaderboardsAchievements");
-				native.CallStatic("Init");
+				native.CallStatic("Init", desc.Android_GooglePlay_DisableUsernameRetrieval);
 			}
 			catch (Exception e)
 			{

@@ -355,6 +355,11 @@ namespace Reign
 		/// ReignScores Game ID
 		/// </summary>
 		public string Android_ReignScores_GameID;
+
+		/// <summary>
+		/// Disables the retrieval of the GooglePlay username when you login. (This lets you remove the android.permission.GET_ACCOUNTS requirement) [Defaults to false]
+		/// </summary>
+		public bool Android_GooglePlay_DisableUsernameRetrieval;
 	}
 	
 	/// <summary>
