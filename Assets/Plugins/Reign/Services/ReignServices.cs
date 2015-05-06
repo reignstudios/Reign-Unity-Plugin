@@ -15,10 +15,11 @@ public class ReignServices : MonoBehaviour
 	/// Current instance of the ReignServices object.
 	/// </summary>
 	public static ReignServices Singleton {get; private set;}
+	private bool canDestroy;
 
-	internal bool requestFrameDone, canDestroy;
-	internal delegate void frameDoneCallbackMethod();
-	internal frameDoneCallbackMethod frameDoneCallback;
+	public delegate void FrameDoneCallbackMethod();
+	private static FrameDoneCallbackMethod frameDoneCallback;
+	private static bool requestingFrame;
 
 	private static int lastScreenWidth, lastScreenHeight;
 	public delegate void ScreenSizeChangedCallbackMethod(int oldWidth, int oldHeight, int newWidth, int newHeight);
@@ -80,6 +81,18 @@ public class ReignServices : MonoBehaviour
 		}
 	}
 
+	public static void RequestEndOfFrame(FrameDoneCallbackMethod frameDoneCallback)
+	{
+		if (ReignServices.frameDoneCallback != null)
+		{
+			Debug.LogError("You must wait until RequestEndOfFrame has finished!");
+			return;
+		}
+
+		ReignServices.frameDoneCallback = frameDoneCallback;
+		requestingFrame = true;
+	}
+
 	static ReignServices()
 	{
 		#if DISABLE_REIGN
@@ -135,9 +148,9 @@ public class ReignServices : MonoBehaviour
 		if (updateService != null) updateService();
 
 		// if end of frame wait requested
-		if (requestFrameDone)
+		if (requestingFrame)
 		{
-			requestFrameDone = false;
+			requestingFrame = false;
 			StartCoroutine(frameSync());
 		}
 
@@ -168,6 +181,7 @@ public class ReignServices : MonoBehaviour
 	{
 		yield return new WaitForEndOfFrame();
 		if (frameDoneCallback != null) frameDoneCallback();
+		frameDoneCallback = null;
 	}
 
 	void OnGUI()

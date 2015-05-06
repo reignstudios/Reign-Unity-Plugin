@@ -245,8 +245,9 @@ namespace Reign
 			}
 
 			StreamManager.streamSavedCallback = streamSavedCallback;
-			ReignServices.Singleton.frameDoneCallback = saveScreenShotFrameDone;
-			ReignServices.Singleton.requestFrameDone = true;
+			//ReignServices.Singleton.frameDoneCallback = saveScreenShotFrameDone;
+			//ReignServices.Singleton.requestingFrame = true;
+			ReignServices.RequestEndOfFrame(saveScreenShotFrameDone);
 		}
 
 		private static void saveScreenShotFrameDone()
