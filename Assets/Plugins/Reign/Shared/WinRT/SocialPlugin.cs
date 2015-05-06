@@ -30,14 +30,14 @@ namespace Reign.Plugin
 			// do nothing...
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type)
+		public void Share(byte[] data, string dataFilename, string text, string title, string desc, SocialShareDataTypes type)
 		{
 			#if WINDOWS_PHONE
 			if (data != null)
 			{
 				string filename;
 				using (var m = new MediaLibrary())
-				using (var image = m.SavePicture("ReignSharedImage" + (type == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg"), data))
+				using (var image = m.SavePicture(dataFilename + (type == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg"), data))
 				{
 					filename = MediaLibraryExtensions.GetPath(image);
 				}
@@ -59,7 +59,7 @@ namespace Reign.Plugin
 			if (data != null)
 			{
 				shareImage = true;
-				shareDataFilename = "ReignSharedImage" + (type == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg");
+				shareDataFilename = dataFilename + (type == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg");
 				StreamManager.SaveFile(shareDataFilename, data, FolderLocations.Storage, imageSavedCallback);
 			}
 			else
@@ -69,9 +69,9 @@ namespace Reign.Plugin
 			#endif
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
+		public void Share(byte[] data, string dataFilename, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
 		{
-			Share(data, text, title, desc, type);
+			Share(data, dataFilename, text, title, desc, type);
 		}
 
 		#if UNITY_METRO || UNITY_WP_8_1
@@ -137,14 +137,14 @@ namespace Reign.Plugin
 			Native.Init(desc);
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type)
+		public void Share(byte[] data, string dataFilename, string text, string title, string desc, SocialShareDataTypes type)
 		{
-			Native.Share(data, text, title, desc, type);
+			Native.Share(data, dataFilename, text, title, desc, type);
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
+		public void Share(byte[] data, string dataFilename, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
 		{
-			Native.Share(data, text, title, desc, x, y, width, height, type);
+			Native.Share(data, dataFilename, text, title, desc, x, y, width, height, type);
 		}
 	}
 }

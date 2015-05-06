@@ -98,7 +98,7 @@ public class ReignServices : MonoBehaviour
 
 	public static void CaptureScreenShot(CaptureScreenShotCallbackMethod captureScreenShotCallback)
 	{
-		if (captureScreenShotCallback != null)
+		if (ReignServices.captureScreenShotCallback != null)
 		{
 			Debug.LogError("You must wait until CaptureScreenShot has finished!");
 			return;

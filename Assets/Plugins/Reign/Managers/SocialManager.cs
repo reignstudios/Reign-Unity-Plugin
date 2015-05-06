@@ -43,19 +43,21 @@ namespace Reign
 		/// Invokes the native share view (BlackBerry uses Unity UI)
 		/// </summary>
 		/// <param name="data">Data you wish to share (taks priority over Text if multiple share types not supported)</param>
+		/// <param name="dataFilename">Name of file without ext</param>
 		/// <param name="text">Text you wish to share</param>
 		/// <param name="title">Title for native view</param>
 		/// <param name="desc">Description for native view</param>
 		/// <param name="type">Type of data sharing</param>
-		public static void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type)
+		public static void Share(byte[] data, string dataFilename, string text, string title, string desc, SocialShareDataTypes type)
 		{
-			plugin.Share(data, text, title, desc, type);
+			plugin.Share(data, dataFilename, text, title, desc, type);
 		}
 
 		/// <summary>
 		/// Invokes the native share view (BlackBerry uses Unity UI)
 		/// </summary>
 		/// <param name="data">Data you wish to share (taks priority over Text if multiple share types not supported)</param>
+		/// <param name="dataFilename">Name of file without ext</param>
 		/// <param name="text">Text you wish to share</param>
 		/// <param name="title">Title for native view</param>
 		/// <param name="desc">Description for native view</param>
@@ -64,9 +66,9 @@ namespace Reign
 		/// <param name="width">iOS view Width</param>
 		/// <param name="height">iOS view Height</param>
 		/// <param name="type">Type of data sharing</param>
-		public static void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
+		public static void Share(byte[] data, string dataFilename, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
 		{
-			plugin.Share(data, text, title, desc, x, y, width, height, type);
+			plugin.Share(data, dataFilename, text, title, desc, x, y, width, height, type);
 		}
 	}
 
@@ -77,12 +79,12 @@ namespace Reign
 			Debug.Log("Share not supported in this environment!");
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type)
+		public void Share(byte[] data, string dataFilename, string text, string title, string desc, SocialShareDataTypes type)
 		{
 			Debug.Log("Share not supported in this environment!");
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
+		public void Share(byte[] data, string dataFilename, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
 		{
 			Debug.Log("Share not supported in this environment!");
 		}
