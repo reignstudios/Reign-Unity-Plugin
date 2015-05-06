@@ -21,6 +21,9 @@ public class ReignServices : MonoBehaviour
 	private static FrameDoneCallbackMethod frameDoneCallback;
 	private static bool requestingFrame;
 
+	public delegate void CaptureScreenShotCallbackMethod(byte[] data);
+	private static CaptureScreenShotCallbackMethod captureScreenShotCallback;
+
 	private static int lastScreenWidth, lastScreenHeight;
 	public delegate void ScreenSizeChangedCallbackMethod(int oldWidth, int oldHeight, int newWidth, int newHeight);
 	public static event ScreenSizeChangedCallbackMethod ScreenSizeChangedCallback;
@@ -91,6 +94,32 @@ public class ReignServices : MonoBehaviour
 
 		ReignServices.frameDoneCallback = frameDoneCallback;
 		requestingFrame = true;
+	}
+
+	public static void CaptureScreenShot(CaptureScreenShotCallbackMethod captureScreenShotCallback)
+	{
+		if (captureScreenShotCallback != null)
+		{
+			Debug.LogError("You must wait until CaptureScreenShot has finished!");
+			return;
+		}
+
+		ReignServices.captureScreenShotCallback = captureScreenShotCallback;
+		RequestEndOfFrame(captureScreenShotEndOfFrame);
+	}
+
+	private static void captureScreenShotEndOfFrame()
+	{
+		var width = Screen.width;
+		var height = Screen.height;
+		var texture = new Texture2D(width, height, TextureFormat.RGB24, false);
+		texture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+		texture.Apply();
+		var data = texture.EncodeToPNG();
+		GameObject.Destroy(texture);
+
+		if (captureScreenShotCallback != null) captureScreenShotCallback(data);
+		captureScreenShotCallback = null;
 	}
 
 	static ReignServices()

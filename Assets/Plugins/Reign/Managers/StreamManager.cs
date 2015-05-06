@@ -245,20 +245,11 @@ namespace Reign
 			}
 
 			StreamManager.streamSavedCallback = streamSavedCallback;
-			//ReignServices.Singleton.frameDoneCallback = saveScreenShotFrameDone;
-			//ReignServices.Singleton.requestingFrame = true;
-			ReignServices.RequestEndOfFrame(saveScreenShotFrameDone);
+			ReignServices.CaptureScreenShot(captureScreenShotCallback);
 		}
 
-		private static void saveScreenShotFrameDone()
+		private static void captureScreenShotCallback(byte[] data)
 		{
-			var width = Screen.width;
-			var height = Screen.height;
-			var texture = new Texture2D(width, height, TextureFormat.RGB24, false);
-			texture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-			texture.Apply();
-			var data = texture.EncodeToPNG();
-			GameObject.Destroy(texture);
 			SaveFile("ScreenShot.png", data, FolderLocations.Pictures, streamSavedCallback);
 		}
 
