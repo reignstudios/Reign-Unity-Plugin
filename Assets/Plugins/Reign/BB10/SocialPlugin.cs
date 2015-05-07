@@ -12,7 +12,7 @@ namespace Reign.Plugin
 		private IntPtr invoke;
 		private SocialDesc desc;
 
-		private string shareText;
+		private string shareText, shareDataFilename;
 		private byte[] shareData;
 		private SocialShareDataTypes shareType;
 
@@ -48,14 +48,15 @@ namespace Reign.Plugin
 			share(2);
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type)
+		public void Share(byte[] data, string dataFilename, string text, string title, string desc, SocialShareDataTypes type)
 		{
-			Share(data, text, title, desc, 0, 0, 10, 10, type);
+			Share(data, dataFilename, text, title, desc, 0, 0, 10, 10, type);
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
+		public void Share(byte[] data, string dataFilename, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
 		{
 			this.desc.BB10_ShareSelectorTitle.text = title;
+			shareDataFilename = dataFilename;
 			shareText = text;
 			shareData = data;
 			shareType = type;
@@ -110,7 +111,7 @@ namespace Reign.Plugin
 					return;
 				}
 
-				string filename = "data/ReignSocialImage" + (shareType == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg");
+				string filename = "data/" + shareDataFilename + (shareType == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg");
 				dataValue = Marshal.StringToHGlobalAnsi(filename);
 				try
 				{

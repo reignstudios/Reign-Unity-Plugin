@@ -12,7 +12,7 @@ public class SocialNative
 {
 	private static final String logTag = "Reign_Social";
 	
-	public static void ShareImage(final byte[] data, final String text, final String title, final boolean isPNG)
+	public static void ShareImage(final byte[] data, final String dataFilename, final String text, final String title, final boolean isPNG)
 	{
 		ReignUnityActivity.ReignContext.runOnUiThread(new Runnable()
 		{
@@ -22,7 +22,7 @@ public class SocialNative
 				{
 					Log.d(logTag, "Saving file for ShareImage dlg");
 					File sdCardDirectory = Environment.getExternalStorageDirectory();
-					File imageFile = new File(sdCardDirectory, isPNG ? "ReignSocialImage.png" : "ReignSocialImage.jpg");
+					File imageFile = new File(sdCardDirectory, isPNG ? (dataFilename+".png") : (dataFilename+".jpg"));
 					FileOutputStream outputStream;
 					try
 					{

@@ -18,7 +18,7 @@ namespace Reign.Plugin
 			// do nothing...
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, SocialShareDataTypes type)
+		public void Share(byte[] data, string dataFilename, string text, string title, string desc, SocialShareDataTypes type)
 		{
 			// check data type is valid
 			if (data != null && type != SocialShareDataTypes.Image_PNG && type != SocialShareDataTypes.Image_JPG)
@@ -27,12 +27,12 @@ namespace Reign.Plugin
 				return;
 			}
 
-			native.CallStatic("ShareImage", data, text, title, type == SocialShareDataTypes.Image_PNG);
+			native.CallStatic("ShareImage", data, dataFilename, text, title, type == SocialShareDataTypes.Image_PNG);
 		}
 
-		public void Share(byte[] data, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
+		public void Share(byte[] data, string dataFilename, string text, string title, string desc, int x, int y, int width, int height, SocialShareDataTypes type)
 		{
-			Share(data, text, title, desc, type);
+			Share(data, dataFilename, text, title, desc, type);
 		}
 	}
 }
