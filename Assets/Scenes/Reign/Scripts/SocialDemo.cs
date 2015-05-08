@@ -35,8 +35,9 @@ public class SocialDemo : MonoBehaviour
 	private void shareClicked()
 	{
 		// NOTE: If the platform doesn't support multiple share types at once, then data will take priority over text.
+		// NOTE2: Facebook on Android doesn't allow image and text data to be shared.
 		var data = ReignLogo.texture.EncodeToPNG();
-		SocialManager.Share(data, "ReignSocialImage", "Demo Text", "Reign Demo", "Reign Demo Desc", SocialShareDataTypes.Image_PNG);
+		SocialManager.Share(data, "ReignSocialImage", null, "Reign Demo", "Reign Demo Desc", SocialShareDataTypes.Image_PNG);
 
 		// NOTE: If you want to share a screen shot you can use the helper method below
 		//ReignServices.CaptureScreenShot(captureScreenShotCallback);

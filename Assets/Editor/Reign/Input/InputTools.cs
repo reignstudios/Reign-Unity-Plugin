@@ -7,6 +7,12 @@ namespace Reign.EditorTools
 {
 	public static class InputTools
 	{
+		[MenuItem("Edit/Reign/Input/Load Default Unity layout")]
+		static void ApplyUnityDefaultLayout()
+		{
+			applyDefaultLayout("UnityDefault");
+		}
+
 		[MenuItem("Edit/Reign/Input/Apply Platform Mapping layout")]
 		static void ApplyPlatformMappingInputLayout()
 		{
