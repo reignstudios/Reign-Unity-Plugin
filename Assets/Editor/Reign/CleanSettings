@@ -3,6 +3,7 @@
 /Editor/Reign/Input/DefaultLayouts/InputManager_Linux
 /Editor/Reign/Input/DefaultLayouts/InputManager_OSX
 /Editor/Reign/Input/DefaultLayouts/InputManager_PlatformMapping
+/Editor/Reign/Input/DefaultLayouts/InputManager_UnityDefault
 /Editor/Reign/Input/DefaultLayouts/InputManager_Win32
 /Editor/Reign/Input/InputTools.cs
 /Editor/Reign/ManifestTools/DefaultAndroidManifests/AndroidManifest_Amazon.xml
