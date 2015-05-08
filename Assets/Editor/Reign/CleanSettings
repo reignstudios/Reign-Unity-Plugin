@@ -91,6 +91,13 @@
 /Plugins/Reign/Services/InputExService.prefab
 /Plugins/Reign/Services/ReignServices.cs
 /Plugins/Reign/Services/ReignServices.prefab
+/Plugins/Reign/PluginAssets/BBM.png
+/Plugins/Reign/PluginAssets/EventSystem.prefab
+/Plugins/Reign/PluginAssets/Facebook.png
+/Plugins/Reign/PluginAssets/ReignScores_UnityUI.prefab
+/Plugins/Reign/PluginAssets/SocialShareCanvas.prefab
+/Plugins/Reign/PluginAssets/Spinner.png
+/Plugins/Reign/PluginAssets/Twitter.png
 /Plugins/Reign/Tools/PerPixelOrthoCamera.cs
 /Plugins/Reign/Shared/Code/InputEx.cs
 /Plugins/Reign/Shared/Code/MM_AdPlugin.cs

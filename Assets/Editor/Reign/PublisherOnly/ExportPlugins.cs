@@ -165,6 +165,7 @@ public static class ExportPlugins
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Managers/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Math/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Services/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/PluginAssets/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Tools/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/Code/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/Interfaces/", files);
