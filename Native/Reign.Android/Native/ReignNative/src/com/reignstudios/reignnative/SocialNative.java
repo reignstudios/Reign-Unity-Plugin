@@ -42,7 +42,9 @@ public class SocialNative
 					if (text != null && text.length() != 0)
 					{
 						Intent shareIntent = new Intent(Intent.ACTION_SEND);
-						shareIntent.setType("*/*");
+						//shareIntent.setType("*/*");
+						if (isPNG) shareIntent.setType("image/png");
+						else shareIntent.setType("image/jpg");
 						shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(imageFile));
 						shareIntent.putExtra(Intent.EXTRA_TEXT, text);
 						Intent chooser = Intent.createChooser(shareIntent, title);
