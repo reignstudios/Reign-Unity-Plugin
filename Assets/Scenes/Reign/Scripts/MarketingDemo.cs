@@ -24,8 +24,9 @@ public class MarketingDemo : MonoBehaviour
 		var desc = new MarketingDesc();
 
 		desc.Editor_URL = "http://reign-studios.net/";// Any full URL
-		desc.WinRT_PackageFamilyName = "";// This is the "Package family name" that can be found in your "Package.appxmanifest".
-		// NOTE: For Windows Phone you don't need to set anything...
+		desc.Win8_PackageFamilyName = "";// This is the "Package family name" that can be found in your "Package.appxmanifest".
+		desc.WP8_AppID = "";// This is the "App ID" that can be found in your "Package.appxmanifest" under "Package Name".
+		// NOTE: For Windows Phone 8.0 you don't need to set anything...
 
 		desc.iOS_AppID = "";// Pass in your AppID "xxxxxxxxx"
 		desc.BB10_AppID = "";// You pass in your AppID "xxxxxxxx".
