@@ -13,7 +13,7 @@ namespace Reign.Plugin
 		#if UNITY_WP_8_1
 		private void async_OpenStore(string url)
 		{
-			UnityEngine.Application.OpenURL("ms-windows-store:navigate?appid={0}" + url);
+			UnityEngine.Application.OpenURL("ms-windows-store:navigate?appid=" + url);
 		}
 		#else
 		private async void async_OpenStore(string url)
