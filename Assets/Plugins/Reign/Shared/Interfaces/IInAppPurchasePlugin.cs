@@ -148,7 +148,7 @@ namespace Reign
 		public InAppPurchaseAPIs WinRT_InAppPurchaseAPI = InAppPurchaseAPIs.None;
 
 		/// <summary>
-		/// IAP IDs
+		/// IAP IDs for Win8 and WP8.1
 		/// </summary>
 		public InAppPurchaseID[] WinRT_MicrosoftStore_InAppIDs;
 
@@ -159,7 +159,7 @@ namespace Reign
 		public InAppPurchaseAPIs WP8_InAppPurchaseAPI = InAppPurchaseAPIs.None;
 
 		/// <summary>
-		/// IAP IDs
+		/// IAP IDs for WP8.0
 		/// </summary>
 		public InAppPurchaseID[] WP8_MicrosoftStore_InAppIDs;
 		

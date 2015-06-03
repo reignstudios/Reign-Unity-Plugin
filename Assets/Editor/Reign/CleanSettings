@@ -437,6 +437,7 @@
 /Plugins/Android/res/color/common_signin_btn_text_light.xml
 /Plugins/Android/res/color/wallet_primary_text_holo_light.xml
 /Plugins/Android/res/color/wallet_secondary_text_holo_dark.xml
+/Plugins/Android/res/drawable/cast_ic_notification_connecting.xml
 /Plugins/Android/res/drawable/common_signin_btn_icon_dark.xml
 /Plugins/Android/res/drawable/common_signin_btn_icon_light.xml
 /Plugins/Android/res/drawable/common_signin_btn_text_dark.xml
@@ -459,6 +460,10 @@
 /Plugins/Android/res/drawable/spinner_9.png
 /Plugins/Android/res/drawable/tw_widget_progressbar_effect_holo_light.png
 /Plugins/Android/res/drawable/tw_widget_progressbar_holo_light.png
+/Plugins/Android/res/drawable-hdpi/cast_ic_notification_0.png
+/Plugins/Android/res/drawable-hdpi/cast_ic_notification_1.png
+/Plugins/Android/res/drawable-hdpi/cast_ic_notification_2.png
+/Plugins/Android/res/drawable-hdpi/cast_ic_notification_on.png
 /Plugins/Android/res/drawable-hdpi/common_full_open_on_phone.png
 /Plugins/Android/res/drawable-hdpi/common_ic_googleplayservices.png
 /Plugins/Android/res/drawable-hdpi/common_signin_btn_icon_disabled_dark.9.png
@@ -489,6 +494,10 @@
 /Plugins/Android/res/drawable-hdpi/powered_by_google_light.png
 /Plugins/Android/res/drawable-hdpi/tw_widget_progressbar_effect_holo_light.png
 /Plugins/Android/res/drawable-hdpi/tw_widget_progressbar_holo_light.png
+/Plugins/Android/res/drawable-mdpi/cast_ic_notification_0.png
+/Plugins/Android/res/drawable-mdpi/cast_ic_notification_1.png
+/Plugins/Android/res/drawable-mdpi/cast_ic_notification_2.png
+/Plugins/Android/res/drawable-mdpi/cast_ic_notification_on.png
 /Plugins/Android/res/drawable-mdpi/common_full_open_on_phone.png
 /Plugins/Android/res/drawable-mdpi/common_signin_btn_icon_disabled_dark.9.png
 /Plugins/Android/res/drawable-mdpi/common_signin_btn_icon_disabled_focus_dark.9.png
@@ -523,6 +532,10 @@
 /Plugins/Android/res/drawable-tvdpi/ic_plusone_small_off_client.png
 /Plugins/Android/res/drawable-tvdpi/ic_plusone_standard_off_client.png
 /Plugins/Android/res/drawable-tvdpi/ic_plusone_tall_off_client.png
+/Plugins/Android/res/drawable-xhdpi/cast_ic_notification_0.png
+/Plugins/Android/res/drawable-xhdpi/cast_ic_notification_1.png
+/Plugins/Android/res/drawable-xhdpi/cast_ic_notification_2.png
+/Plugins/Android/res/drawable-xhdpi/cast_ic_notification_on.png
 /Plugins/Android/res/drawable-xhdpi/common_full_open_on_phone.png
 /Plugins/Android/res/drawable-xhdpi/common_signin_btn_icon_disabled_dark.9.png
 /Plugins/Android/res/drawable-xhdpi/common_signin_btn_icon_disabled_focus_dark.9.png
@@ -552,6 +565,10 @@
 /Plugins/Android/res/drawable-xhdpi/powered_by_google_light.png
 /Plugins/Android/res/drawable-xhdpi/tw_widget_progressbar_effect_holo_light.png
 /Plugins/Android/res/drawable-xhdpi/tw_widget_progressbar_holo_light.png
+/Plugins/Android/res/drawable-xxhdpi/cast_ic_notification_0.png
+/Plugins/Android/res/drawable-xxhdpi/cast_ic_notification_1.png
+/Plugins/Android/res/drawable-xxhdpi/cast_ic_notification_2.png
+/Plugins/Android/res/drawable-xxhdpi/cast_ic_notification_on.png
 /Plugins/Android/res/drawable-xxhdpi/common_full_open_on_phone.png
 /Plugins/Android/res/drawable-xxhdpi/common_signin_btn_icon_disabled_dark.9.png
 /Plugins/Android/res/drawable-xxhdpi/common_signin_btn_icon_disabled_focus_dark.9.png
@@ -590,6 +607,9 @@
 /Plugins/Android/res/values/admob_iap_style.xml
 /Plugins/Android/res/values/admob_strings.xml
 /Plugins/Android/res/values/amazon_gc_styles.xml
+/Plugins/Android/res/values/auth_strings.xml
+/Plugins/Android/res/values/cast_ids.xml
+/Plugins/Android/res/values/cast_strings.xml
 /Plugins/Android/res/values/common_attrs.xml
 /Plugins/Android/res/values/common_colors.xml
 /Plugins/Android/res/values/common_strings.xml
@@ -622,6 +642,7 @@
 /Plugins/Android/res/values-el/common_strings.xml
 /Plugins/Android/res/values-el/strings.xml
 /Plugins/Android/res/values-en/strings.xml
+/Plugins/Android/res/values-en-rAU/common_strings.xml
 /Plugins/Android/res/values-en-rGB/common_strings.xml
 /Plugins/Android/res/values-en-rGB/strings.xml
 /Plugins/Android/res/values-en-rIN/common_strings.xml
