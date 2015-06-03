@@ -2,21 +2,27 @@ package com.reignstudios.reignnative;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.util.Log;
 
@@ -48,7 +54,8 @@ public class StreamNative implements ReignActivityCallbacks
 				try
 				{
 					Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
-					MediaStore.Images.Media.insertImage(ReignUnityActivity.ReignContext.getContentResolver(), image, title, desc);
+					//MediaStore.Images.Media.insertImage(ReignUnityActivity.ReignContext.getContentResolver(), image, title, desc);
+					insertImage(ReignUnityActivity.ReignContext.getContentResolver(), image, title, desc);// Google implementation saves at 50% quality
 					saveImageSucceeded = true;
 					saveImageDone = true;
 				}
@@ -61,6 +68,102 @@ public class StreamNative implements ReignActivityCallbacks
 			}
 		});
 	}
+	
+	public static final String insertImage(ContentResolver cr, Bitmap source, String title, String description)
+	{
+		ContentValues values = new ContentValues();
+		values.put(Images.Media.TITLE, title);
+		values.put(Images.Media.DESCRIPTION, description);
+		values.put(Images.Media.MIME_TYPE, "image/jpeg");
+		
+		Uri url = null;
+		String stringUrl = null;    /* value to be returned */
+		
+		try
+		{
+			url = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+			
+			if (source != null)
+			{
+				OutputStream imageOut = cr.openOutputStream(url);
+				try
+				{
+					source.compress(Bitmap.CompressFormat.JPEG, 100, imageOut);
+				}
+				finally
+				{
+					imageOut.close();
+				}
+			
+				long id = ContentUris.parseId(url);
+				// Wait until MINI_KIND thumbnail is generated.
+				Bitmap miniThumb = Images.Thumbnails.getThumbnail(cr, id,
+				Images.Thumbnails.MINI_KIND, null);
+				// This is for backward compatibility.
+				Bitmap microThumb = StoreThumbnail(cr, miniThumb, id, 50F, 50F,
+				Images.Thumbnails.MICRO_KIND);
+			}
+			else
+			{
+				Log.e(logTag, "Failed to create thumbnail, removing original");
+				cr.delete(url, null, null);
+				url = null;
+			}
+		}
+		catch (Exception e)
+		{
+			Log.e(logTag, "Failed to insert image", e);
+			if (url != null)
+			{
+				cr.delete(url, null, null);
+				url = null;
+			}
+		}
+		
+		if (url != null) stringUrl = url.toString();
+		return stringUrl;
+	}
+	
+	private static final Bitmap StoreThumbnail(ContentResolver cr, Bitmap source, long id, float width, float height, int kind)
+	{
+        // create the matrix to scale it
+        Matrix matrix = new Matrix();
+
+        float scaleX = width / source.getWidth();
+        float scaleY = height / source.getHeight();
+
+        matrix.setScale(scaleX, scaleY);
+
+        Bitmap thumb = Bitmap.createBitmap(source, 0, 0,
+                                           source.getWidth(),
+                                           source.getHeight(), matrix,
+                                           true);
+
+        ContentValues values = new ContentValues(4);
+        values.put(Images.Thumbnails.KIND,     kind);
+        values.put(Images.Thumbnails.IMAGE_ID, (int)id);
+        values.put(Images.Thumbnails.HEIGHT,   thumb.getHeight());
+        values.put(Images.Thumbnails.WIDTH,    thumb.getWidth());
+
+        Uri url = cr.insert(Images.Thumbnails.EXTERNAL_CONTENT_URI, values);
+
+        try
+        {
+            OutputStream thumbOut = cr.openOutputStream(url);
+
+            thumb.compress(Bitmap.CompressFormat.JPEG, 100, thumbOut);
+            thumbOut.close();
+            return thumb;
+        }
+        catch (FileNotFoundException ex)
+        {
+            return null;
+        }
+        catch (IOException ex) 
+       {
+            return null;
+        }
+    }
 	
 	private static float[] fitInViewIfLarger(float objectWidth, float objectHeight, float viewWidth, float viewHeight)
 	{
