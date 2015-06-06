@@ -15,7 +15,12 @@ namespace Reign
 		/// <summary>
 		/// Amazon
 		/// </summary>
-		Amazon
+		Amazon,
+
+		/// <summary>
+		/// Samsung
+		/// </summary>
+		Samsung
 	}
 
 	/// <summary>
@@ -57,6 +62,11 @@ namespace Reign
 		/// Pass in your bundle ID "com.Company.AppName"
 		/// </summary>
 		public string Android_Amazon_BundleID;
+
+		/// <summary>
+		/// Pass in your bundle ID "com.Company.AppName"
+		/// </summary>
+		public string Android_Samsung_BundleID;
 
 		/// <summary>
 		/// Pass in your AppID "xxxxxxxx".

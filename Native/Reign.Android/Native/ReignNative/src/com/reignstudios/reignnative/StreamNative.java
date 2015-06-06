@@ -76,6 +76,10 @@ public class StreamNative implements ReignActivityCallbacks
 		values.put(Images.Media.DESCRIPTION, description);
 		values.put(Images.Media.MIME_TYPE, "image/jpeg");
 		
+		long date = System.currentTimeMillis();
+		values.put(Images.Media.DATE_TAKEN, date);
+		values.put(Images.Media.DATE_ADDED, date / 1000);
+		
 		Uri url = null;
 		String stringUrl = null;    /* value to be returned */
 		

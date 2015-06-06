@@ -22,6 +22,12 @@ public class MessageBoxDemo : MonoBehaviour
 
 	private void showOkCancelClicked()
 	{
+		// NOTE: You can pass in options and override the default button names
+		/*var options = new MessageBoxOptions()
+		{
+			OkButtonName = "Ok",
+			CancelButtonText = "Cancel"
+		};*/
 		MessageBoxManager.Show("Yahoo", "Are you Awesome!?", MessageBoxTypes.OkCancel, callback);
 	}
 

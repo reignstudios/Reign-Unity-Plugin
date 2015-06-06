@@ -34,7 +34,8 @@ public class MarketingDemo : MonoBehaviour
 		desc.Android_MarketingStore = MarketingStores.GooglePlay;
 		desc.Android_GooglePlay_BundleID = "";// Pass in your bundle ID "com.Company.AppName"
 		desc.Android_Amazon_BundleID = "";// Pass in your bundle ID "com.Company.AppName"
-			
+		desc.Android_Samsung_BundleID = "";// Pass in your bundle ID "com.Company.AppName"
+
 		MarketingManager.OpenStoreForReview(desc);
 	}
 
