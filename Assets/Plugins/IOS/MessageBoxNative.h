@@ -12,5 +12,5 @@
     bool okClicked, cancelClicked;
 }
 
-- (void)Show:(NSString*)title message:(NSString*)message type:(int)type;
+- (void)Show:(NSString*)title message:(NSString*)message okButtonText:(NSString*)okButtonText cancelButtonText:(NSString*)cancelButtonText type:(int)type;
 @end

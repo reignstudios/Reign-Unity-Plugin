@@ -23,7 +23,7 @@ namespace Reign.Plugin
 			}
 		}
 	
-		public void Show(string title, string message, MessageBoxTypes type, MessageBoxCallback callback)
+		public void Show(string title, string message, MessageBoxTypes type, MessageBoxOptions options, MessageBoxCallback callback)
 		{
 			this.callback = callback;
 			native.CallStatic("Show", title, message, convertType(type));

@@ -58,16 +58,16 @@
     // do nothing...
 }
 
-- (void)Show:(NSString*)title message:(NSString*)message type:(int)type
+- (void)Show:(NSString*)title message:(NSString*)message okButtonText:(NSString*)okButtonText cancelButtonText:(NSString*)cancelButtonText type:(int)type
 {
     UIAlertView* alert = nil;
     if (type == 0)
     {
-        alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:okButtonText otherButtonTitles:nil];
     }
     else
     {
-        alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+        alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:cancelButtonText otherButtonTitles:okButtonText, nil];
     }
     
     [alert show];
@@ -100,9 +100,9 @@ extern "C"
         }
     }
     
-    void ShowMessageBox(const char* title, const char* message, int type)
+    void ShowMessageBox(const char* title, const char* message, const char* okButtonText, const char* cancelButtonText, int type)
     {
-        [native Show:GetStringParam(title) message:GetStringParam(message) type:type];
+        [native Show:GetStringParam(title) message:GetStringParam(message) okButtonText:GetStringParam(okButtonText) cancelButtonText:GetStringParam(cancelButtonText) type:type];
     }
     
     bool MessageBoxOkClicked()

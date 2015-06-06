@@ -35,7 +35,7 @@ namespace Reign.Plugin
 		[DllImport("libbps", EntryPoint="dialog_event_get_selected_context")]
 		private static extern IntPtr dialog_event_get_selected_context(IntPtr _event);
 	
-		public void Show(string title, string message, MessageBoxTypes type, MessageBoxCallback callback)
+		public void Show(string title, string message, MessageBoxTypes type, MessageBoxOptions options, MessageBoxCallback callback)
 		{
 			const string okContextID = "okButton", cancelContextID = "cancelButton";
 		
