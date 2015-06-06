@@ -34,6 +34,11 @@ namespace Reign
 		OkCancel
 	}
 
+	public class MessageBoxOptions
+	{
+		public string OkButtonName = "OK", CancelButtonText = "Cancel";
+	}
+
 	/// <summary>
 	/// Used to fire back message box results
 	/// </summary>
@@ -55,7 +60,7 @@ namespace Reign.Plugin
 		/// <param name="message">Message</param>
 		/// <param name="type">MessageBox type</param>
 		/// <param name="callback">Callback fired when done.</param>
-		void Show(string title, string message, MessageBoxTypes type, MessageBoxCallback callback);
+		void Show(string title, string message, MessageBoxTypes type, MessageBoxOptions options, MessageBoxCallback callback);
 
 		/// <summary>
 		/// Used to handle events

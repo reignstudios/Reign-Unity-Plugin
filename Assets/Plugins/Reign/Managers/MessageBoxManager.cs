@@ -53,7 +53,7 @@ namespace Reign
 		/// <param name="message">MessageBox Message.</param>
 		public static void Show(string title, string message)
 		{
-			plugin.Show(title, message, MessageBoxTypes.Ok, null);
+			plugin.Show(title, message, MessageBoxTypes.Ok, new MessageBoxOptions(), null);
 		}
 
 		/// <summary>
@@ -65,7 +65,21 @@ namespace Reign
 		/// <param name="callback">The callback that fires when done.</param>
 		public static void Show(string title, string message, MessageBoxTypes type, MessageBoxCallback callback)
 		{
-			plugin.Show(title, message, type, callback);
+			plugin.Show(title, message, type, new MessageBoxOptions(), callback);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="title">MessageBox Title.</param>
+		/// <param name="message">MessageBox Message.</param>
+		/// <param name="type">MessageBox Type.</param>
+		/// <param name="options">MessageBox Options.</param>
+		/// <param name="callback">The callback that fires when done.</param>
+		public static void Show(string title, string message, MessageBoxTypes type, MessageBoxOptions options, MessageBoxCallback callback)
+		{
+			if (options == null) options = new MessageBoxOptions();
+			plugin.Show(title, message, type, options, callback);
 		}
 		
 		private static void update()
@@ -78,7 +92,7 @@ namespace Reign
 	{
 		public class MessageBoxPlugin_Dumy : IMessageBoxPlugin
 		{
-			public void Show(string title, string message, MessageBoxTypes type, MessageBoxCallback callback)
+			public void Show(string title, string message, MessageBoxTypes type, MessageBoxOptions options, MessageBoxCallback callback)
 			{
 				if (callback != null) callback(MessageBoxResult.Cancel);
 			}

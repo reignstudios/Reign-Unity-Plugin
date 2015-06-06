@@ -6,16 +6,16 @@ namespace Reign.Plugin
 {
 	public class MessageBoxPlugin : IMessageBoxPlugin
 	{
-		public void Show(string title, string message, MessageBoxTypes type, MessageBoxCallback callback)
+		public void Show(string title, string message, MessageBoxTypes type, MessageBoxOptions options, MessageBoxCallback callback)
 		{
 			if (type == MessageBoxTypes.Ok)
 			{
-				EditorUtility.DisplayDialog(title, message, "OK");
+				EditorUtility.DisplayDialog(title, message, options.OkButtonName);
 				if (callback != null) callback(MessageBoxResult.Ok);
 			}
 			else
 			{
-				bool value = EditorUtility.DisplayDialog(title, message, "OK", "Cancel");
+				bool value = EditorUtility.DisplayDialog(title, message, options.OkButtonName, options.CancelButtonText);
 				if (callback != null) callback(value ? MessageBoxResult.Ok : MessageBoxResult.Cancel);
 			}
 		}

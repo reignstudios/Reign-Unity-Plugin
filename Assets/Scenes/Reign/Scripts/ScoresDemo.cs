@@ -18,6 +18,12 @@ public class ScoresDemo : MonoBehaviour
 	private bool disableUI;
 	GUIStyle uiStyle;
 
+	// ======================================================
+	// NOTE about users confused over Reign-Scores
+	// Reign-Scores is an API target option, just as GooglePlay version GamceCircle is.
+	// Reign-Scores is NOT required to use native services like GooglePlay, GameCenter ect.
+	// Its a self-hosted option you can put on any ASP.NET server you own for platforms like WP8, BB10 ect.
+	// ======================================================
 	void Start()
 	{
 		// bind button events
