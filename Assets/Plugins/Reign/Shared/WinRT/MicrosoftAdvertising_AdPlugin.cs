@@ -119,7 +119,13 @@ namespace Reign.Plugin
 					adControl.IsEngagedChanged += adControl_IsEngagedChanged;
 					adControl.AdRefreshed += adControl_AdRefreshed;
 					#endif
+
 					adControl.ErrorOccurred += adControl_ErrorOccurred;
+					#if WINDOWS_PHONE
+					adControl.SetValue(System.Windows.Controls.Canvas.ZIndexProperty, 98);
+					#else
+					adControl.SetValue(Windows.UI.Xaml.Controls.Canvas.ZIndexProperty, 98);
+					#endif
 			
 					#if WINDOWS_PHONE || UNITY_WP_8_1
 					adControl.ApplicationId = desc.Testing ? "test_client" : desc.WP8_MicrosoftAdvertising_ApplicationID;
