@@ -7,7 +7,7 @@ public class MessageBoxNative
 {
 	private static boolean okClicked, cancelClicked;
 	
-	public static void Show(final String title, final String message, final int type)
+	public static void Show(final String title, final String message, final String okButtonText, final String cancelButtonText, final int type)
 	{
 		ReignUnityActivity.ReignContext.runOnUiThread(new Runnable()
 		{
@@ -16,7 +16,7 @@ public class MessageBoxNative
 				AlertDialog.Builder dlgAlert = new AlertDialog.Builder(ReignUnityActivity.ReignContext);
 				dlgAlert.setTitle(title);
 				dlgAlert.setMessage(message);
-				dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+				dlgAlert.setPositiveButton(okButtonText, new DialogInterface.OnClickListener()
 				{
 					public void onClick(DialogInterface dialog, int which)
 					{
@@ -26,7 +26,7 @@ public class MessageBoxNative
 				
 				if (type == 1)
 				{
-					dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+					dlgAlert.setNegativeButton(cancelButtonText, new DialogInterface.OnClickListener()
 					{
 						public void onClick(DialogInterface dialog, int which)
 						{

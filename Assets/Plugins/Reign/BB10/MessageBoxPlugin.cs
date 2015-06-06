@@ -53,13 +53,13 @@ namespace Reign.Plugin
 				return;
 			}
 			
-			if (dialog_add_button(dialog, "OK", true, okContextID, true) != 0)
+			if (dialog_add_button(dialog, options.OkButtonName, true, okContextID, true) != 0)
 			{
 				dispose();
 				return;
 			}
 			
-			if (type == MessageBoxTypes.OkCancel && dialog_add_button(dialog, "Cancel", true, cancelContextID, true) != 0)
+			if (type == MessageBoxTypes.OkCancel && dialog_add_button(dialog, options.CancelButtonText, true, cancelContextID, true) != 0)
 			{
 				dispose();
 				return;
