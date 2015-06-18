@@ -18,7 +18,7 @@ namespace Reign.Plugin
 			MessageBoxInit();
 		}
 
-		public void Show(string title, string message, MessageBoxTypes type, MessageBoxCallback callback)
+		public void Show(string title, string message, MessageBoxTypes type, MessageBoxOptions options, MessageBoxCallback callback)
 		{
 			if (type == MessageBoxTypes.Ok)
 			{
