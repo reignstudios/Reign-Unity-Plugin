@@ -44,21 +44,13 @@ _ReSharper*/
 #*.unityproj
 #*.sln
 
-# Eclipse ---------------
-*.pydevproject
-#.project
-.metadata
-bin/**
-tmp/**
-tmp/**/*
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-#.classpath
-#.settings/
-.loadpath
+# Android Studios ---------------
+.gradle
+#/local.properties
+#/.idea/workspace.xml
+#/.idea/libraries
+/build
+/captures
 
 # External tool builders
 .externalToolBuilders/
