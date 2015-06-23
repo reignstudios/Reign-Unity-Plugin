@@ -320,14 +320,11 @@ namespace Reign.EditorTools
 				projData = projData.Replace
 				(
 					@"/* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = System/Library/Frameworks/GoogleMobileAds.framework; sourceTree = SDKROOT; };",
-					@"/* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = file; name = GoogleMobileAds.framework; path = Frameworks/GoogleMobileAds.framework; sourceTree = ""<group>""; };"
+					@"/* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = """ + Application.dataPath+"/Plugins/IOS/GoogleMobileAds.framework" + @"""; sourceTree = ""<absolute>""; };"
 				);
 
 				// save proj data
 				File.WriteAllText(projPath, projData);
-
-				// copy GoogleMobileAds.framework over to xCode project
-				File.Copy(Application.dataPath+"/Plugins/IOS/GoogleMobileAds.framework", pathToBuiltProject+"/Frameworks/GoogleMobileAds.framework", true);
 			}
 			#endif
     	}
