@@ -405,6 +405,7 @@
 /Plugins/iOS/EmailNative.mm
 /Plugins/iOS/GameCenterNative.h
 /Plugins/iOS/GameCenterNative.mm
+/Plugins/iOS/GoogleMobileAds.framework
 /Plugins/iOS/iAd_AdsNative.h
 /Plugins/iOS/iAd_AdsNative.mm
 /Plugins/iOS/InAppPurchaseNative.h
