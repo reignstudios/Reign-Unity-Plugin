@@ -806,6 +806,7 @@
 /Plugins/Android/reignnativeamazon.jar
 /Plugins/Android/reignnativegoogleplay.jar
 /Plugins/Android/reignnativesamsung.jar
+/Plugins/Android/SamsungIAP2.0.1.jar
 /Plugins/Reign/Android/AdMob_AdPlugin.cs
 /Plugins/Reign/Android/AdMob_InterstitialAdPlugin.cs
 /Plugins/Reign/Android/Amazon_AdPlugin.cs
