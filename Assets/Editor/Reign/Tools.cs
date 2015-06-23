@@ -15,6 +15,10 @@ using System.Text;
 using System;
 using System.Collections.Generic;
 
+#if UNITY_IOS && UNITY_5
+using UnityEditor.iOS.Xcode;
+#endif
+
 namespace Reign.EditorTools
 {
 	public static class Tools
@@ -285,6 +289,47 @@ namespace Reign.EditorTools
 					doc.Save(projPath);
 				}
 			}
+			#if UNITY_IOS && UNITY_5
+			else if (target == BuildTarget.iOS)
+			{
+				string projPath = pathToBuiltProject + "/Unity-iPhone.xcodeproj/project.pbxproj";
+
+				var proj = new PBXProject();
+				proj.ReadFromString(File.ReadAllText (projPath));
+
+				string targetID = proj.TargetGuidByName ("Unity-iPhone");
+
+				// set custom link flags
+				proj.AddBuildProperty (targetID, "OTHER_LDFLAGS", "-all_load");
+				proj.AddBuildProperty (targetID, "OTHER_LDFLAGS", "-ObjC");
+
+				// add frameworks
+				proj.AddFrameworkToProject(targetID, "AdSupport.framework", true);
+				proj.AddFrameworkToProject(targetID, "CoreTelephony.framework", true);
+				proj.AddFrameworkToProject(targetID, "EventKit.framework", true);
+				proj.AddFrameworkToProject(targetID, "EventKitUI.framework", true);
+				proj.AddFrameworkToProject(targetID, "iAd.framework", true);
+				proj.AddFrameworkToProject(targetID, "MessageUI.framework", true);
+				proj.AddFrameworkToProject(targetID, "StoreKit.framework", true);
+				proj.AddFrameworkToProject(targetID, "Security.framework", true);
+				proj.AddFrameworkToProject(targetID, "GameKit.framework", true);
+				proj.AddFrameworkToProject(targetID, "GoogleMobileAds.framework", true);
+
+				// change GoogleMobileAds to use reletive path
+				string projData = proj.WriteToString();
+				projData = projData.Replace
+				(
+					@"/* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = System/Library/Frameworks/GoogleMobileAds.framework; sourceTree = SDKROOT; };",
+					@"/* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = file; name = GoogleMobileAds.framework; path = Frameworks/GoogleMobileAds.framework; sourceTree = ""<group>""; };"
+				);
+
+				// save proj data
+				File.WriteAllText(projPath, projData);
+
+				// copy GoogleMobileAds.framework over to xCode project
+				File.Copy(Application.dataPath+"/Plugins/IOS/GoogleMobileAds.framework", pathToBuiltProject+"/Frameworks/GoogleMobileAds.framework", true);
+			}
+			#endif
     	}
 		#endregion
 
