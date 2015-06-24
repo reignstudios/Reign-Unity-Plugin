@@ -313,18 +313,42 @@ namespace Reign.EditorTools
 				proj.AddFrameworkToProject(targetID, "StoreKit.framework", true);
 				proj.AddFrameworkToProject(targetID, "Security.framework", true);
 				proj.AddFrameworkToProject(targetID, "GameKit.framework", true);
-				proj.AddFrameworkToProject(targetID, "GoogleMobileAds.framework", true);
+				proj.AddFrameworkToProject(targetID, "GoogleMobileAds.framework", false);
 
 				// change GoogleMobileAds to use reletive path
 				string projData = proj.WriteToString();
 				projData = projData.Replace
 				(
 					@"/* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = System/Library/Frameworks/GoogleMobileAds.framework; sourceTree = SDKROOT; };",
-					@"/* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = """ + Application.dataPath+"/Plugins/IOS/GoogleMobileAds.framework" + @"""; sourceTree = ""<absolute>""; };"
+					@"/* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = Frameworks/GoogleMobileAds.framework; sourceTree = ""<group>""; };"
+					//@"/* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = """ + pathToBuiltProject+"/Frameworks/GoogleMobileAds.framework" + @"""; sourceTree = ""<absolute>""; };"
+				);
+
+				// change framework search path to include local framework directory
+				projData = projData.Replace
+				(
+					@"FRAMEWORK_SEARCH_PATHS = ""$(inherited)"";",
+					@"FRAMEWORK_SEARCH_PATHS = (""$(inherited)"", ""$(PROJECT_DIR)/Frameworks"",);"
 				);
 
 				// save proj data
 				File.WriteAllText(projPath, projData);
+
+				// extract GoogleMobileAds.framework.zip to xcode framework path
+				if (!Directory.Exists(pathToBuiltProject+"/Frameworks/GoogleMobileAds.framework"))
+				{
+					var startInfo = new System.Diagnostics.ProcessStartInfo();
+					startInfo.Arguments = Application.dataPath+"/Plugins/IOS/GoogleMobileAds.framework.zip" + " -d " + pathToBuiltProject+"/Frameworks";
+					startInfo.FileName = "unzip";
+					startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+					startInfo.CreateNoWindow = true;
+					using (var process = System.Diagnostics.Process.Start(startInfo))
+					{
+						process.WaitForExit();
+						int exitCode = process.ExitCode;
+						if (exitCode != 0) Debug.LogError("Failed to unzip GoogleMobileAds.framework.zip with ErrorCode: " + exitCode);
+					}
+				}
 			}
 			#endif
     	}
