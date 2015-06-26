@@ -378,7 +378,6 @@
 /Plugins/Reign/Platforms/Shared/WinRT/SocialPlugin.cs
 /Plugins/Reign/Platforms/Shared/WinRT/StreamPlugin.cs
 /Plugins/Reign/Platforms/Shared/WinRT/WinRTPlugin.cs
-/Plugins/Reign/Platforms/BB10/BlackBerryAdvertising_AdPlugin.cs
 /Plugins/Reign/Platforms/BB10/Common.cs
 /Plugins/Reign/Platforms/BB10/EmailPlugin.cs
 /Plugins/Reign/Platforms/BB10/InAppPurchasePlugin.cs
