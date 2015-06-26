@@ -306,7 +306,6 @@ namespace Reign.Plugin
 			else throw new Exception("Unsuported WinRT_AdAPI: " + desc.WinRT_AdAPI);
 			#elif UNITY_BLACKBERRY
 			if (desc.BB10_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
-			else if (desc.BB10_AdAPI == AdAPIs.BlackBerryAdvertising) return new BlackBerryAdvertising_AdPlugin_BB10(desc, callback);
 			else if (desc.BB10_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback, ReignServices.Singleton);
 			else throw new Exception("Unsuported BB10_AdAPI: " + desc.BB10_AdAPI);
 			#elif UNITY_IOS

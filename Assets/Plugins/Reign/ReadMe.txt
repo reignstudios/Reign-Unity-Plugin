@@ -6,7 +6,7 @@ Getting Started
 ----------------------------
 Open one of the scenes from: "Assets/Plugins/DemoScenes/...".
 And look at ".cs" files for reference.
-Make sure you have the "Assets\Plugins\Reign\Services\ReignServices.prefab" in the Scene for the plugins to work.
+Make sure you have the "Assets/Plugins/Reign/Services/ReignServices.prefab" in the Scene for the plugins to work.
 
 ----------------------------
 Post build steps

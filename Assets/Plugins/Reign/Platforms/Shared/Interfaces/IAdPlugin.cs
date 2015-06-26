@@ -343,11 +343,6 @@ namespace Reign
 		MicrosoftAdvertising,
 
 		/// <summary>
-		/// BlackBerry Advertising
-		/// </summary>
-		BlackBerryAdvertising,
-
-		/// <summary>
 		/// iAd
 		/// </summary>
 		iAd,

@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿// -------------------------------------------------------
+//  Created by Andrew Witte.
+// -------------------------------------------------------
+
+#if UNITY_EDITOR
+using UnityEngine;
 using System.Collections;
 using UnityEditor;
 using System.IO;
@@ -59,3 +64,4 @@ namespace Reign.EditorTools
 		}
 	}
 }
+#endif

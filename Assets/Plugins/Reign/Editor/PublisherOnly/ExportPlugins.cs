@@ -3,6 +3,7 @@
 //  Copyright (c) 2013 Reign-Studios. All rights reserved.
 // -------------------------------------------------------
 
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
@@ -379,3 +380,4 @@ public static class ExportPlugins
 		exportUnityPackages(getOpenSourceFiles(null), false, "OpenSource", folder);
 	}
 }
+#endif

@@ -12,12 +12,25 @@ namespace Reign
 		{
 			#if UNITY_WINRT
 			plugin = new PushNotificationPlugin_WinRT();
+			#else
+			plugin = new PushNotification_Dumy();
 			#endif
 		}
 
 		public static void Init(PushNotificationsDesc desc)
 		{
 			plugin.Init(desc);
+		}
+	}
+}
+
+namespace Reign.Plugin
+{
+	public class PushNotification_Dumy : IPushNotificationPlugin
+	{
+		public void Init(PushNotificationsDesc desc)
+		{
+			// do nothing...
 		}
 	}
 }

@@ -2,6 +2,7 @@
 //  Created by Andrew Witte.
 // -------------------------------------------------------
 
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -457,3 +458,4 @@ namespace Reign.EditorTools
 		#endregion
 	}
 }
+#endif

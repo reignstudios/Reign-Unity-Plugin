@@ -47,6 +47,7 @@ public class SocialNative
 						else shareIntent.setType("image/jpg");
 						shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(imageFile));
 						shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+						shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
 						Intent chooser = Intent.createChooser(shareIntent, title);
 						ReignUnityActivity.ReignContext.startActivity(chooser);
 					}
@@ -54,6 +55,7 @@ public class SocialNative
 					{
 						Intent shareIntent = new Intent(Intent.ACTION_SEND);
 						shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(imageFile));
+						shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
 						if (isPNG) shareIntent.setType("image/png");
 						else shareIntent.setType("image/jpg");
 						Intent chooser = Intent.createChooser(shareIntent, title);
@@ -64,6 +66,7 @@ public class SocialNative
 				{
 					Intent shareIntent = new Intent(Intent.ACTION_SEND);
 					shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+					shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
 					shareIntent.setType("text/plain");
 					Intent chooser = Intent.createChooser(shareIntent, title);
 					ReignUnityActivity.ReignContext.startActivity(chooser);
