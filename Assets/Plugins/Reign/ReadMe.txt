@@ -4,7 +4,7 @@ Post build steps will be explained there for each supported platform.
 ----------------------------
 Getting Started
 ----------------------------
-Open one of the scenes from: "Assets/Scenes/Reign/...".
+Open one of the scenes from: "Assets/Plugins/DemoScenes/...".
 And look at ".cs" files for reference.
 Make sure you have the "Assets\Plugins\Reign\Services\ReignServices.prefab" in the Scene for the plugins to work.
 

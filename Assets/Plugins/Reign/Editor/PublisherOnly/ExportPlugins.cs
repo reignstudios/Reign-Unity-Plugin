@@ -15,7 +15,7 @@ public static class ExportPlugins
 	{
 		var start = new System.Diagnostics.ProcessStartInfo();
 		start.Arguments = srcPath + " " + dstFile;
-		start.FileName = Application.dataPath + "/Editor/Reign/PublisherOnly/ZipCompressor.exe";
+		start.FileName = Application.dataPath + "/Plugins/Reign/Editor/PublisherOnly/ZipCompressor.exe";
 		start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
 		using (var proc = System.Diagnostics.Process.Start(start))
 		{
@@ -30,14 +30,14 @@ public static class ExportPlugins
 	static void PrepareRelease()
 	{
 		// reset review settings
-		using (var stream = new FileStream(Application.dataPath+"/Editor/Reign/ReviewSettings", FileMode.Create, FileAccess.Write, FileShare.None))
+		using (var stream = new FileStream(Application.dataPath+"/Plugins/Reign/Editor/ReviewSettings", FileMode.Create, FileAccess.Write, FileShare.None))
 		using (var writer = new StreamWriter(stream))
 		{
 			writer.Write("0");
 		}
 
 		// generate clean files list
-		using (var stream = new FileStream(Application.dataPath+"/Editor/Reign/CleanSettings", FileMode.Create, FileAccess.Write, FileShare.None))
+		using (var stream = new FileStream(Application.dataPath+"/Plugins/Reign/Editor/CleanSettings", FileMode.Create, FileAccess.Write, FileShare.None))
 		using (var writer = new StreamWriter(stream))
 		{
 			globalFilesAdded = false;
@@ -48,7 +48,7 @@ public static class ExportPlugins
 				string value = file.Remove(0, Application.dataPath.Length).Replace('\\', '/');
 				switch (value)
 				{
-					case "/Editor/Reign/Reign.EditorTools.dll":
+					case "/Plugins/Reign/Editor/Reign.EditorTools.dll":
 					case "/Plugins/Reign/VersionInfo/ReignVersionCheck":
 					case "/Plugins/Reign/VersionInfo/ReignVersionCheck_Windows":
 					case "/Plugins/Reign/VersionInfo/ReignVersionCheck_BB10":
@@ -65,7 +65,7 @@ public static class ExportPlugins
 
 		// zip external source code
 		string rootPath = Application.dataPath.Replace("Assets", "");
-		zipPath("src=" + rootPath + @"\APIs\ReignScores", "dst=" + Application.dataPath + "/Editor/Reign/ReignScores.zip");
+		zipPath("src=" + rootPath + @"\APIs\ReignScores", "dst=" + Application.dataPath + "/Plugins/Reign/Editor/ReignScores.zip");
 		zipPath("src=" + rootPath + @"\Native\Reign.Android", "dst=" + Application.dataPath + "/Plugins/Android/Reign.Android.zip");
 
 		AssetDatabase.Refresh();
@@ -157,26 +157,24 @@ public static class ExportPlugins
 		if (files == null) files = new List<string>();
 
 		// add all files from paths
-		getFilesInPath(Application.dataPath + "/Editor/Reign/", files);
-		getFilesInPath(Application.dataPath + "/Resources/Reign/", files);
-		getFilesInPath(Application.dataPath + "/Scenes/Reign/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Editor/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Resources/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/DemoScenes/", files);
 
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/EditorRuntime/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/EditorRuntime/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Managers/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Math/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Services/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/PluginAssets/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Tools/", files);
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/Code/", files);
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/Interfaces/", files);
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/ImageTools/", files);
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/SharpZipLib/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/Shared/Code/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/Shared/Interfaces/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/Shared/ImageTools/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/Shared/SharpZipLib/", files);
 
 		// add specific files
 		files.Add(Application.dataPath + "/Plugins/Reign/VersionInfo/ReignVersionCheck");
 		files.Add(Application.dataPath + "/Plugins/Reign/ReadMe.txt");
-		files.Add(Application.dataPath + "/smcs.rsp");
-		files.Add(Application.dataPath + "/gmcs.rsp");
 
 		return files;
 	}
@@ -210,8 +208,8 @@ public static class ExportPlugins
 		files = getGlobalFiles(files);
 
 		getFilesInPath(Application.dataPath + "/Plugins/WP8/", files);
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/WP8/", files);
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/WinRT/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/WP8/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/Shared/WinRT/", files);
 		files.Add(Application.dataPath + "/Plugins/Reign/VersionInfo/ReignVersionCheck_Windows");
 
 		return files;
@@ -229,8 +227,7 @@ public static class ExportPlugins
 	{
 		files = getGlobalFiles(files);
 
-		getFilesInPath(Application.dataPath + "/StreamingAssets/Reign/BB10/", files);
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/BB10/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/BB10/", files);
 		files.Add(Application.dataPath + "/Plugins/Reign/VersionInfo/ReignVersionCheck_BB10");
 
 		return files;
@@ -249,7 +246,7 @@ public static class ExportPlugins
 		files = getGlobalFiles(files);
 
 		getFilesInPath(Application.dataPath + "/Plugins/iOS/", files);
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/iOS/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/iOS/", files);
 		files.Add(Application.dataPath + "/Plugins/Reign/VersionInfo/ReignVersionCheck_iOS");
 
 		return files;
@@ -268,7 +265,7 @@ public static class ExportPlugins
 		files = getGlobalFiles(files);
 
 		getFilesInPath(Application.dataPath + "/Plugins/Android/", files, disableUnityLegalConflicts ? "amazon-ads-5.4.227.jar" : null);
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/Android/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/Android/", files);
 		files.Add(Application.dataPath + "/Plugins/Reign/VersionInfo/ReignVersionCheck_Android");
 
 		return files;
@@ -365,8 +362,8 @@ public static class ExportPlugins
 	{
 		if (files == null) files = new List<string>();
 
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/ImageTools/", files);
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/Shared/SharpZipLib/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/Shared/ImageTools/", files);
+		getFilesInPath(Application.dataPath + "/Plugins/Reign/Platforms/Shared/SharpZipLib/", files);
 
 		return files;
 	}

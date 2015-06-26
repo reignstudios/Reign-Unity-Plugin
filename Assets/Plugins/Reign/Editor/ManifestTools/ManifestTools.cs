@@ -34,7 +34,7 @@ namespace Reign.EditorTools
 		[MenuItem("Edit/Reign/Manifests/Save current AndroidManifest")]
 		static void SaveCustomManifiest()
 		{
-			string filename = EditorUtility.SaveFilePanel("Android Manifest", Application.dataPath+"/Editor/Reign/ManifestTools/DefaultAndroidManifests", "AndroidManifest_Custom", "xml");
+			string filename = EditorUtility.SaveFilePanel("Android Manifest", Application.dataPath+"/Plugins/Reign/Editor/ManifestTools/DefaultAndroidManifests", "AndroidManifest_Custom", "xml");
 			if (string.IsNullOrEmpty(filename)) return;
 			
 			EditorApplication.SaveAssets();
@@ -45,7 +45,7 @@ namespace Reign.EditorTools
 		[MenuItem("Edit/Reign/Manifests/Load custom AndroidManifest")]
 		static void LoadCustomManifiest()
 		{
-			string filename = EditorUtility.OpenFilePanel("Android Manifest", Application.dataPath+"/Editor/Reign/ManifestTools/DefaultAndroidManifests", "xml");
+			string filename = EditorUtility.OpenFilePanel("Android Manifest", Application.dataPath+"/Plugins/Reign/Editor/ManifestTools/DefaultAndroidManifests", "xml");
 			if (string.IsNullOrEmpty(filename)) return;
 			
 			loadAndroidManifiest(filename);

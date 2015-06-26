@@ -230,7 +230,7 @@ namespace Reign.EditorTools
 		[MenuItem("Edit/Reign/Input/Save custom platform layout")]
 		static void SaveCustomPlatformLayout()
 		{
-			string filename = EditorUtility.SaveFilePanel("Input Layout", Application.dataPath+"/Editor/Reign/Input/DefaultLayouts", "InputManager_Custom", "");
+			string filename = EditorUtility.SaveFilePanel("Input Layout", Application.dataPath+"/Plugins/Reign/Editor/Input/DefaultLayouts", "InputManager_Custom", "");
 			if (string.IsNullOrEmpty(filename)) return;
 			
 			EditorApplication.SaveAssets();
@@ -242,7 +242,7 @@ namespace Reign.EditorTools
 		[MenuItem("Edit/Reign/Input/Load custom platform layout")]
 		static void LoadCustomPlatformLayout()
 		{
-			string filename = EditorUtility.OpenFilePanel("Input Layout", Application.dataPath+"/Editor/Reign/Input/DefaultLayouts", "");
+			string filename = EditorUtility.OpenFilePanel("Input Layout", Application.dataPath+"/Plugins/Reign/Editor/Input/DefaultLayouts", "");
 			if (string.IsNullOrEmpty(filename)) return;
 			
 			EditorApplication.SaveAssets();
@@ -255,7 +255,7 @@ namespace Reign.EditorTools
 		{
 			EditorApplication.SaveAssets();
 			string root = Application.dataPath.Replace("Assets", "ProjectSettings");
-			File.Copy(root + "/InputManager.asset", Application.dataPath+"/Editor/Reign/Input/DefaultLayouts/InputManager_" + platform, true);
+			File.Copy(root + "/InputManager.asset", Application.dataPath+"/Plugins/Reign/Editor/Input/DefaultLayouts/InputManager_" + platform, true);
 			AssetDatabase.Refresh();
 		}
 
@@ -263,7 +263,7 @@ namespace Reign.EditorTools
 		{
 			EditorApplication.SaveAssets();
 			string root = Application.dataPath.Replace("Assets", "ProjectSettings");
-			File.Copy(Application.dataPath+"/Editor/Reign/Input/DefaultLayouts/InputManager_" + platform, root + "/InputManager.asset", true);
+			File.Copy(Application.dataPath+"/Plugins/Reign/Editor/Input/DefaultLayouts/InputManager_" + platform, root + "/InputManager.asset", true);
 			AssetDatabase.Refresh();
 		}
 	}

@@ -23,7 +23,7 @@ namespace Reign.Plugin
 			WinRTPlugin.Dispatcher.BeginInvoke(delegate()
 			{
 				// XNA method
-				Microsoft.Xna.Framework.GamerServices.Guide.BeginShowMessageBox("Version of Windows", "Pick a version of Windows.",
+				Microsoft.Xna.Framework.GamerServices.Guide.BeginShowMessageBox(title, message,
 				new System.Collections.Generic.List<string> {options.OkButtonName, options.CancelButtonText}, 0, Microsoft.Xna.Framework.GamerServices.MessageBoxIcon.Error,
 				asyncResult =>
 				{

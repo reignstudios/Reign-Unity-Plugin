@@ -98,7 +98,7 @@ namespace Reign.EditorTools
 		{
 			if (!EditorUtility.DisplayDialog("Warning!", "This will remove all Reign plugin files.", "OK", "Cancel")) return;
 
-			using (var stream = new FileStream(Application.dataPath+"/Editor/Reign/CleanSettings", FileMode.Open, FileAccess.Read, FileShare.None))
+			using (var stream = new FileStream(Application.dataPath+"/Plugins/Reign/Editor/CleanSettings", FileMode.Open, FileAccess.Read, FileShare.None))
 			using (var reader = new StreamReader(stream))
 			{
 				string file = reader.ReadLine();
@@ -200,7 +200,7 @@ namespace Reign.EditorTools
 				foreach (var source in csSources)
 				{
 					// copy cs file
-					string sourcePath = string.Format("{0}/{1}/{2}", Application.dataPath, "Plugins/Reign", source);
+					string sourcePath = string.Format("{0}/{1}/{2}", Application.dataPath, "Plugins/Reign/Platforms", source);
 					string sourceFileName = Path.GetFileName(source);
 					File.Copy(sourcePath, string.Format("{0}/{1}{2}/{3}", pathToBuiltProject, productName, extraPath, sourceFileName), true);
 
