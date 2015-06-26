@@ -3,7 +3,6 @@
 //  Copyright (c) 2013 Reign-Studios. All rights reserved.
 // -------------------------------------------------------
 
-#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ public static class ExportPlugins
 	{
 		var start = new System.Diagnostics.ProcessStartInfo();
 		start.Arguments = srcPath + " " + dstFile;
-		start.FileName = Application.dataPath + "/Plugins/Reign/Editor/PublisherOnly/ZipCompressor.exe";
+		start.FileName = Application.dataPath + "/Editor/Reign/PublisherOnly/ZipCompressor.exe";
 		start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
 		using (var proc = System.Diagnostics.Process.Start(start))
 		{
@@ -31,14 +30,14 @@ public static class ExportPlugins
 	static void PrepareRelease()
 	{
 		// reset review settings
-		using (var stream = new FileStream(Application.dataPath+"/Plugins/Reign/Editor/ReviewSettings", FileMode.Create, FileAccess.Write, FileShare.None))
+		using (var stream = new FileStream(Application.dataPath+"/Editor/Reign/ReviewSettings", FileMode.Create, FileAccess.Write, FileShare.None))
 		using (var writer = new StreamWriter(stream))
 		{
 			writer.Write("0");
 		}
 
 		// generate clean files list
-		using (var stream = new FileStream(Application.dataPath+"/Plugins/Reign/Editor/CleanSettings", FileMode.Create, FileAccess.Write, FileShare.None))
+		using (var stream = new FileStream(Application.dataPath+"/Editor/Reign/CleanSettings", FileMode.Create, FileAccess.Write, FileShare.None))
 		using (var writer = new StreamWriter(stream))
 		{
 			globalFilesAdded = false;
@@ -49,7 +48,7 @@ public static class ExportPlugins
 				string value = file.Remove(0, Application.dataPath.Length).Replace('\\', '/');
 				switch (value)
 				{
-					case "/Plugins/Reign/Editor/Reign.EditorTools.dll":
+					case "/Editor/Reign/Reign.EditorTools.dll":
 					case "/Plugins/Reign/VersionInfo/ReignVersionCheck":
 					case "/Plugins/Reign/VersionInfo/ReignVersionCheck_Windows":
 					case "/Plugins/Reign/VersionInfo/ReignVersionCheck_BB10":
@@ -66,7 +65,7 @@ public static class ExportPlugins
 
 		// zip external source code
 		string rootPath = Application.dataPath.Replace("Assets", "");
-		zipPath("src=" + rootPath + @"\APIs\ReignScores", "dst=" + Application.dataPath + "/Plugins/Reign/Editor/ReignScores.zip");
+		zipPath("src=" + rootPath + @"\APIs\ReignScores", "dst=" + Application.dataPath + "/Editor/Reign/ReignScores.zip");
 		zipPath("src=" + rootPath + @"\Native\Reign.Android", "dst=" + Application.dataPath + "/Plugins/Android/Reign.Android.zip");
 
 		AssetDatabase.Refresh();
@@ -158,7 +157,7 @@ public static class ExportPlugins
 		if (files == null) files = new List<string>();
 
 		// add all files from paths
-		getFilesInPath(Application.dataPath + "/Plugins/Reign/Editor/", files);
+		getFilesInPath(Application.dataPath + "/Editor/Reign/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/Resources/", files);
 		getFilesInPath(Application.dataPath + "/Plugins/Reign/DemoScenes/", files);
 
@@ -176,6 +175,8 @@ public static class ExportPlugins
 		// add specific files
 		files.Add(Application.dataPath + "/Plugins/Reign/VersionInfo/ReignVersionCheck");
 		files.Add(Application.dataPath + "/Plugins/Reign/ReadMe.txt");
+		files.Add(Application.dataPath + "/gmcs.rsp");
+		files.Add(Application.dataPath + "/smcs.rsp");
 
 		return files;
 	}
@@ -380,4 +381,3 @@ public static class ExportPlugins
 		exportUnityPackages(getOpenSourceFiles(null), false, "OpenSource", folder);
 	}
 }
-#endif

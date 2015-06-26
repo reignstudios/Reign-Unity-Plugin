@@ -2,7 +2,6 @@
 //  Created by Andrew Witte.
 // -------------------------------------------------------
 
-#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -99,7 +98,7 @@ namespace Reign.EditorTools
 		{
 			if (!EditorUtility.DisplayDialog("Warning!", "This will remove all Reign plugin files.", "OK", "Cancel")) return;
 
-			using (var stream = new FileStream(Application.dataPath+"/Plugins/Reign/Editor/CleanSettings", FileMode.Open, FileAccess.Read, FileShare.None))
+			using (var stream = new FileStream(Application.dataPath+"/Editor/Reign/CleanSettings", FileMode.Open, FileAccess.Read, FileShare.None))
 			using (var reader = new StreamReader(stream))
 			{
 				string file = reader.ReadLine();
@@ -458,4 +457,3 @@ namespace Reign.EditorTools
 		#endregion
 	}
 }
-#endif
