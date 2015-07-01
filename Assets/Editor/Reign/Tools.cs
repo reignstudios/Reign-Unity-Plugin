@@ -334,6 +334,9 @@ namespace Reign.EditorTools
 				// save proj data
 				File.WriteAllText(projPath, projData);
 
+				// create Frameworks folder if one doesn't exists
+				if (!Directory.Exists(pathToBuiltProject+"/Frameworks")) Directory.CreateDirectory(pathToBuiltProject+"/Frameworks");
+
 				// extract GoogleMobileAds.framework.zip to xcode framework path
 				if (!Directory.Exists(pathToBuiltProject+"/Frameworks/GoogleMobileAds.framework"))
 				{
