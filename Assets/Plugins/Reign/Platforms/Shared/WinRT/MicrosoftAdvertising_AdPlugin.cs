@@ -201,10 +201,10 @@ namespace Reign.Plugin
 					}
 					#endif
 
-					#if UNITY_METRO
-					setGravity(desc.WinRT_MicrosoftAdvertising_AdGravity);
-					#else
+					#if WINDOWS_PHONE || UNITY_WP_8_1
 					setGravity(desc.WP8_MicrosoftAdvertising_AdGravity);
+					#else
+					setGravity(desc.WinRT_MicrosoftAdvertising_AdGravity);
 					#endif
 					
 					eventCallback = desc.EventCallback;

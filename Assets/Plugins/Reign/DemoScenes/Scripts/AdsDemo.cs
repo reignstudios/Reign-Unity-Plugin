@@ -143,7 +143,6 @@ public class AdsDemo : MonoBehaviour
 
 	private static void eventCallback(AdEvents adEvent, string eventMessage)
 	{
-		// NOTE: On BB10 these events never get called!
 		switch (adEvent)
 		{
 			case AdEvents.Refreshed: singleton.AdStatusText.text = "Refreshed"; break;
