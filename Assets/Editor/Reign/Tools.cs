@@ -335,13 +335,13 @@ namespace Reign.EditorTools
 				File.WriteAllText(projPath, projData);
 
 				// create Frameworks folder if one doesn't exists
-				if (!Directory.Exists(pathToBuiltProject+"/Frameworks")) Directory.CreateDirectory(pathToBuiltProject+"/Frameworks");
+				if (!Directory.Exists(pathToBuiltProject+"/Frameworks/")) Directory.CreateDirectory(pathToBuiltProject+"/Frameworks/");
 
 				// extract GoogleMobileAds.framework.zip to xcode framework path
-				if (!Directory.Exists(pathToBuiltProject+"/Frameworks/GoogleMobileAds.framework"))
+				if (!Directory.Exists(pathToBuiltProject+"/Frameworks/GoogleMobileAds.framework/"))
 				{
 					var startInfo = new System.Diagnostics.ProcessStartInfo();
-					startInfo.Arguments = Application.dataPath+"/Plugins/IOS/GoogleMobileAds.framework.zip" + " -d " + pathToBuiltProject+"/Frameworks";
+					startInfo.Arguments = @"""" + Application.dataPath+"/Plugins/IOS/GoogleMobileAds.framework.zip" + @""" -d """ + pathToBuiltProject+@"/Frameworks/""";
 					startInfo.FileName = "unzip";
 					startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
 					startInfo.CreateNoWindow = true;
