@@ -194,6 +194,8 @@ namespace Reign.EditorTools
 					"WP8/CurrentAppSimulator/MockReceiptStore.cs",
 					"WP8/CurrentAppSimulator/ProductLicense.cs",
 					"WP8/CurrentAppSimulator/ProductListing.cs",
+					#else
+					"Shared/WinRT/AdDuplex_AdPlugin.cs",
 					#endif
 				};
 

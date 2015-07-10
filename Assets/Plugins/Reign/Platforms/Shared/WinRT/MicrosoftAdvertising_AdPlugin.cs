@@ -189,7 +189,7 @@ namespace Reign.Plugin
 							if (desc.Testing) adControl.AdUnitId = "10042998";
 							break;
 
-						case WinRT_MicrosoftAdvertising_AdSize.Sqaure_250x250:
+						case WinRT_MicrosoftAdvertising_AdSize.Square_250x250:
 							adControl.Width = 250;
 							adControl.Height = 250;
 							if (desc.Testing) adControl.AdUnitId = "10043105";

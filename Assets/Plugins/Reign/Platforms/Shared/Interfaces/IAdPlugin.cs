@@ -28,9 +28,50 @@ namespace Reign
 		Wide_728x90,
 
 		/// <summary>
-		/// Sqaure_250x250
+		/// Square_250x250
 		/// </summary>
-		Sqaure_250x250
+		Square_250x250
+	}
+
+	/// <summary>
+	/// Ad Size types
+	/// </summary>
+	public enum WinRT_AdDuplex_AdSize
+	{
+		/// <summary>
+		/// Tall_160x600
+		/// </summary>
+		Tall_160x600,
+
+		/// <summary>
+		/// Wide_250x125
+		/// </summary>
+		Wide_250x125,
+
+		/// <summary>
+		/// Wide_292x60
+		/// </summary>
+		Wide_292x60,
+
+		/// <summary>
+		/// Wide_300x250
+		/// </summary>
+		Wide_300x250,
+
+		/// <summary>
+		/// Wide_500x130
+		/// </summary>
+		Wide_500x130,
+
+		/// <summary>
+		/// Wide_720x90
+		/// </summary>
+		Wide_720x90,
+
+		/// <summary>
+		/// Square_250x250
+		/// </summary>
+		Square_250x250,
 	}
 	
 	/// <summary>
@@ -343,6 +384,11 @@ namespace Reign
 		MicrosoftAdvertising,
 
 		/// <summary>
+		/// AdDuplex
+		/// </summary>
+		AdDuplex,
+
+		/// <summary>
 		/// iAd
 		/// </summary>
 		iAd,
@@ -472,7 +518,7 @@ namespace Reign
 		/// <summary>
 		/// Ad size type
 		/// </summary>
-		public WinRT_MicrosoftAdvertising_AdSize WinRT_MicrosoftAdvertising_AdSize = WinRT_MicrosoftAdvertising_AdSize.Sqaure_250x250;
+		public WinRT_MicrosoftAdvertising_AdSize WinRT_MicrosoftAdvertising_AdSize = WinRT_MicrosoftAdvertising_AdSize.Square_250x250;
 
 		/// <summary>
 		/// Set to true to use native Ads refresh method (Defaults to true)
@@ -481,14 +527,34 @@ namespace Reign
 
 		/// <summary>
 		/// Set Ad refresh rate in seconds (Defaults to 2 min).
-		/// NOTE: WP8_MicrosoftAdvertising_UseBuiltInRefresh must be set to false to use this field
+		/// NOTE: WinRT_MicrosoftAdvertising_UseBuiltInRefresh must be set to false to use this field
 		/// </summary>
 		public int WinRT_MicrosoftAdvertising_RefreshRate = 120;
 
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity WinRT_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WinRT_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
+		public AdGravity WinRT_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WinRT_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter, WinRT_AdDuplex_AdGravity = AdGravity.TopCenter;
+
+		/// <summary>
+		/// AdDuplex Application Key
+		/// </summary>
+		public string WinRT_AdDuplex_ApplicationKey;
+		
+		/// <summary>
+		/// AdDuplex UnitID
+		/// </summary>
+		public string WinRT_AdDuplex_UnitID;
+
+		/// <summary>
+		/// Set Ad refresh rate in seconds (Defaults to 2 min).
+		/// </summary>
+		public int WinRT_AdDuplex_RefreshRate = 120;
+
+		/// <summary>
+		/// Ad size type
+		/// </summary>
+		public WinRT_AdDuplex_AdSize WinRT_AdDuplex_AdSize = WinRT_AdDuplex_AdSize.Square_250x250;
 
 		/// <summary>
 		/// Set to your APID
@@ -531,6 +597,21 @@ namespace Reign
 		/// NOTE: WP8_MicrosoftAdvertising_UseBuiltInRefresh must be set to false to use this field
 		/// </summary>
 		public int WP8_MicrosoftAdvertising_RefreshRate = 120;
+
+		/// <summary>
+		/// AdDuplex Application Key
+		/// </summary>
+		public string WP8_AdDuplex_ApplicationKey;
+		
+		/// <summary>
+		/// AdDuplex UnitID
+		/// </summary>
+		public string WP8_AdDuplex_UnitID;
+
+		/// <summary>
+		/// Set Ad refresh rate in seconds (Defaults to 2 min).
+		/// </summary>
+		public int WP8_AdDuplex_RefreshRate = 120;
 		
 		/// <summary>
 		/// AdMob UnitID (NOTE: must set even for testing)
@@ -550,7 +631,7 @@ namespace Reign
 		/// <summary>
 		/// Starting Ad gravity.
 		/// </summary>
-		public AdGravity WP8_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WP8_AdMob_AdGravity = AdGravity.TopCenter, WP8_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter;
+		public AdGravity WP8_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WP8_AdMob_AdGravity = AdGravity.TopCenter, WP8_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter, WP8_AdDuplex_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
 		/// Set to your APID
