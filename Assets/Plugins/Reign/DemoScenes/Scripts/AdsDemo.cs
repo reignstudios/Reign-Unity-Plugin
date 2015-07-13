@@ -67,6 +67,12 @@ public class AdsDemo : MonoBehaviour
 		desc.WinRT_MicrosoftAdvertising_AdSize = WinRT_MicrosoftAdvertising_AdSize.Wide_728x90;
 		//desc.WinRT_MicrosoftAdvertising_UseBuiltInRefresh = false;
 		//desc.WinRT_MicrosoftAdvertising_RefreshRate = 120;
+
+		desc.WinRT_AdDuplex_ApplicationKey = "";
+		desc.WinRT_AdDuplex_UnitID = "";
+		desc.WinRT_AdDuplex_AdGravity = AdGravity.BottomCenter;
+		desc.WinRT_AdDuplex_AdSize = WinRT_AdDuplex_AdSize.Wide_500x130;
+		//desc.WinRT_AdDuplex_RefreshRate = 120;
 			
 		// WP8 settings (Windows Phone 8.0 & 8.1)
 		desc.WP8_AdAPI = AdAPIs.MicrosoftAdvertising;
@@ -76,6 +82,11 @@ public class AdsDemo : MonoBehaviour
 		desc.WP8_MicrosoftAdvertising_AdSize = WP8_MicrosoftAdvertising_AdSize.Wide_480x80;
 		//desc.WP8_MicrosoftAdvertising_UseBuiltInRefresh = false;
 		//desc.WP8_MicrosoftAdvertising_RefreshRate = 120;
+
+		desc.WP8_AdDuplex_ApplicationKey = "";
+		desc.WP8_AdDuplex_UnitID = "";
+		desc.WP8_AdDuplex_AdGravity = AdGravity.BottomCenter;
+		//desc.WP8_AdDuplex_RefreshRate = 120;
 			
 		desc.WP8_AdMob_UnitID = "";// NOTE: You MUST have this even for Testing!
 		desc.WP8_AdMob_AdGravity = AdGravity.BottomCenter;
@@ -143,6 +154,7 @@ public class AdsDemo : MonoBehaviour
 
 	private static void eventCallback(AdEvents adEvent, string eventMessage)
 	{
+		if (singleton.AdStatusText == null) return;
 		switch (adEvent)
 		{
 			case AdEvents.Refreshed: singleton.AdStatusText.text = "Refreshed"; break;

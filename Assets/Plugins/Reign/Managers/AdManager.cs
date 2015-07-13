@@ -303,6 +303,7 @@ namespace Reign.Plugin
 			if (desc.WinRT_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);
 			else if (desc.WinRT_AdAPI == AdAPIs.MicrosoftAdvertising) return new MicrosoftAdvertising_AdPlugin_WinRT(desc, callback);
 			else if (desc.WinRT_AdAPI == AdAPIs.MillennialMediaAdvertising) return new MM_AdPlugin(desc, callback, ReignServices.Singleton);
+			else if (desc.WinRT_AdAPI == AdAPIs.AdDuplex) return new AdDuplex_AdPlugin_WinRT(desc, callback);
 			else throw new Exception("Unsuported WinRT_AdAPI: " + desc.WinRT_AdAPI);
 			#elif UNITY_BLACKBERRY
 			if (desc.BB10_AdAPI == AdAPIs.None) return new Dumy_AdPlugin(desc, callback);

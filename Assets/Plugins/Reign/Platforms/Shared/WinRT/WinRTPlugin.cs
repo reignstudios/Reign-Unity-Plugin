@@ -117,6 +117,10 @@ namespace Reign
 			MessageBoxPlugin_WinRT.InitNative = init_MessageBoxPlugin;
 			MarketingPlugin_WinRT.InitNative = init_MarketingPlugin;
 			EmailPlugin_WinRT.InitNative = init_EmailPlugin;
+			
+			#if UNITY_METRO
+			AdDuplex_AdPlugin_WinRT.InitNative = init_AdDuplex_AdPlugin;
+			#endif
 
 			#if WINDOWS_PHONE
 			AdMob_AdPlugin_WP8.InitNative = init_AdMob_AdPlugin;
@@ -166,6 +170,13 @@ namespace Reign
 		{
 			plugin.Native = new MicrosoftAdvertising_AdPlugin_Native(desc, createdCallback);
 		}
+
+		#if UNITY_METRO
+		private static void init_AdDuplex_AdPlugin(AdDuplex_AdPlugin_WinRT plugin, AdDesc desc, AdCreatedCallbackMethod createdCallback)
+		{
+			plugin.Native = new AdDuplex_AdPlugin_Native(desc, createdCallback);
+		}
+		#endif
 
 		private static void init_MessageBoxPlugin(MessageBoxPlugin_WinRT plugin)
 		{
