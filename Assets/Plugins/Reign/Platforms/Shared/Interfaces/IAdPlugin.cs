@@ -537,12 +537,12 @@ namespace Reign
 		public AdGravity WinRT_MicrosoftAdvertising_AdGravity = AdGravity.TopCenter, WinRT_MillennialMediaAdvertising_AdGravity = AdGravity.TopCenter, WinRT_AdDuplex_AdGravity = AdGravity.TopCenter;
 
 		/// <summary>
-		/// AdDuplex Application Key
+		/// AdDuplex Application Key (NOTE: must set even for testing)
 		/// </summary>
 		public string WinRT_AdDuplex_ApplicationKey;
 		
 		/// <summary>
-		/// AdDuplex UnitID
+		/// AdDuplex UnitID (NOTE: must set even for testing)
 		/// </summary>
 		public string WinRT_AdDuplex_UnitID;
 

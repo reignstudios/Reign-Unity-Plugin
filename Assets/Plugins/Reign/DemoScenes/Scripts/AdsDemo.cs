@@ -60,7 +60,7 @@ public class AdsDemo : MonoBehaviour
 		//desc.Editor_MillennialMediaAdvertising_RefreshRate = 120,
 
 		// WinRT settings (Windows 8.0 & 8.1)
-		desc.WinRT_AdAPI = AdAPIs.MicrosoftAdvertising;
+		desc.WinRT_AdAPI = AdAPIs.MicrosoftAdvertising;// NOTE: If building for WP 8.1 or Universal targets this value is used. All other WinRT values or used for Win8
 		desc.WinRT_MicrosoftAdvertising_ApplicationID = "";
 		desc.WinRT_MicrosoftAdvertising_UnitID = "";
 		desc.WinRT_MicrosoftAdvertising_AdGravity = AdGravity.BottomCenter;
@@ -75,7 +75,7 @@ public class AdsDemo : MonoBehaviour
 		//desc.WinRT_AdDuplex_RefreshRate = 120;
 			
 		// WP8 settings (Windows Phone 8.0 & 8.1)
-		desc.WP8_AdAPI = AdAPIs.MicrosoftAdvertising;
+		desc.WP8_AdAPI = AdAPIs.MicrosoftAdvertising;// NOTE: If building for WP 8.1 or Universal targets this value is NOT used (Use the WinRT value instead). All other WP8 values are still used for WP 8.0, 8.1 and Universal.
 		desc.WP8_MicrosoftAdvertising_ApplicationID = "";
 		desc.WP8_MicrosoftAdvertising_UnitID = "";
 		desc.WP8_MicrosoftAdvertising_AdGravity = AdGravity.BottomCenter;

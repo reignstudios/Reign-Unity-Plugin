@@ -371,6 +371,7 @@
 /Plugins/Reign/Platforms/WP8/AdMob_AdPlugin.cs
 /Plugins/Reign/Platforms/WP8/AdMob_InterstitialAdPlugin.cs
 /Plugins/Reign/Platforms/Shared/WinRT/AdDuplex_AdPlugin.cs
+/Plugins/Reign/Platforms/Shared/WinRT/AdDuplex_InterstitialAdPlugin.cs
 /Plugins/Reign/Platforms/Shared/WinRT/EmailPlugin.cs
 /Plugins/Reign/Platforms/Shared/WinRT/MarketingPlugin.cs
 /Plugins/Reign/Platforms/Shared/WinRT/MessageBoxPlugin.cs

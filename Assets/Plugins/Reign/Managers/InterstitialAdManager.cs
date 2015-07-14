@@ -280,6 +280,9 @@ namespace Reign.Plugin
 			if (desc.WP8_AdAPI == InterstitialAdAPIs.None) return new Dumy_InterstitialAdPlugin(desc, callback);
 			else if (desc.WP8_AdAPI == InterstitialAdAPIs.AdMob) return new AdMob_InterstitialAdPlugin_WP8(desc, callback);
 			else throw new Exception("Unsuported WP8_AdAPI: " + desc.WP8_AdAPI);
+			#elif UNITY_METRO
+			if (desc.WinRT_AdAPI == InterstitialAdAPIs.AdDuplex) return new AdDuplex_InterstitialAdPlugin_WinRT(desc, callback);
+			else throw new Exception("Unsuported WinRT_AdAPI: " + desc.WinRT_AdAPI);
 			#elif UNITY_IOS
 			if (desc.iOS_AdAPI == InterstitialAdAPIs.None) return new Dumy_InterstitialAdPlugin(desc, callback);
 			else if (desc.iOS_AdAPI == InterstitialAdAPIs.AdMob) return new AdMob_InterstitialAdPlugin_iOS(desc, callback);

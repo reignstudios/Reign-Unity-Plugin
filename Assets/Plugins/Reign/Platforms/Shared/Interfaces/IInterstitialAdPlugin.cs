@@ -26,6 +26,11 @@ namespace Reign
 		/// Amazon
 		/// </summary>
 		Amazon,
+
+		/// <summary>
+		/// AdDuplex
+		/// </summary>
+		AdDuplex
 	}
 
 	/// <summary>
@@ -92,7 +97,10 @@ namespace Reign
 		public int UnityUI_SortIndex = 1001;
 
 		// WinRT
-		// TODO...
+		/// <summary>
+		/// Ad API type
+		/// </summary>
+		public InterstitialAdAPIs WinRT_AdAPI = InterstitialAdAPIs.None;
 
 		// WP8
 		/// <summary>
@@ -101,10 +109,19 @@ namespace Reign
 		public InterstitialAdAPIs WP8_AdAPI = InterstitialAdAPIs.None;
 
 		/// <summary>
-		/// AdMob UnitID
-		/// NOTE: Must set event for testing
+		/// AdMob UnitID (NOTE: must set even for testing)
 		/// </summary>
 		public string WP8_AdMob_UnitID;
+
+		/// <summary>
+		/// AdDuplex Application Key (NOTE: must set even for testing)
+		/// </summary>
+		public string WP8_AdDuplex_ApplicationKey;
+
+		/// <summary>
+		/// AdDuplex UnitID (NOTE: must set even for testing)
+		/// </summary>
+		public string WP8_AdDuplex_UnitID;
 		
 		// BB10
 		// TODO...
@@ -116,14 +133,12 @@ namespace Reign
 		public InterstitialAdAPIs iOS_AdAPI = InterstitialAdAPIs.None;
 
 		/// <summary>
-		/// AdMob UnitID
-		/// NOTE: Must set event for testing
+		/// AdMob UnitID (NOTE: must set even for testing)
 		/// </summary>
 		public string iOS_AdMob_UnitID;
 
 		/// <summary>
-		/// DFP UnitID
-		/// NOTE: Must set event for testing
+		/// DFP UnitID (NOTE: must set even for testing)
 		/// </summary>
 		public string iOS_DFP_UnitID;
 		
@@ -134,20 +149,17 @@ namespace Reign
 		public InterstitialAdAPIs Android_AdAPI = InterstitialAdAPIs.None;
 
 		/// <summary>
-		/// AdMob UnitID
-		/// NOTE: Must set event for testing
+		/// AdMob UnitID (NOTE: must set even for testing)
 		/// </summary>
 		public string Android_AdMob_UnitID;
 
 		/// <summary>
-		/// DFP UnitID
-		/// NOTE: Must set event for testing
+		/// DFP UnitID (NOTE: must set even for testing)
 		/// </summary>
 		public string Android_DFP_UnitID;
 
 		/// <summary>
-		/// Amazon UnitID
-		/// NOTE: Must set event for testing
+		/// Amazon UnitID (NOTE: must set even for testing)
 		/// </summary>
 		public string Android_Amazon_ApplicationKey;
 	}

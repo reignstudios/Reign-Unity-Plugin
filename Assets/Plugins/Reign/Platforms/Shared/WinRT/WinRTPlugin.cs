@@ -120,6 +120,7 @@ namespace Reign
 			
 			#if UNITY_METRO
 			AdDuplex_AdPlugin_WinRT.InitNative = init_AdDuplex_AdPlugin;
+			AdDuplex_InterstitialAdPlugin_WinRT.InitNative = init_AdDuplex_InterstitialAdPlugin;
 			#endif
 
 			#if WINDOWS_PHONE
@@ -175,6 +176,15 @@ namespace Reign
 		private static void init_AdDuplex_AdPlugin(AdDuplex_AdPlugin_WinRT plugin, AdDesc desc, AdCreatedCallbackMethod createdCallback)
 		{
 			plugin.Native = new AdDuplex_AdPlugin_Native(desc, createdCallback);
+		}
+
+		private static void init_AdDuplex_InterstitialAdPlugin(AdDuplex_InterstitialAdPlugin_WinRT plugin, InterstitialAdDesc desc, InterstitialAdCreatedCallbackMethod createdCallback)
+		{
+			#if UNITY_WP_8_1
+			plugin.Native = new AdDuplex_InterstitialAdPlugin_Native(desc, createdCallback);
+			#else
+			plugin.Native = new Dumy_InterstitialAdPlugin(desc, createdCallback);
+			#endif
 		}
 		#endif
 

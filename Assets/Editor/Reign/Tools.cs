@@ -196,6 +196,7 @@ namespace Reign.EditorTools
 					"WP8/CurrentAppSimulator/ProductListing.cs",
 					#else
 					"Shared/WinRT/AdDuplex_AdPlugin.cs",
+					"Shared/WinRT/AdDuplex_InterstitialAdPlugin.cs",
 					#endif
 				};
 

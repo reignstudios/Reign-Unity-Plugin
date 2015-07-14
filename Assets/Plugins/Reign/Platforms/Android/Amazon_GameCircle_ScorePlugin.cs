@@ -67,7 +67,7 @@ namespace Reign.Plugin
 			AchievementDesc found = null;
 			foreach (var a in desc.AchievementDescs)
 			{
-				if (a.ID == achievementID) found =  a;
+				if (a.ID == achievementID) found = a;
 			}
 			if (found == null) throw new Exception("Failed to find AchievementID: " + achievementID);
 
