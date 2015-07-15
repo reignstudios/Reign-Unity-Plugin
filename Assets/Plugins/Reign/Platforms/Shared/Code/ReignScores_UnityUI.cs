@@ -234,15 +234,15 @@ namespace Reign.Plugin
 			foreach (var value in AchievementImages) value.gameObject.SetActive(false);
 
 			// set new values
-			for (int i = achievementOffset; i != (achievementOffset+AchievementsToListPerPage); ++i)
+			for (int i = achievementOffset, uiIndex = 0; i != (achievementOffset+AchievementsToListPerPage); ++i, ++uiIndex)
 			{
-				if (i >= Achievements_Names.Length || i >= Achievements_Descs.Length || i >= AchievementImages.Length || i >= achievements.Length) break;
+				if (uiIndex >= Achievements_Names.Length || uiIndex >= Achievements_Descs.Length || uiIndex >= AchievementImages.Length || i >= achievements.Length) break;
 
 				var achievement = achievements[i];
-				Achievements_Names[i].text = achievement.Name;
-				Achievements_Descs[i].text = achievement.Desc;
-				AchievementImages[i].sprite = achievement.IsAchieved ? achievement.AchievedSprite : achievement.UnachievedSprite;
-				AchievementImages[i].gameObject.SetActive(true);
+				Achievements_Names[uiIndex].text = achievement.Name;
+				Achievements_Descs[uiIndex].text = achievement.Desc;
+				AchievementImages[uiIndex].sprite = achievement.IsAchieved ? achievement.AchievedSprite : achievement.UnachievedSprite;
+				AchievementImages[uiIndex].gameObject.SetActive(true);
 			}
 		}
 
