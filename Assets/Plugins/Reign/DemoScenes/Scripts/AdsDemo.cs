@@ -71,7 +71,7 @@ public class AdsDemo : MonoBehaviour
 		desc.WinRT_AdDuplex_ApplicationKey = "";
 		desc.WinRT_AdDuplex_UnitID = "";
 		desc.WinRT_AdDuplex_AdGravity = AdGravity.BottomCenter;
-		desc.WinRT_AdDuplex_AdSize = WinRT_AdDuplex_AdSize.Wide_500x130;
+		desc.WinRT_AdDuplex_AdSize = WinRT_AdDuplex_AdSize.Wide_728x90;
 		//desc.WinRT_AdDuplex_RefreshRate = 120;
 			
 		// WP8 settings (Windows Phone 8.0 & 8.1)

@@ -1,4 +1,4 @@
-Reign Unity Plugin (Last Live Build was 134)
+Reign Unity Plugin (Last Live Build was 135)
 ==================
 The "dev" branch is used for adding breaking changes, while "master" is to be considered the stable or minor changes branch.
 
@@ -12,15 +12,13 @@ TODO
 Roadmap
 ========================================================================
 - Add Desktop platform support.
+- Add Tizen support.
 - Add Ouya support.
 - Push notifications.
 - Samsung Power button hold callback.
-- Disable Android naviagtion bar request.
-- Look into AdDuplex
 - Look into InMobi
 - Win8/WP8 Live Tile features
 - Look into PlayHaven, Chartboost and Flurry
-- Custom button text for MessageBox buttons
 - Look into making encrypted PlayerPrefs
 - Cross platform Ad Mediation
 - Virtual Currency IAP system.

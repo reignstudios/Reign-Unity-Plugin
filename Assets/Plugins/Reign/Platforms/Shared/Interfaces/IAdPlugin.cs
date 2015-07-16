@@ -64,9 +64,9 @@ namespace Reign
 		Wide_500x130,
 
 		/// <summary>
-		/// Wide_720x90
+		/// Wide_728x90
 		/// </summary>
-		Wide_720x90,
+		Wide_728x90,
 
 		/// <summary>
 		/// Square_250x250
@@ -554,7 +554,7 @@ namespace Reign
 		/// <summary>
 		/// Ad size type
 		/// </summary>
-		public WinRT_AdDuplex_AdSize WinRT_AdDuplex_AdSize = WinRT_AdDuplex_AdSize.Square_250x250;
+		public WinRT_AdDuplex_AdSize WinRT_AdDuplex_AdSize = WinRT_AdDuplex_AdSize.Wide_728x90;
 
 		/// <summary>
 		/// Set to your APID

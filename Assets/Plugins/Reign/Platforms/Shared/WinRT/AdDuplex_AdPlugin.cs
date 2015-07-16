@@ -112,8 +112,8 @@ namespace Reign.Plugin
 							adControl.Size = "500x130";
 							break;
 
-						case WinRT_AdDuplex_AdSize.Wide_720x90:
-							adControl.Size = "720x90";
+						case WinRT_AdDuplex_AdSize.Wide_728x90:
+							adControl.Size = "728x90";
 							break;
 
 						case WinRT_AdDuplex_AdSize.Square_250x250:
