@@ -129,13 +129,13 @@ namespace ReignScores.Services.Users
 					// check if achievement already exists
 					command.CommandText = string.Format("SELECT ID, PercentComplete FROM Achievements WHERE UserID = '{0}' and AchievementID = '{1}'", userID, achievementID);
 					string id = null;
-					int currentPercentComplete = 0;
+					float currentPercentComplete = 0;
 					using (var reader = command.ExecuteReader())
 					{
 						if (reader.Read())
 						{
 							id = reader["ID"].ToString();
-							currentPercentComplete = int.Parse(reader["PercentComplete"].ToString());
+							currentPercentComplete = float.Parse(reader["PercentComplete"].ToString());
 						}
 					}
 
@@ -158,7 +158,7 @@ namespace ReignScores.Services.Users
 							return ResponseTool.GenerateXML(webResponse);
 						}
 					}
-					else if (int.Parse(percentComplete) > currentPercentComplete)
+					else if (float.Parse(percentComplete) > currentPercentComplete)
 					{
 						// update existing achievement
 						command.CommandText = string.Format("UPDATE Achievements SET Date = '{0}', PercentComplete = {1} WHERE ID = '{2}'", DateTime.UtcNow, percentComplete, id);
@@ -207,7 +207,7 @@ namespace ReignScores.Services.Users
 							{
 								ID = reader["AchievementID"].ToString(),
 								AchievementID = reader["AchievementID"].ToString(),
-								PercentComplete = int.Parse(reader["PercentComplete"].ToString())
+								PercentComplete = float.Parse(reader["PercentComplete"].ToString())
 							};
 							webResponse.Achievements.Add(a);
 						}
