@@ -44,8 +44,6 @@ public class AdsDemo : MonoBehaviour
 		desc.Testing = true;// NOTE: To test ads on iOS, you must enable them in iTunes Connect.
 		desc.Visible = true;
 		desc.EventCallback = eventCallback;
-		desc.UnityUI_AdMaxWidth = 0.3f;
-		desc.UnityUI_AdMaxHeight = 0.15f;
 		desc.UseClassicGUI = false;
 		desc.GUIOverrideEnabled = false;
 		desc.UnityUI_SortIndex = 1000;
@@ -53,7 +51,9 @@ public class AdsDemo : MonoBehaviour
 		// Editor
 		desc.Editor_AdAPI = AdAPIs.EditorTestAd;
 		desc.Editor_AdGravity = AdGravity.BottomCenter;
-		desc.Editor_AdScale = 2;
+		desc.Editor_AdScale = 1.5f;
+		//desc.Editor_FixedWidthOverride = 250;
+		//desc.Editor_FixedHeightOverride = 64;
 
 		desc.Editor_MillennialMediaAdvertising_APID = "";
 		desc.Editor_MillennialMediaAdvertising_AdGravity = AdGravity.BottomCenter;
@@ -101,7 +101,7 @@ public class AdsDemo : MonoBehaviour
 		desc.BB10_MillennialMediaAdvertising_APID = "";
 		desc.BB10_MillennialMediaAdvertising_AdGravity = AdGravity.BottomCenter;
 		//desc.BB10_MillennialMediaAdvertising_RefreshRate = 120;
-		desc.BB10_AdScale = 2;
+		desc.BB10_AdScale = 1.5f;
 			
 		// iOS settings
 		desc.iOS_AdAPI = AdAPIs.AdMob;

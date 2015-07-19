@@ -49,7 +49,7 @@ namespace Reign.Plugin
 					adRect = ad.AddComponent<RectTransform>();
 					adImage = ad.AddComponent<Image>();
 					adImage.sprite = Resources.Load<Sprite>("Reign/Ads/DemoAd");
-					adImage.preserveAspect = true;
+					adImage.preserveAspect = (desc.Editor_FixedWidthOverride <= 0 || desc.Editor_FixedHeightOverride <= 0);
 					var button = ad.AddComponent<Button>();
 					button.onClick.AddListener(adClicked);
 				}
@@ -97,7 +97,14 @@ namespace Reign.Plugin
 			{
 				float screenWidth = Screen.width, screenHeight = Screen.height;
 				float scale = new Vector2(screenWidth, screenHeight).magnitude / new Vector2(1280, 720).magnitude;
-				float adWidth = 320 * desc.Editor_AdScale * scale, adHeight = 53 * desc.Editor_AdScale * scale;
+				float width = 320 * scale, height = 53 * scale;
+				if (desc.Editor_FixedWidthOverride > 0 && desc.Editor_FixedHeightOverride > 0)
+				{
+					width = desc.Editor_FixedWidthOverride;
+					height = desc.Editor_FixedHeightOverride;
+				}
+
+				float adWidth = width * desc.Editor_AdScale, adHeight = height * desc.Editor_AdScale;
 				switch (gravity)
 				{
 					case AdGravity.CenterScreen:
@@ -140,7 +147,14 @@ namespace Reign.Plugin
 				float screenWidth = Screen.width, screenHeight = Screen.height;
 				float scale = (new Vector2(screenWidth, screenHeight).magnitude / new Vector2(1280, 720).magnitude) * desc.Editor_AdScale;
 				var texture = adImage.sprite.texture;
-				float adWidth = (texture.width / screenWidth) * scale, adHeight = (texture.height / screenHeight) * scale;
+				float width = texture.width * scale, height = texture.height * scale;
+				if (desc.Editor_FixedWidthOverride > 0 && desc.Editor_FixedHeightOverride > 0)
+				{
+					width = desc.Editor_FixedWidthOverride;
+					height = desc.Editor_FixedHeightOverride;
+				}
+
+				float adWidth = (width * desc.Editor_AdScale) / screenWidth, adHeight = (height * desc.Editor_AdScale) / screenHeight;
 				switch (gravity)
 				{
 					case AdGravity.CenterScreen:

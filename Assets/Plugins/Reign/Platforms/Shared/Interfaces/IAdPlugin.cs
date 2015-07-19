@@ -454,11 +454,6 @@ namespace Reign
 		public AdEventCallbackMethod EventCallback;
 
 		/// <summary>
-		/// Used to limit the native Unity UI size
-		/// </summary>
-		public float UnityUI_AdMaxWidth = 0.3f, UnityUI_AdMaxHeight = 0.15f;
-
-		/// <summary>
 		/// Used to set the UI layer order of the Ad
 		/// </summary>
 		public int UnityUI_SortIndex = 1000;
@@ -498,6 +493,11 @@ namespace Reign
 		/// Set to scale Unity UI/GUI based Ads.
 		/// </summary>
 		public float Editor_AdScale = 1;
+
+		/// <summary>
+		/// Set to override the size values of the Ad. NOTE: disables screen size scaling.
+		/// </summary>
+		public int Editor_FixedWidthOverride = 0, Editor_FixedHeightOverride = 0;
 
 		// WinRT
 		/// <summary>
