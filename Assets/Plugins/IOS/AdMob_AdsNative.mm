@@ -130,9 +130,9 @@
         case 0: frame.origin = CGPointMake(0, viewSize.height-size.height); break;
         case 1: frame.origin = CGPointMake(viewSize.width-size.width, viewSize.height-size.height); break;
         case 2: frame.origin = CGPointMake((viewSize.width*.5f)-(size.width*.5f), viewSize.height-size.height); break;
-        case 3: frame.origin = CGPointMake(0, 0); break;
-        case 4: frame.origin = CGPointMake(viewSize.width-size.width, 0); break;
-        case 5: frame.origin = CGPointMake((viewSize.width*.5f)-(size.width*.5f), 0); break;
+        case 3: frame.origin = CGPointMake(0, 1); break;
+        case 4: frame.origin = CGPointMake(viewSize.width-size.width, 1); break;
+        case 5: frame.origin = CGPointMake((viewSize.width*.5f)-(size.width*.5f), 1); break;
         case 6: frame.origin = CGPointMake((viewSize.width*.5f)-(size.width*.5f), (viewSize.height*.5f)-(size.height*.5f)); break;
     }
     

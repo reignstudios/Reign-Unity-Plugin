@@ -104,7 +104,7 @@ public class AdsDemo : MonoBehaviour
 		desc.BB10_AdScale = 1.5f;
 			
 		// iOS settings
-		desc.iOS_AdAPI = AdAPIs.AdMob;
+		desc.iOS_AdAPI = AdAPIs.iAd;
 		desc.iOS_iAd_AdGravity = AdGravity.BottomCenter;
 			
 		desc.iOS_AdMob_AdGravity = AdGravity.BottomCenter;
