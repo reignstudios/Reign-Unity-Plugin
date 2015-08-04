@@ -111,7 +111,8 @@ namespace Reign.Plugin
 					return;
 				}
 
-				string filename = "data/" + shareDataFilename + (shareType == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg");
+				//string filename = "data/"+shareDataFilename + (shareType == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg");// Other apps can't seem to read data from this location
+				string filename = "/accounts/1000/shared/photos/"+shareDataFilename + (shareType == SocialShareDataTypes.Image_PNG ? ".png" : ".jpg");
 				dataValue = Marshal.StringToHGlobalAnsi(filename);
 				try
 				{
