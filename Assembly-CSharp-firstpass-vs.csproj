@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{C7974569-147A-214D-88F1-7E0E6BE81BAA}</ProjectGuid>
+	<ProjectGuid>{8AE8CC81-2B2E-8C72-753F-40834FF8A829}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -361,6 +361,8 @@
      <Compile Include="Assets\Plugins\Reign\Platforms\Shared\SharpZipLib\Zip\ZipInputStream.cs" />
      <Compile Include="Assets\Plugins\Reign\Platforms\Shared\SharpZipLib\Zip\ZipNameTransform.cs" />
      <Compile Include="Assets\Plugins\Reign\Platforms\Shared\SharpZipLib\Zip\ZipOutputStream.cs" />
+     <Compile Include="Assets\Plugins\Reign\Platforms\Shared\WinRT\AdDuplex_AdPlugin.cs" />
+     <Compile Include="Assets\Plugins\Reign\Platforms\Shared\WinRT\AdDuplex_InterstitialAdPlugin.cs" />
      <Compile Include="Assets\Plugins\Reign\Platforms\Shared\WinRT\EmailPlugin.cs" />
      <Compile Include="Assets\Plugins\Reign\Platforms\Shared\WinRT\MarketingPlugin.cs" />
      <Compile Include="Assets\Plugins\Reign\Platforms\Shared\WinRT\MessageBoxPlugin.cs" />
