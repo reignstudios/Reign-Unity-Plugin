@@ -45,7 +45,7 @@ _ReSharper*/
 #*.sln
 
 # Android Studios ---------------
-#.gradle
+.gradle
 #/local.properties
 #/.idea/workspace.xml
 #/.idea/libraries
