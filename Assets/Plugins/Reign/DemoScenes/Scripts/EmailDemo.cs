@@ -18,11 +18,14 @@ public class EmailDemo : MonoBehaviour
 		EmailButton.Select();
 		EmailButton.onClick.AddListener(emailClicked);
 		BackButton.onClick.AddListener(backClicked);
+
+		Debug.Log("Value: " + (int)'\n');
+		Debug.Log("How%0AYou");
 	}
 
 	private void emailClicked()
 	{
-		EmailManager.Send("support@reign-studios.com", "Subject", "Some body content...");
+		EmailManager.Send("support@reign-studios.com", "Subject", "Some body content...<br>More Content");
 	}
 
 	private void backClicked()
