@@ -338,12 +338,18 @@ namespace Reign.Plugin
 					}
 					#endif
 
-					callback(infos.ToArray(), true);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						callback(infos.ToArray(), true);
+					});
 				}
 				catch (Exception e)
 				{
 					Debug.LogError(e.Message);
-					callback(null, false);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						callback(null, false);
+					});
 				}
 			});
 		}
@@ -372,14 +378,23 @@ namespace Reign.Plugin
 					if (testing)
 					{
 						var testProductID = wp8TestListingInformation.ProductListings[inAppID.ID].ProductId;
-						restoreCallback(inAppID.ID, wp8TestLicenseInformation.ProductLicenses[testProductID].IsActive && !wp8TestLicenseInformation.ProductLicenses[testProductID].IsConsumable);
+						ReignServices.InvokeOnUnityThread(delegate
+						{
+							restoreCallback(inAppID.ID, wp8TestLicenseInformation.ProductLicenses[testProductID].IsActive && !wp8TestLicenseInformation.ProductLicenses[testProductID].IsConsumable);
+						});
 					}
 					else
 					{
-						restoreCallback(inAppID.ID, licenseInformation.ProductLicenses[inAppID.ID].IsActive && !licenseInformation.ProductLicenses[inAppID.ID].IsConsumable);
+						ReignServices.InvokeOnUnityThread(delegate
+						{
+							restoreCallback(inAppID.ID, licenseInformation.ProductLicenses[inAppID.ID].IsActive && !licenseInformation.ProductLicenses[inAppID.ID].IsConsumable);
+						});
 					}
 					#else
-					restoreCallback(inAppID.ID, licenseInformation.ProductLicenses[inAppID.ID].IsActive && inAppID.Type != InAppPurchaseTypes.Consumable);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						restoreCallback(inAppID.ID, licenseInformation.ProductLicenses[inAppID.ID].IsActive && inAppID.Type != InAppPurchaseTypes.Consumable);
+					});
 					#endif
 				}
 			});
@@ -471,22 +486,34 @@ namespace Reign.Plugin
 							#if WINDOWS_PHONE
 							if (testing)
 							{
-								purchasedCallback(inAppID, receipt, wp8TestLicenseInformation.ProductLicenses[inAppID].IsActive);
+								ReignServices.InvokeOnUnityThread(delegate
+								{
+									purchasedCallback(inAppID, receipt, wp8TestLicenseInformation.ProductLicenses[inAppID].IsActive);
+								});
 								if (wp8TestLicenseInformation.ProductLicenses[inAppID].IsConsumable) CurrentAppSimulator.ReportProductFulfillment(productID);
 							}
 							else
 							{
-								purchasedCallback(inAppID, receipt, licenseInformation.ProductLicenses[inAppID].IsActive);
+								ReignServices.InvokeOnUnityThread(delegate
+								{
+									purchasedCallback(inAppID, receipt, licenseInformation.ProductLicenses[inAppID].IsActive);
+								});
 								if (licenseInformation.ProductLicenses[inAppID].IsConsumable) CurrentApp.ReportProductFulfillment(productID);
 							}
 							#elif UNITY_METRO_8_0
-							purchasedCallback(inAppID, receipt, !string.IsNullOrEmpty(receipt) || licenseInformation.ProductLicenses[inAppID].IsActive);
+							ReignServices.InvokeOnUnityThread(delegate
+							{
+								purchasedCallback(inAppID, receipt, !string.IsNullOrEmpty(receipt) || licenseInformation.ProductLicenses[inAppID].IsActive);
+							});
 							if (isConsumbable(inAppID))
 							{
 								Debug.LogError("NOTE: Consumable IAP not supported in 8.0");
 							}
 							#else
-							purchasedCallback(inAppID, receipt, results.Status == ProductPurchaseStatus.Succeeded || results.Status == ProductPurchaseStatus.AlreadyPurchased || licenseInformation.ProductLicenses[inAppID].IsActive);
+							ReignServices.InvokeOnUnityThread(delegate
+							{
+								purchasedCallback(inAppID, receipt, results.Status == ProductPurchaseStatus.Succeeded || results.Status == ProductPurchaseStatus.AlreadyPurchased || licenseInformation.ProductLicenses[inAppID].IsActive);
+							});
 							if (isConsumbable(inAppID))
 							{
 								if (testing) await CurrentAppSimulator.ReportConsumableFulfillmentAsync(productID, results.TransactionId);
@@ -498,12 +525,18 @@ namespace Reign.Plugin
 					catch (Exception e)
 					{
 						Debug.LogError(e.Message);
-						if (purchasedCallback != null) purchasedCallback(inAppID, null, false);
+						ReignServices.InvokeOnUnityThread(delegate
+						{
+							if (purchasedCallback != null) purchasedCallback(inAppID, null, false);
+						});
 					}
 				}
 				else
 				{
-					if (purchasedCallback != null) purchasedCallback(inAppID, null, true);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						if (purchasedCallback != null) purchasedCallback(inAppID, null, true);
+					});
 				}
 			});
 		}

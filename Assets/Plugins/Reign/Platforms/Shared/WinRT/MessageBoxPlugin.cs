@@ -28,7 +28,10 @@ namespace Reign.Plugin
 				asyncResult =>
 				{
 					int? result = Microsoft.Xna.Framework.GamerServices.Guide.EndShowMessageBox(asyncResult);
-					if (callback != null) callback(result == 0 ? MessageBoxResult.Ok : MessageBoxResult.Cancel);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						if (callback != null) callback(result == 0 ? MessageBoxResult.Ok : MessageBoxResult.Cancel);
+					});
 				}, null);
 
 				// Silverlight method. (Doesn't support custom named buttons)
@@ -42,7 +45,10 @@ namespace Reign.Plugin
 				if (type == MessageBoxTypes.Ok)
 				{
 					await msg.ShowAsync();
-					if (callback != null) callback(MessageBoxResult.Ok);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						if (callback != null) callback(MessageBoxResult.Ok);
+					});
 				}
 				else if (type == MessageBoxTypes.OkCancel)
 				{
@@ -50,7 +56,10 @@ namespace Reign.Plugin
 					msg.Commands.Add(new UICommand(options.OkButtonName, new UICommandInvokedHandler((cmd) => result = true)));
 					msg.Commands.Add(new UICommand(options.CancelButtonText, new UICommandInvokedHandler((cmd) => result = false)));
 					await msg.ShowAsync();
-					if (callback != null) callback(result ? MessageBoxResult.Ok : MessageBoxResult.Cancel);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						if (callback != null) callback(result ? MessageBoxResult.Ok : MessageBoxResult.Cancel);
+					});
 				}
 			});
 			#endif

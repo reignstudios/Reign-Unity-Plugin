@@ -143,7 +143,10 @@ namespace Reign.Plugin
 					Debug.LogError(e.Message);
 				}
 
-				if (createdCallback != null) createdCallback(pass);
+				ReignServices.InvokeOnUnityThread(delegate
+				{
+					if (createdCallback != null) createdCallback(pass);
+				});
 			});
 		}
 

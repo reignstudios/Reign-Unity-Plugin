@@ -298,12 +298,18 @@ namespace Reign.Plugin
 					using (var fileStream = await file.OpenStreamForWriteAsync())
 					{
 						fileStream.Write(data, 0, data.Length);
-						if (streamSavedCallback != null) streamSavedCallback(true);
+						ReignServices.InvokeOnUnityThread(delegate
+						{
+							if (streamSavedCallback != null) streamSavedCallback(true);
+						});
 					}
 				}
 				else
 				{
-					if (streamSavedCallback != null) streamSavedCallback(false);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						if (streamSavedCallback != null) streamSavedCallback(false);
+					});
 				}
 			});
 		}
@@ -337,7 +343,10 @@ namespace Reign.Plugin
 
 			if (e.TaskResult != TaskResult.OK)
 			{
-				if (callback != null) callback(null, false);
+				ReignServices.InvokeOnUnityThread(delegate
+				{
+					if (callback != null) callback(null, false);
+				});
 				return;
 			}
 
@@ -351,24 +360,36 @@ namespace Reign.Plugin
 						var stream = e.ChosenPhoto;
 						if (maxWidth == 0 || maxHeight == 0)
 						{
-							callback(stream, true);
+							ReignServices.InvokeOnUnityThread(delegate
+							{
+								callback(stream, true);
+							});
 						}
 						else
 						{
 							var scaledStream = resizeImageStream(stream, maxWidth, maxHeight);
-							callback(scaledStream, true);
+							ReignServices.InvokeOnUnityThread(delegate
+							{
+								callback(scaledStream, true);
+							});
 						}
 					}
 					else if (callback != null)
 					{
-						callback(null, false);
+						ReignServices.InvokeOnUnityThread(delegate
+						{
+							callback(null, false);
+						});
 					}
 
 					return;
 				}
 			}
 
-			if (callback != null) callback(null, false);
+			ReignServices.InvokeOnUnityThread(delegate
+			{
+				if (callback != null) callback(null, false);
+			});
 		}
 		#endif
 
@@ -380,7 +401,10 @@ namespace Reign.Plugin
 		{
 			if (data == null)
 			{
-				LoadFileDialog_streamLoadedCallback(null, false);
+				ReignServices.InvokeOnUnityThread(delegate
+				{
+					LoadFileDialog_streamLoadedCallback(null, false);
+				});
 				return;
 			}
 
@@ -392,7 +416,10 @@ namespace Reign.Plugin
 				if (LoadFileDialog_maxWidth == 0 || LoadFileDialog_maxHeight == 0)
 				{
 					stream = await file.OpenStreamForReadAsync();
-					LoadFileDialog_streamLoadedCallback(stream, true);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						LoadFileDialog_streamLoadedCallback(stream, true);
+					});
 				}
 				else
 				{
@@ -401,12 +428,18 @@ namespace Reign.Plugin
 						stream = await resizeImageStream(tempStream.AsRandomAccessStream(), LoadFileDialog_maxWidth, LoadFileDialog_maxHeight);
 					}
 
-					LoadFileDialog_streamLoadedCallback(stream, true);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						LoadFileDialog_streamLoadedCallback(stream, true);
+					});
 				}
 			}
 			else
 			{
-				LoadFileDialog_streamLoadedCallback(null, false);
+				ReignServices.InvokeOnUnityThread(delegate
+				{
+					LoadFileDialog_streamLoadedCallback(null, false);
+				});
 			}
 
 			LoadFileDialog_picker = null;
@@ -465,7 +498,10 @@ namespace Reign.Plugin
 						if (maxWidth == 0 || maxHeight == 0)
 						{
 							stream = await file.OpenStreamForReadAsync();
-							streamLoadedCallback(stream, true);
+							ReignServices.InvokeOnUnityThread(delegate
+							{
+								streamLoadedCallback(stream, true);
+							});
 						}
 						else
 						{
@@ -483,13 +519,19 @@ namespace Reign.Plugin
 								#endif
 							}
 
-							streamLoadedCallback(stream, true);
+							ReignServices.InvokeOnUnityThread(delegate
+							{
+								streamLoadedCallback(stream, true);
+							});
 							#endif
 						}
 					}
 					else
 					{
-						streamLoadedCallback(null, false);
+						ReignServices.InvokeOnUnityThread(delegate
+						{
+							streamLoadedCallback(null, false);
+						});
 					}
 					#endif
 				}
@@ -497,7 +539,10 @@ namespace Reign.Plugin
 				{
 					if (stream != null) stream.Dispose();
 					Debug.LogError(e.Message);
-					streamLoadedCallback(null, false);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						streamLoadedCallback(null, false);
+					});
 				}
 			});
 		}
@@ -599,24 +644,36 @@ namespace Reign.Plugin
 						{
 							if (maxWidth == 0 || maxHeight == 0)
 							{
-								streamLoadedCallback(cameraStream.AsStream(), true);
+								ReignServices.InvokeOnUnityThread(delegate
+								{
+									streamLoadedCallback(cameraStream.AsStream(), true);
+								});
 							}
 							else
 							{
 								var stream = await resizeImageStream(cameraStream, maxWidth, maxHeight);
-								streamLoadedCallback(stream, true);
+								ReignServices.InvokeOnUnityThread(delegate
+								{
+									streamLoadedCallback(stream, true);
+								});
 							}
 						}
 					}
 					else
 					{
-						streamLoadedCallback(null, false);
+						ReignServices.InvokeOnUnityThread(delegate
+						{
+							streamLoadedCallback(null, false);
+						});
 					}
 				}
 				catch (Exception e)
 				{
 					Debug.LogError(e.Message);
-					streamLoadedCallback(null, false);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						streamLoadedCallback(null, false);
+					});
 				}
 			});
 			#endif
@@ -631,12 +688,18 @@ namespace Reign.Plugin
 			{
 				if (loadCameraPicker_maxWidth == 0 || loadCameraPicker_maxHeight == 0)
 				{
-					loadCameraPicker_streamLoadedCallback(e.ChosenPhoto, true);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						loadCameraPicker_streamLoadedCallback(e.ChosenPhoto, true);
+					});
 				}
 				else
 				{
 					var stream = resizeImageStream(e.ChosenPhoto, loadCameraPicker_maxWidth, loadCameraPicker_maxHeight);
-					loadCameraPicker_streamLoadedCallback(stream, true);
+					ReignServices.InvokeOnUnityThread(delegate
+					{
+						loadCameraPicker_streamLoadedCallback(stream, true);
+					});
 				}
 			}
 		}

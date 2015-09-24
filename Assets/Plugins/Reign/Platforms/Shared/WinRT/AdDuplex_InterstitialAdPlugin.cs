@@ -51,7 +51,10 @@ namespace Reign.Plugin
 			}
 			else
 			{
-				if (createdCallback != null) createdCallback(pass);
+				ReignServices.InvokeOnUnityThread(delegate
+				{
+					if (createdCallback != null) createdCallback(pass);
+				});
 			}
 		}
 
