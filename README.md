@@ -1,14 +1,33 @@
 Reign Unity Plugin - Unity4 edition (Last Build: 144)
 ==================
-The "dev" branch is used for adding breaking changes, while "master" is to be considered the stable or minor changes branch.
+This Reign API is a cross-platform, unified API for the Unity game engine.
 
-The "Reign Unity Plugin(s)" are copyright and owned by Andrew D. Witte and Philip J. Witte.
-Please look at the licence for more info.
-
-Contributing rules
+Features
 ========================================================================
-TODO
+• Editor testing.
+• Win8 Privacy Policy (To pass WACK).
+• <strong>Ads:</strong> Microsoft, BB10, AdMob, MM, iAd, ect.
+• <strong>Interstitial Ads:</strong> AdMob.
+• <strong>IAP:</strong> MS-Store, BB10, Apple.
+&nbsp; &nbsp;GooglePlay, Amazon and Samsung.
+• Native Ok/Cancel Message Boxes.
+• Email feedback request.
+• Invoke store page for review.
+• Save/Load/Delete data files.
+• Save/Load Image files to your pictures folder.
+• Save SnapShot to Pictures in one easy call.
+• Native Image/Photo Picker.
+• Native Camera Picker.
+• Save File Picker (Win8 only).
+• Social Image / Text Sharing.
+• GameCenter Leaderboards / Achievements
+• GooglePlay Leaderboards / Achievements
+• GameCircle Leaderboards / Achievements
+• Reign-Scores Leaderboards / Achievements
+• Silverlight ImageTools ported for image processing.
+• SharpZipLib ported to be compatible with all platforms.
+• InputEx for handling Input oddities and managing layouts.
 
-Roadmap
+Unity5 Version
 ========================================================================
-- Unity4 version will go into feature freeze but will still get patches until its no longer used.
+- For Unity5 targeted version go here: https://github.com/reignstudios/Reign-Unity-Plugin5
